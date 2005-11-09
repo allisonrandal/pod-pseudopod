@@ -5,9 +5,11 @@ use Pod::PseudoPod::HTML;
 
 my $file = $ARGV[0];
 my $parser  = Pod::PseudoPod::HTML->new ();
+$parser->add_body_tags(1);
+$parser->add_css_tags(1);
 
 if (-e $file) {
-  $parser->filter($file)->any_errata_seen;
+  $parser->parse_file($file)->any_errata_seen;
 } else {
   die "Unable to open file\n";
 }
