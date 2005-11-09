@@ -114,6 +114,15 @@ sub end_U   { $_[0]{'scratch'} .= '</font>' if $_[0]{'css_tags'} }
 sub start_Z { $_[0]{'scratch'} .= '<a name="' }
 sub end_Z   { $_[0]{'scratch'} .= '">' }
 
+sub start_A { $_[0]{'scratch'} .= '<a href="#' }
+sub end_A   { $_[0]{'scratch'} .= '">link</a>' }
+
+sub start_G { $_[0]{'scratch'} .= '<sup>' }
+sub end_G   { $_[0]{'scratch'} .= '</sup>' }
+
+sub start_H { $_[0]{'scratch'} .= '<sub>' }
+sub end_H   { $_[0]{'scratch'} .= '</sub>' }
+
 sub emit {
   my($self, $nowrap) = @_;
   my $out = $self->{'scratch'} . "\n";
