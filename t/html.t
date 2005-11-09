@@ -285,6 +285,39 @@ is($results, <<"EOHTML", "Link anchor entity in a paragraph");
 
 EOHTML
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a A<crossreferencelink>.
+EOPOD
+is($results, <<"EOHTML", "Link entity in a paragraph");
+<p>A plain paragraph with a <a href="#crossreferencelink">link</a>.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a G<superscript>.
+EOPOD
+is($results, <<"EOHTML", "Superscript in a paragraph");
+<p>A plain paragraph with a <sup>superscript</sup>.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a H<subscript>.
+EOPOD
+is($results, <<"EOHTML", "Subscript in a paragraph");
+<p>A plain paragraph with a <sub>subscript</sub>.</p>
+
+EOHTML
+
 ######################################
 
 sub initialize {
