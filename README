@@ -11,6 +11,14 @@ INSTALLATION
     make test
     make install
 
+    # or
+
+    perl Build.PL
+    ./Build
+    ./Build test
+    ./Build install
+   
+
 EXTRAS
     The "examples/" directory includes a pod2html converter and a
     podchecker script that aren't in the standard installation.
