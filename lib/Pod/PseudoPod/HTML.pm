@@ -94,8 +94,23 @@ sub end_Document   {
 }
 
 # Handling code tags
+sub start_A { $_[0]{'scratch'} .= '<a href="#' }
+sub end_A   { $_[0]{'scratch'} .= '">link</a>' }
+
+sub start_B { $_[0]{'scratch'} .= '<b>' }
+sub end_B   { $_[0]{'scratch'} .= '</b>' }
+
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
+
+sub start_G { $_[0]{'scratch'} .= '<sup>' }
+sub end_G   { $_[0]{'scratch'} .= '</sup>' }
+
+sub start_H { $_[0]{'scratch'} .= '<sub>' }
+sub end_H   { $_[0]{'scratch'} .= '</sub>' }
+
+sub start_I { $_[0]{'scratch'} .= '<i>' }
+sub end_I   { $_[0]{'scratch'} .= '</i>' }
 
 sub start_N {
   my ($self) = @_;
@@ -108,20 +123,14 @@ sub end_N {
   $self->{'scratch'} .= '</font>' if $self->{'css_tags'};
 }
 
+sub start_R { $_[0]{'scratch'} .= '<em>' }
+sub end_R   { $_[0]{'scratch'} .= '</em>' }
+
 sub start_U { $_[0]{'scratch'} .= '<font class="url">' if $_[0]{'css_tags'} }
 sub end_U   { $_[0]{'scratch'} .= '</font>' if $_[0]{'css_tags'} }
 
 sub start_Z { $_[0]{'scratch'} .= '<a name="' }
 sub end_Z   { $_[0]{'scratch'} .= '">' }
-
-sub start_A { $_[0]{'scratch'} .= '<a href="#' }
-sub end_A   { $_[0]{'scratch'} .= '">link</a>' }
-
-sub start_G { $_[0]{'scratch'} .= '<sup>' }
-sub end_G   { $_[0]{'scratch'} .= '</sup>' }
-
-sub start_H { $_[0]{'scratch'} .= '<sub>' }
-sub end_H   { $_[0]{'scratch'} .= '</sub>' }
 
 sub emit {
   my($self, $nowrap) = @_;
