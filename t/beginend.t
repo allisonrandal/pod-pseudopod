@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 19;
+use Test::More tests => 20;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -108,6 +108,25 @@ is($results, <<'EOHTML', "programlisting blocks with css tags turned on");
   beyond ordinary indented text.</code></pre>
 
 </div>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->add_css_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=begin listing
+
+  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.
+
+=end listing
+EOPOD
+
+is($results, <<'EOHTML', "listing blocks");
+<pre><code>  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.</code></pre>
 
 EOHTML
 

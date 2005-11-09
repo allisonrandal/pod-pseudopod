@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -379,7 +379,7 @@ sub _ponder_for {
 sub _ponder_begin {
   my ($self,$para,$curr_open,$paras) = @_;
 
-  unless ($para->[2] =~ /^\s*(?:table|sidebar|figure)/) {
+  unless ($para->[2] =~ /^\s*(?:table|sidebar|figure|listing)/) {
     return $self->SUPER::_ponder_begin($para,$curr_open,$paras);
   }
 
@@ -478,7 +478,7 @@ sub _ponder_end {
       # what's that for?
     
     $self->{'content_seen'} ||= 1;
-    if ($content eq 'table' or $content eq 'sidebar' or $content eq 'figure') {
+    if ($content eq 'table' or $content eq 'sidebar' or $content eq 'figure' or $content eq 'listing') {
       $self->_handle_element_end( $content );
     } else {
       $self->_handle_element_end( 'for' );
