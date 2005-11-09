@@ -3,11 +3,11 @@ require 5;
 package Pod::PseudoPod::Text;
 use strict;
 use Carp ();
-use Pod::PseudoPod::Methody ();
-use Pod::PseudoPod ();
+#use Pod::PseudoPod::Methody ();
+#use Pod::PseudoPod ();
 use vars qw( @ISA $VERSION $FREAKYMODE);
 $VERSION = '1.02';
-@ISA = ('Pod::PseudoPod::Methody');
+use base qw( Pod::PseudoPod );
 BEGIN { *DEBUG = defined(&Pod::PseudoPod::DEBUG)
           ? \&Pod::PseudoPod::DEBUG
           : sub() {0}
