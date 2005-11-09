@@ -4,7 +4,7 @@ package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
 use vars qw( $VERSION );
-$VERSION = '0.03';
+$VERSION = '0.04';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -16,7 +16,7 @@ sub new {
   my $self = shift;
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
-  $new->accept_targets( 'html', 'HTML', 'sidebar' );
+  $new->accept_targets( 'html', 'HTML', 'sidebar', 'table' );
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
@@ -76,6 +76,29 @@ sub start_for {
 }
 
 sub end_for   { $_[0]{'scratch'} .= "\n</blockquote>"; $_[0]->emit() }
+
+sub start_table { 
+  my ($self, $flags) = @_;
+  if ($flags->{'title'}) {
+    $self->{'scratch'} .= "<i>Table: " . $flags->{'title'} . "</i>\n";
+  }
+  $self->{'scratch'} .= "<table>\n\n";
+}
+
+sub end_table   { $_[0]{'scratch'} .= "</table>"; $_[0]->emit() }
+
+sub start_headrow { $_[0]{'in_headrow'} = 1 }
+sub start_bodyrows { $_[0]{'in_headrow'} = 0 }
+
+sub start_row { $_[0]{'scratch'} .= "<tr>\n\n" }
+sub end_row { $_[0]{'scratch'} .= '</tr>'; $_[0]->emit() }
+
+sub start_cell { $_[0]{'scratch'} .= $_[0]{'in_headrow'} ? '<th>' : '<td>'; }
+sub end_cell { 
+  my $self = shift;
+  $self->{'scratch'} .= ($self->{'in_headrow'}) ? '</th>' : '</td>';
+  $self->emit();
+}
 
 sub start_Document { 
   my ($self) = @_;

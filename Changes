@@ -1,11 +1,15 @@
 Revision history for Pod::PseudoPod
 
-0.01 Jan  6, 2003
-	- original simple subclass of Pod::Simple
-
-0.02 Nov 30, 2003
-	- switch to call style similar to Pod::Simple::Methody
+0.04 Jan 1, 2004
+	- add support for tables, including: "=begin table", =row,
+	  =cell, =headrow, =bodyrows
 
 0.03 Dec 31, 2003
 	- add generic support for =begin entities with title text
 	  after the target name
+
+0.02 Nov 30, 2003
+	- switch to call style similar to Pod::Simple::Methody
+
+0.01 Jan  6, 2003
+	- original simple subclass of Pod::Simple

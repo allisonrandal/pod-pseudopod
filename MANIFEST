@@ -12,6 +12,7 @@ t/basic.t
 t/beginend.t
 t/html.t
 t/text.t
+t/table.t
 t/pod_simple/ac_c_extend.t
 t/pod_simple/ac_c_simple.t
 t/pod_simple/ac_d.t

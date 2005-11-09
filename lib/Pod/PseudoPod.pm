@@ -17,7 +17,7 @@ BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
 @Known_formatting_codes = qw(A B C E F G H I L M N R S T U X Z);
 %Known_formatting_codes = map(($_=>1), @Known_formatting_codes);
-@Known_directives       = qw(head0 head1 head2 head3 head4 item over back);
+@Known_directives       = qw(head0 head1 head2 head3 head4 item over back headrow bodyrows row cell);
 %Known_directives       = map(($_=>'Plain'), @Known_directives);
 
 sub new {
@@ -186,6 +186,8 @@ sub _ponder_paragraph_buffer {
       next if $self->_ponder_over($para,$curr_open,$paras);
     } elsif($para_type eq '=back') {
       next if $self->_ponder_back($para,$curr_open,$paras);
+    } elsif($para_type eq '=row') {
+      next if $self->_ponder_row_start($para,$curr_open,$paras);
       
     } else {
       # All non-magical codes!!!
@@ -365,8 +367,8 @@ sub _ponder_begin {
   }
   
   my ($target, $title) = $content =~ m/^(\S+)\s*(.*)$/;
+  $title =~ s/^(picture|html)\s*// if ($target eq 'table');
   $para->[1]{'title'} = $title if ($title);
-
   $para->[1]{'target'} = $target;  # without any ':'
 
   $target =~ s/^:!/!:/s;
@@ -419,7 +421,11 @@ sub _ponder_begin {
     DEBUG > 1 and print "Ignoring ignorable =begin\n";
   } else {
     $self->{'content_seen'} ||= 1;
-    $self->_handle_element_start('for', $para->[1]);
+    if ($target eq 'table') {
+      $self->_handle_element_start($target, $para->[1]);
+    } else {
+      $self->_handle_element_start('for', $para->[1]);
+    }
   }
 
   return 1;
@@ -455,6 +461,8 @@ sub _ponder_end {
     return 1;
   }
   
+  $self->_ponder_row_end($para,$curr_open,$paras) if $content eq 'table';
+
   unless(@$curr_open and $curr_open->[-1][0] eq '=for') {
     $self->whine(
       $para->[1]{'start_line'},
@@ -487,7 +495,11 @@ sub _ponder_end {
       # what's that for?
     
     $self->{'content_seen'} ||= 1;
-    $self->_handle_element_end( 'for' );
+    if ($content eq 'table') {
+      $self->_handle_element_end( $content );
+    } else {
+      $self->_handle_element_end( 'for' );
+    }
   }
   DEBUG > 1 and print "Popping $curr_open->[-1][0] $curr_open->[-1][1]{'target'} because of =end $content\n";
   pop @$curr_open;
@@ -598,7 +610,33 @@ sub _ponder_over {
 
   return;
 }
-      
+
+sub _ponder_row_start {
+  my ($self,$para,$curr_open,$paras) = @_;
+
+  $self->_ponder_row_end($para,$curr_open,$paras);
+
+  push @$curr_open, $para;
+
+  $self->{'content_seen'} ||= 1;
+  $self->_handle_element_start('row', $para->[1]);
+
+  return 1;
+}
+
+sub _ponder_row_end {
+  my ($self,$para,$curr_open,$paras) = @_;
+  # PseudoPod doesn't have a row closing entity, so "=row" and "=end
+  # table" have to double for it.
+
+  if(@$curr_open and $curr_open->[-1][0] eq '=row') {
+    $self->{'content_seen'} ||= 1;
+    my $over = pop @$curr_open;
+    $self->_handle_element_end( 'row' );
+  }
+  return 1;
+}
+
 sub _ponder_back {
   my ($self,$para,$curr_open,$paras) = @_;
   # TODO: fire off </item-number> or </item-bullet> or </item-text> ??

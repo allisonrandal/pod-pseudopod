@@ -18,3 +18,15 @@ TODO list for Perl module Pod::PseudoPod
 
 - Create Pod::PseudoPod::Checker, to validate pod without creating
   a full, formatted document.
+
+- Handle code tags within Verbatim text (but still don't wrap).
+
+- Handle code tags within =begin entities. Currently this kills the
+  begin_for event, so there's no way to output content to mark that
+  the =begin has started.
+
+- Modify E<> entity handling so E<lt> and E<gt> are properly encoded
+  as html entities, not as literal "<" and ">".
+
+- Add a utility to generate an index from a list of files (module and
+  script, probably).
