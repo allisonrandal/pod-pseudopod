@@ -60,6 +60,8 @@ sub end_over_text      { --$_[0]{'Indent'} }
 sub start_over_block   { ++$_[0]{'Indent'} }
 sub end_over_block     { --$_[0]{'Indent'} }
 
+sub start_N { $_[0]{'scratch'} .= ' [footnote: '; }
+sub end_N   { $_[0]{'scratch'} .= ']'; }
 
 sub emit {
   my($self, $tweak_indent) = splice(@_,0,2);
@@ -67,7 +69,8 @@ sub emit {
    # Yes, 'STRING' x NEGATIVE gives '', same as 'STRING' x 0
 
   $self->{'scratch'} =~ tr{\xAD}{}d if Pod::Simple::ASCII;
-  my $out = Text::Wrap::wrap($indent, $indent, $self->{'scratch'} .= "\n");
+  my $out = $self->{'scratch'} . "\n";
+  $out = Text::Wrap::wrap($indent, $indent, $out);
   $out =~ tr{\xA0}{ } if Pod::Simple::ASCII;
   print {$self->{'output_fh'}} $out, "\n";
   $self->{'scratch'} = '';
@@ -115,7 +118,7 @@ Pod::PseudoPod::Text -- format PseudoPod as plaintext
 
 =head1 DESCRIPTION
 
-This class is a formatter that takes Pod and renders it as
+This class is a formatter that takes PseudoPod and renders it as
 wrapped plaintext.
 
 Its wrapping is done by L<Text::Wrap>, so you can change
@@ -127,12 +130,14 @@ This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
 
 L<Pod::Simple>, L<Pod::Simple::TextContent>, L<Pod::Text>
 
-=head1 COPYRIGHT AND DISCLAIMERS
+=head1 COPYRIGHT
 
-Copyright (c) 2002 Sean M. Burke.  All rights reserved.
+Copyright (c) 2002-2004 Sean M. Burke and Allison Randal.  All rights
+reserved.
 
-This library is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. The full text of the license
+can be found in the LICENSE file included with this module.
 
 This program is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of
@@ -140,7 +145,8 @@ merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 
-Sean M. Burke C<sburke@cpan.org>
+Sean M. Burke C<sburke@cpan.org> &
+Allison Randal <allison@perl.org>
 
 =cut
 
