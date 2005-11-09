@@ -52,4 +52,3 @@ t/pod_simple/test_old_perlvar.pod
 t/pod_simple/test_old_perlvar_out.txt
 t/pod_simple/verbatims.t
 t/pod_simple/x_nixer.t
-META.yml                                 Module meta-data (added by MakeMaker)
