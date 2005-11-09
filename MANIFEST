@@ -1,0 +1,15 @@
+MANIFEST
+LICENSE
+README
+Todo
+Changes
+lib/Pod/PseudoPod.pm
+t/001_load.t
+Makefile.PL
+LICENSE
+README
+Todo
+Changes
+lib/Pod/PseudoPod.pm
+t/001_load.t
+Makefile.PL

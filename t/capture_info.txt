@@ -1,0 +1,646 @@
+1..5
+ok 1 - use Pod::PseudoPod::HTML;
+ok 2 - The object isa Pod::PseudoPod::HTML
+
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Document
+start thirdarg: HASH(0x8195904)
+keys: start_line
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head0
+start thirdarg: HASH(0x824b200)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Project Overviewend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head0
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a6c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Perl 6 is the next major version of Perl. It is a complete rewrite of the interpreter, and a significant update of the language itself. The goal is that Perl 6 will add support for much needed new features, and still be cleaner, faster and easier to use.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a48)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The Perl 6 project is vast and complex. It is not, however, complicated. The project runs on a simple structure with very little management overhead. That's really the only way it could run. The project doesn't have huge cash resources, or time resources. Its only resource is the people who believe in the project enough to spend their off-hours, their "relaxation" time, working to see it completed. This chapter is as much about people as it is about Perl.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head1
+start thirdarg: HASH(0x824b17c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The Birth of Perl 6end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head1
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a0c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Back on July 18, 2000, the second day of the fourth Perl Conference (TPC 4), a small band of Perl geeks gathered to prepare for a meeting of the Perl 5 Porters later that day. The topic at hand was the current state of the Perl community. Four months had passed since the 5.6.0 release of Perl, and although it introduced some important features, none was revolutionary.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x824b17c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+There had been very little forward movement in the previous year. It was generally acknowledged that the Perl 5 codebase had grown difficult to maintain. At the same time, infighting on the perl5-porters list had grown so intense that some of the best developers decided to leave. It was time for a change, but no one was quite sure what to do. They started conservatively with plans to change the organization of Perl development.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a0c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+An hour into the discussion, around the time most people nod off in any meeting, Jon Orwant (the reserved, universally-respected editor of the Perl Journal) stepped quietly into the room and snapped everyone to attention with an entirely uncharacteristic and well-planned gesture. "Smash!", a coffee mug hit the wall. "We are #*@%-ed (Crash!) unless we can come up with something that will excite the community (Pow!), because everyone's getting bored and going off and doing other things (Bam!)." (At least, that's basically how Larry tells it. As is usually the case with events like this, no one remembers exactly what Jon said.)end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x824b17c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Awakened by this display, the group started to search for a real solution. The language needed room to grow. It needed the freedom to evaluate new features without the obscuring weight of legacy code. The community needed something to believe in, something to get excited about.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a0c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Within a few hours the group settled on Perl 6, a complete rewrite of Perl. The plan wasn't just a language change, or just an implementation change, or just a social change. It was a paradigm shift. Perl 6 would be the community's rewrite of Perl, and the community's rewrite of itself.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x824b17c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Would Perl 6, particularly Perl 6 as a complete rewrite, have happened without that fateful meeting? Almost certainly. The signs appeared on the lists, in conferences, and in journals months in advance. If it hadn't started that day, it would have happened a week later, or perhaps a few months later, but it would have happened. It was a step the community needed to take.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head1
+start thirdarg: HASH(0x8195898)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+In the Beginning...end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head1
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a54)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Let's pause and consider Perl development up to that fateful meeting. Perl 6 is just another step in the chain, the motivations behind it and the directions it will take are partially guided by history.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195898)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+[L - What's the overall motivation for including this section in the introduction? I need a intro paragraph that explains it better. Is it simply FYI? Supporting the point that Perl 6 was the right step?]end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a54)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Perl was first developed in 1986 by Larry Wall while he was working as a programmer for Unisys. After creating a configuration and monitoring system for a large network that spanned the two American coasts, he was faced with the task of assembling usable reports from log files scattered across the network. The available tools simply weren't up to the job. A linguist at heart, Larry set out to create his own programming language, which he called start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: I
+start thirdarg: HASH(0x824b1d0)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+perlend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: I
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+. He released the first version of Perl on December 18, 1987. He made it freely-available on Usenet (this was before the Internet took over the world, remember), and quickly a community of Perl programmers grew.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195898)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The early adopters of Perl were system administrators who had hit the wall with shell scripting, start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: I
+start thirdarg: HASH(0x825428c)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+awkend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: I
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+, and start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: I
+start thirdarg: HASH(0x8254280)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+sedend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: I
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+. However, in the mid-1990s Perl's audience exploded with the advent of the Web, as Perl was tailor-made for CGI scripting and other Web-related programming.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a54)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Meantime, the Perl language itself kept growing, as Larry and others kept adding new features. Probably the most revolutionary change in Perl (until Perl 6, of course) was the addition of packages, modules, and object-oriented programming with Perl 5. While this made the transition period from Perl 4 to Perl 5 unusually long, it breathed new life into the language by providing a modern, modular interface. Before Perl 5, Perl was considered simply a scripting language; after Perl 5, Perl was considered a full-fledged programming language.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195898)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Larry, meanwhile, started taking a back seat to Perl development and allowed others to take responsibility for adding new features and fixing bugs in Perl. The Perl 5 Porters mailing list (P5P) became the central clearing house for bug reports or proposed changes to the Perl language, with the "pumpkin holder" (also known as the "pumpking") being the programmer responsible for implementing the patches and distributing them to the rest of the list for review. Larry continued to follow Perl development, but like a parent determined not to smother his children, he stayed out of the day-to-day development, restricting his involvement to situations in which he was truly needed.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195a54)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Perhaps the clearest sign that Perl 6 was the right step for the community is the resurgence of Perl 5 development it inspired. Jarkko Hietaniemi was the 5.7 - 5.8 pumpking, with 5.8.0 released on July 18, 2002, appropriately (though unintentionally) on the 2 year anniversary of Perl 6. Perl 5.8 offers usable Unicode support, a working (!) threads interface, safe signals, and a significant improvement of the internals with code cleanup, bug fixes, better documentation and more than quadrupled test coverage. At this writing, Jarkko has passed the pumpking hat on to Hugo van der Sanden for 5.9 - 5.10. Plans for Perl 5.10 include enhancements to the regular expression engine, further internals cleanup and a 'use perl6ish' pragma that will integrate many of the features of Perl 6. Perl 5 is active and thriving, and will continue to be so even after the release of Perl 6.0.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8195898)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+[L - This paragraph doesn't make nearly as much sense when it's separated from the comments about Perl development falling into a slump.]end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82542c8)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The earliest progress toward implementing Perl 6 started before the current incarnation of Perl 6 was even conceived. The Topaz project, started in 1998, was spearheaded by Chip Salzenberg. It was a re-implementation of Perl 5 written in C++. The project was abandoned, but many of the goals and intended features for Topaz were adopted for Perl 6 internals, and the difficulties Topaz encountered were also valuable guides.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82542bc)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Sapphire was another early prototype that influenced the shape of Perl 6 internals. It was a one week project in September 2000. The brainchild of Simon Cozens, Sapphire was another rewrite of Perl 5 internals. It was never intended for release, only as an experiment to see how far the idea could go in a week, and what lessons could be learned.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head1
+start thirdarg: HASH(0x824b17c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The Continuing Missionend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head1
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x825428c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Much has changed since the early days of the project. New people join the group and others leave in a regular pattern of "changing the guard". Plans change as the work progresses and the demands of the work and the needs of the community become clearer. Today the Perl 6 project has three major parts: language design, internals, and documentation. Each branch is relatively autonomous, though there is a healthy amount of coordination between them.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head2
+start thirdarg: HASH(0x8254268)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Language Designend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head2
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254388)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+As with all things Perl, the core of the language design process is Larry Wall, the creator of the Perl language. Larry is supported by the rest of the design team: Damian Conway, Dan Sugalski, Hugo van der Sanden, and myself (Allison Randal). We speak in a weekly teleconference and we also meet face-to-face a few times a year to hash out ideas for the design documents, or work through roadblocks standing in the way of design or implementation. The group is a good diverse mix, including programmers-for-hire, Perl trainers, and linguists with a broad spectrum of interests and experiences. This diversity has proved quite valuable in the design process as each member is able to see problems in the design or potential solutions that the other members missed.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head3
+start thirdarg: HASH(0x81af04c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Requests for Comments (RFCs)end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head3
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543c4)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The first step in the new language design was the RFCs. The RFC ("request for comment") process was an initial burst of community involvement. Anyone was free to submit an RFC on any subject, whether it was as small as adding an operator, or as big as reworking OO syntax. Most of the proposals were really quite conservative. The RFCs followed a standard format so they would be easier to read and easier to compare.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x81af04c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Each RFC was subject to peer review, carried out in an intense few weeks around October 2000. One thing the RFC process demonstrated was that the Perl community still wasn't quite ready to move beyond the infighting that had characterized Perl 5 Porters earlier that year.start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: F
+start thirdarg: HASH(0x8254340)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Mark-Jason Dominus wrote an excellent critique of the RFC process (start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: U
+start thirdarg: HASH(0x8254430)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+http://www.perl.com/pub/a/2000/11/perl6rfc.htmlend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: U
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+). It may seem harsh to people accustomed to the more open and tolerant community of today, but it's an accurate representation of the times.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: F
+end thirdarg: 
+end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543c4)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Even though few RFCs have been accepted without modification, the process identified a large number of irritants in the language, which have served as sign posts for later design efforts.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head3
+start thirdarg: HASH(0x8254418)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Apocalypses and Exegesesend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head3
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254424)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The Apocalypses and Exegeses are an important part of the design process. Larry started the Apocalypse series as a systematic way of answering the RFCs. Each Apocalypse corresponds to a chapter in his book "Programming Perl", and addresses the features in the chapter that are likely to change.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254418)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+However, the Apocalypses have become much more than a simple response to RFC's. Larry has a startling knack for looking at 12 solutions to a problem, pulling out the good bits from each one, and combining them in a solution that is 10 times better than any of the proposed solutions. The Apocalypses are an excellent example of this "Larry Effect". He addresses each relevant RFC, and gives reasons why he accepted or rejected various pieces of it. But each Apocalypse also goes beyond a simple "yes" and "no" response to attack the roots of the problems identified in the RFC's.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254424)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The Exegeses are an extension to each Apocalypse. Each is built around a practical code example that applies and explains the new ideas.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head3
+start thirdarg: HASH(0x81af04c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The p6l Mailing Listend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head3
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x824b08c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The next body of design work is the Perl 6 Language mailing list -- start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: U
+start thirdarg: HASH(0x825428c)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+perl6-language@perl.orgend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: U
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+, often fondly referred to as "p6l". Luke Palmer has been deputized as an unofficial referee on the list, answering questions that don't require the direct involvement of the design team, or that have been answered before. The list has around 40 regular contributors in any given month, as well as a large number of occasional posters and lurkers. Some people have participated since the very beginning, others appear for a few months and move on.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x81af04c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Even though the individuals change, the general tone of the p6l list is the same. It's an open forum for any ideas on the user-visible parts of Perl 6. The typical pattern is for one person to post an idea, and 5-10 people respond with criticisms or suggestions. The list periodically travels down a speculative thread like a runaway train, but these eventually run out of steam. Then Larry picks out the golden bits and gently tells the rest that no, he never intended Perl 6 to have hyper-vulcan mechanoid scooby-dooby-doos. Even when Larry doesn't post, he follows the list and the traffic serves as a valuable seed and reflector for his thoughts.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head2
+start thirdarg: HASH(0x82543ac)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Internalsend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head2
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254448)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Parrot is a grandiose idea that turned out to be more realistic than anyone originally could have believed: why not have a single interpreter for several languages? Unlike the parent Perl 6 project which was launched in a single day, the plan for Parrot formed in bits and pieces over the space of a year.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543ac)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+On April 1, 2001, Simon Cozens published an article titled "Programming Parrot" as an April fools joke.start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: F
+start thirdarg: HASH(0x8195a90)
+keys: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: U
+start thirdarg: HASH(0x82544e4)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+http://www.perl.com/pub/a/2001/04/01/parrot.htmend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: U
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+ end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: F
+end thirdarg: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+ It was a contrived interview with Larry Wall and Guido van Rossum detailing their plans to merge Python and Perl into a new language called Parrot. A few months later, when Perl 6 internals began to take an independent path within the larger project, they dubbed the subproject "Parrot" in a fitting turn of life imitating art.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254448)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The plan for Parrot was to build a language-neutral runtime environment. It would support all the features of the major dynamic languages. It would have threading and unicode support, two of the most problematic features to add into Perl 5 code, built in from the start. It would support exceptions and compilation to bytecode, have clean extension and embedding mechanisms. [list more features]end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543ac)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Designing the interpreter to be language-neutral was simply good design. Modular code is cleaner and easier to maintain. One practical advantage of the design was that Parrot development could begin even though the Perl 6 language specification was still in flux, because the compiler would be independent of any one syntax.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254448)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The bigger win in the long term, though, was that since Parrot would support the features of dynamic languages languages like Python, Ruby, Scheme, Befunge, and countless others, and wasn't biased to a particular syntax, Parrot could run all of these languages with little additional effort. It is generally acknowledged that different languages are suited to different tasks. Picking which language will be used in a large software project is a common planning problem. There is never a perfect fit. It usually boils down to picking the language with the most advantages and the least noticeable disadvantages. It would be incredible to be able to combine languages within a project. Use well tested libraries from one language for one task. Take advantage of a clean way of expressing a particular problem domain in a second, without being forced to use it in areas where it is weak.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543ac)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The modular design also benefits future language designers. Instead of targeting lex/yacc and re-implementing low-level features like garbage collection and dynamic types, designers can write a parser that targets the Parrot virtual machine.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254448)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The internals development for Perl 6 falls to the Parrot project. Dan Sugalski leads the project as internals designer, and Steve Fink is the current pumpking. The Parrot project is largely autonomous. Dan coordinates with the rest of the design team to ensure that Parrot will be able to support the semantics Perl 6 will require, but the language design branch has very little input into the details of implementation. Parrot isn't developed solely for Perl, but Perl 6 is entirely dependent on Parrot -- it is the only interpreter for Perl 6.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543ac)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The core communication line for the Parrot project is the mailing list, perl6-internals@perl.org, otherwise known as 'p6i'. It's a much more business-like list than p6l. Workflow in Parrot takes the form of submitted patches. Anyone is free to submit a patch, and contributors who consistently submit valuable patches over a long period of time are granted checkin access to the CVS repository.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254448)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+[L - I'm deleting "Patch submissions are usually small modular changes, though they may range across numerous files." because it's the wrong level of detail for this chapter. That info can appear in chapter 2.]end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head2
+start thirdarg: HASH(0x8254514)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Documentationend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head2
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x825440c)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Though adequate documentation has been a goal from the very beginning, the Perl 6 documentation project is a relatively recent addition. It operates under the guidance of Michael Lazzaro. The stated goal of the documentation project is to systematically walk through each Apocalypse and produce fully specified documentation from them. The results of the project are eventually intended to be the documentation released with Perl 6.0.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254514)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The task of the documenters is a difficult one. The specification for Perl 6 is still in process and constantly shifting, so they're shooting at a moving target. Published documentation often has to be completely rewritten within the space of a few months. The process is immensely valuable though, as it helps to identify inconsistencies or problems in the design that the broad brushstrokes of the Apocalypses miss. Often it is the documentation process that causes the shift in language specification, as identified problems lead to solutions and the solutions, in turn, trickle changes through the system.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head2
+start thirdarg: HASH(0x8254508)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Supporting Structureend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head2
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543dc)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Last, but not least, is the glue that holds the project together. The highest praise belongs to Ask Bjtext args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+øtext args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+rn Hansen and Robert Spier who manage the email, revision control and bug tracking systems as well as the web pages for Perl 6 and Parrot. Without these systems, the project would grind to a screeching halt.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254508)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Nathan Torkington and Allison Randal share the load of project management. Nat tends to handle outside interfacing while Allison tends to handle the nuts and bolts of the project, but neither role is set in concrete. As is typical of open source development projects, managing the Perl 6 project is quite different from managing a commercial project of the same size and complexity. There are no schedules, no deadlines, no hiring and firing, no salaries, bonuses or stock options. There are no employees or bosses, really very little hierarchy whatsoever. Management in this context isn't about giving orders, it's about making sure everyone has what they need to keep moving forward.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82543dc)
+keys: start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+In the end, it is the developers themselves who hold the project together. Each individual bears their own share of the responsibility for finding a task that suits their skills, coordinating with others to keep duplicated effort minimal, and making sure the job gets done.end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: head1
+start thirdarg: HASH(0x8254484)
+keys: start_line, errata
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+POD ERRORSend self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: head1
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82545bc)
+keys: start_line, ~cooked, errata
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Hey! start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: B
+start thirdarg: HASH(0x81dd374)
+keys: 
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+The above document had some coding errors, which are explained below:end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: B
+end thirdarg: 
+end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: over-text
+start thirdarg: HASH(0x81dd410)
+keys: ~type, start_line, indent, errata
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: item-text
+start thirdarg: HASH(0x825440c)
+keys: ~type, start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Around line 134:end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: item-text
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x82544b4)
+keys: start_line, ~cooked
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+'=begin' only takes one parameter, not several as in '=begin sidebar Early Steps Toward Perl 6 Internals'end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: item-text
+start thirdarg: HASH(0x8254340)
+keys: ~type, start_line
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+Around line 150:end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: item-text
+end thirdarg: 
+start self: Pod::PseudoPod::HTML=HASH(0x824b350)
+start element: Para
+start thirdarg: HASH(0x8254418)
+keys: start_line, ~cooked
+text args:
+Pod::PseudoPod::HTML=HASH(0x824b350)
+=end sidebar without matching =begin.  (Stack: [empty])end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Para
+end thirdarg: 
+end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: over-text
+end thirdarg: 
+end self: Pod::PseudoPod::HTML=HASH(0x824b350)
+end element: Document
+end thirdarg: 
