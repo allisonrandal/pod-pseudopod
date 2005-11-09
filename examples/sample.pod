@@ -39,10 +39,9 @@ This is more content of the for.
 Tables, sidebars, and figures are handled specially, all other
 begin/end pairs are simply treated as ordinary text. In the html
 formatter, if the "add_css_tags" option is turned on each is wrapped
-in a E<lt>divE<gt> tag with the class set to the target ("=begin
-comment" is "E<lt>div class='comment'E<gt>") so you can format them
-however you like. A default set of formats in included in the sample
-style.css.
+in a div tag with the class set to the target ("=begin comment" is a
+div with class='comment') so you can format them however you like. A
+default set of formats in included in the sample style.css.
 
 =head2 Program listings
 
@@ -63,5 +62,41 @@ This is a sample epigraph. These are generally italic, and often
 aligned right.
 
 =end epigraph
+
+=head2 Tables
+
+
+=begin table picture Example Table Title
+
+=headrow
+
+=row
+
+=cell Head 1
+
+=cell Head 2
+
+=bodyrows
+
+=row
+
+=cell Some content for the first cell.
+
+=cell Some content for the second cell.
+
+=end table
+
+
+=head2 Figures
+
+F codes within figures are converted into image source tags in html.
+
+=begin figure
+
+Z<some cross-reference>
+
+F<image.gif>
+
+=end figure
 
 =cut
