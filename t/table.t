@@ -220,13 +220,12 @@ wraps right around.
 =end table
 
 EOPOD
-is($results, <<'EOHTML', "lines in cells can wrap");
+is($results, <<'EOHTML', "lines in cells are not wrapped");
 <table>
 
 <tr>
 
-<td>This is a really, really long cell. So long, in fact that it wraps
-right around.</td>
+<td>This is a really, really long cell. So long, in fact that it wraps right around.</td>
 
 <td>Cell 2</td>
 
