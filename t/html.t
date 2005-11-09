@@ -183,6 +183,29 @@ is($results, <<'EOHTML', "code block");
 EOHTML
 
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a C<functionname>.
+EOPOD
+is($results, <<"EOHTML", "code entity in a paragraph");
+<p>A plain paragraph with a <code>functionname</code>.</p>
+
+EOHTML
+
+initialize($parser, $results);
+#$parser->parse_string_document( "C<functionname>" );
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with aN<footnote entry>.
+EOPOD
+is($results, <<"EOHTML", "footnote entity in a paragraph");
+<p>A plain paragraph with a (footnote: footnote entry).</p>
+
+EOHTML
+
 ######################################
 
 sub initialize {
