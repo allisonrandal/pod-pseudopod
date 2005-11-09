@@ -17,6 +17,7 @@ lib/Pod/PseudoPod/DumpAsXML.pm
 lib/Pod/PseudoPod/HTML.pm
 lib/Pod/PseudoPod/Index.pm
 lib/Pod/PseudoPod/Text.pm
+lib/Pod/PseudoPod/Tutorial.pod
 lib/Pod/PseudoPod/XMLOutStream.pm
 t/basic.t
 t/beginend.t
