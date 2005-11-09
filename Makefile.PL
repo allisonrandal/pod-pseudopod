@@ -10,7 +10,6 @@ WriteMakefile(
     },
     test =>
         {TESTS => 't/*.t t/*/*.t'},
-    PREREQ_FATAL => 1,
     AUTHOR       => 'Allison Randal (allison@perl.org)',
-    ABSTRACT     => 'a framework for parsing PseudoPod documents',
+    ABSTRACT     => "A framework for parsing O'Reilly's PseudoPod",
 );
