@@ -1,5 +1,16 @@
 #!/usr/bin/perl
 
+######################################################################
+#
+# A sample PseudoPod to HTML converter script that uses
+# Pod::PseudoPod::HTML.
+#
+# usage:
+#
+# ./pod2html <filename>
+#
+######################################################################
+
 use lib "../lib";
 use Pod::PseudoPod::HTML;
 
