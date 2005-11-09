@@ -36,4 +36,39 @@ div.editor
 	width: 25%;
 }
 
+div.hack > p:first-child
+{
+	font-style: italic;
+	font-weight: bold;
+	width: 50%;
+	margin-left: 5%;
+}
+
+div.note
+{
+	border-width: thin;
+	border-style: solid;
+}
+
+div.caution
+{
+	border-width: thin;
+	border-style: solid;
+	background: #ff6666;
+}
+
+div.production
+{
+	background: #000000;
+	color: #ffffff;
+	padding: 2px;
+	text-align: center;
+}
+
+.code_command
+{
+	font-weight: bold;
+	text-decoration: underline;
+}
+
 -->
