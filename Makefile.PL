@@ -8,6 +8,9 @@ WriteMakefile(
         'Pod::Simple'   => 0.96,
         'Text::Wrap'    => 98.112902,
     },
-    AUTHOR       => 'Allison Randal (al@shadowed.net)',
+    test =>
+        {TESTS => 't/*.t t/*/*.t'},
+    PREREQ_FATAL => 1,
+    AUTHOR       => 'Allison Randal (allison@perl.org)',
     ABSTRACT     => 'a framework for parsing PseudoPod documents',
 );
