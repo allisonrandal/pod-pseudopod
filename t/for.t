@@ -36,8 +36,23 @@ This is a PseudoPod for with an end directive.
 
 EOPOD
 
-is($results, <<'EOHTML', "an ended for");
+is($results, <<'EOHTML', "a for with an '=end' directive");
 <p>This is a PseudoPod for with an end directive.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for editor
+
+This is a PseudoPod for with an end for directive.
+
+=end for
+
+EOPOD
+
+is($results, <<'EOHTML', "a for with an '=end for' directive");
+<p>This is a PseudoPod for with an end for directive.</p>
 
 EOHTML
 

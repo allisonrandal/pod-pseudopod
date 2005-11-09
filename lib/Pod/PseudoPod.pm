@@ -542,15 +542,20 @@ sub _ponder_end {
   }
   
   unless($content eq $curr_open->[-1][1]{'target'}) {
-    $self->whine(
-      $para->[1]{'start_line'},
-      "=end $content doesn't match =begin " 
-      . $curr_open->[-1][1]{'target'}
-      . ".  (Stack: "
-      . $self->_dump_curr_open() . ')'
-    );
-    DEBUG and print "Ignoring mistargetted =end $content at line $para->[1]{'start_line'}\n";
-    return 1;
+    if ($content eq 'for' and $curr_open->[-1][1]{'~really'} eq '=for') {
+      # =for allows a "=end for" directive
+      $content = $curr_open->[-1][1]{'target'};
+    } else {
+      $self->whine(
+        $para->[1]{'start_line'},
+        "=end $content doesn't match =begin " 
+        . $curr_open->[-1][1]{'target'}
+        . ".  (Stack: "
+        . $self->_dump_curr_open() . ')'
+      );
+      DEBUG and print "Ignoring mistargetted =end $content at line $para->[1]{'start_line'}\n";
+      return 1;
+    }
   }
 
   # Else it's okay to close...
