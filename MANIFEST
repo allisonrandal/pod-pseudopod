@@ -5,9 +5,8 @@ Todo
 Changes
 lib/Pod/PseudoPod.pm
 lib/Pod/PseudoPod/HTML.pm
-lib/Pod/PseudoPod/Methody.pm
 lib/Pod/PseudoPod/Text.pm
-t/capture_info.txt
+scripts/pod2html
 t/html.t
 t/load.t
 t/text.t
