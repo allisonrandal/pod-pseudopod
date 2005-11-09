@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.08';
+$VERSION = '0.09';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -1174,7 +1174,7 @@ a PseudoPod formatter/processor.
 
 =head1 SEE ALSO
 
-L<Pod::Simple>, L<Pod::PseudoPod::HTML>
+L<Pod::Simple>, L<Pod::PseudoPod::HTML>, L<Pod::PseudoPod::Tutorial>
 
 =head1 COPYRIGHT
 
