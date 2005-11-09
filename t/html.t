@@ -194,8 +194,8 @@ is($results, <<"EOHTML", "code entity in a paragraph");
 
 EOHTML
 
+
 initialize($parser, $results);
-#$parser->parse_string_document( "C<functionname>" );
 $parser->parse_string_document(<<'EOPOD');
 =pod
 
@@ -205,6 +205,75 @@ is($results, <<"EOHTML", "footnote entity in a paragraph");
 <p>A plain paragraph with a (footnote: footnote entry).</p>
 
 EOHTML
+
+
+initialize($parser, $results);
+$parser->add_body_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with body tags turned on.
+EOPOD
+is($results, <<"EOHTML", "adding html body tags");
+<html>
+<body>
+
+<p>A plain paragraph with body tags turned on.</p>
+
+</body>
+</html>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->add_body_tags(1);
+$parser->add_css_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with body tags and css tags turned on.
+EOPOD
+is($results, <<"EOHTML", "adding html body tags and css tags");
+<html>
+<body>
+<link rel='stylesheet' href='style.css' type='text/css'>
+
+<p>A plain paragraph with body tags and css tags turned on.</p>
+
+</body>
+</html>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->add_css_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with aN<footnote entry> and css tags.
+EOPOD
+is($results, <<"EOHTML", "css footnote entity in a paragraph");
+<p>A plain paragraph with a<font class="footnote"> (footnote: footnote
+entry)</font> and css tags.</p>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->add_css_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a U<http://test.url.com/stuff/and/junk.txt>.
+EOPOD
+is($results, <<"EOHTML", "URL entity in a paragraph");
+<p>A plain paragraph with a <font
+class="url">http://test.url.com/stuff/and/junk.txt</font>.</p>
+
+EOHTML
+
 
 ######################################
 
