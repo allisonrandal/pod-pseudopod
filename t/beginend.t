@@ -12,9 +12,6 @@ BEGIN {
 	use_ok( 'Pod::PseudoPod::HTML' );
 }
 
-my $parser = Pod::PseudoPod::HTML->new ();
-isa_ok ($parser, 'Pod::PseudoPod::HTML');
-
 my $results;
 
 initialize($parser, $results);
@@ -72,6 +69,62 @@ is($results, <<'EOHTML', "a sidebar with a Z<> entity");
 </blockquote>
 
 EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin programlisting
+
+  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.
+
+=end programlisting
+EOPOD
+
+is($results, <<'EOHTML', "allow programlisting blocks");
+<pre><code>  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.</code></pre>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->add_css_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=begin programlisting
+
+  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.
+
+=end programlisting
+EOPOD
+
+is($results, <<'EOHTML', "programlising blocks with css tags turned on");
+<div class='programlisting'>
+
+<pre><code>  This is used for code blocks
+  and should have no effect
+  beyond ordinary indented text.</code></pre>
+
+</div>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin blockquote
+
+This is quoted text.
+
+=end blockquote
+EOPOD
+
+is($results, <<'EOHTML', "blockquotes");
+<p>This is quoted text.</p>
+
+EOHTML
+
 
 ######################################
 
