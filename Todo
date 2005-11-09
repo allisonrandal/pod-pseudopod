@@ -1,9 +1,25 @@
 TODO list for Perl module Pod::PseudoPod
 
-- Override _ponder_paragraph_buffer() in Pod::Simple::BlackBox to
-  correctly handle PseudoPod's "=begin" entities (e.g. "=begin sidebar
-  Sidebar Title"), and the POD table tags ("=headrow", "=bodyrow",
-  "=row", "=cell").
+- Create Pod::PseudoPod::Checker, to validate pod without creating
+  a full, formatted document.
+
+- Handle X<> tags for html output. They should create an html anchor
+  (randomly generated number?), and an index list at the end of the
+  document.
+
+- Handle code tags within Verbatim text (but still don't wrap).
+
+- Modify E<> entity handling so E<lt> and E<gt> are properly encoded
+  as html entities, not as literal "<" and ">".
+
+- Add a utility to generate an index from a list of files (module and
+  script, probably).
+
+- Handle "=begin programlisting" directives. They're basically a noop,
+  text within them is handled just like normal text.
+
+- Allow "=end" directives after "=for" directives (PseudoPod allows
+  them, even though Pod doesn't)..
 
 - Handle N<> tags so they output document-end footnotes instead of
   inline text.
@@ -11,22 +27,3 @@ TODO list for Perl module Pod::PseudoPod
 - Handle numbered E<> tags (e.g. "E<#xF6>"). (Actually, I think this
   should probably stay as is, unless O'Reilly wants the special
   characters back in this format.)
-
-- Handle X<> tags for html output. They should create an html anchor
-  (randomly generated number?), and an index list at the end of the
-  document.
-
-- Create Pod::PseudoPod::Checker, to validate pod without creating
-  a full, formatted document.
-
-- Handle code tags within Verbatim text (but still don't wrap).
-
-- Handle code tags within =begin entities. Currently this kills the
-  begin_for event, so there's no way to output content to mark that
-  the =begin has started.
-
-- Modify E<> entity handling so E<lt> and E<gt> are properly encoded
-  as html entities, not as literal "<" and ">".
-
-- Add a utility to generate an index from a list of files (module and
-  script, probably).
