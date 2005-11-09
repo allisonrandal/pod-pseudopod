@@ -15,6 +15,10 @@ sub new {
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_target_as_text(qw( text plaintext plain ));
+  $new->accept_targets_as_text( qw(author blockquote comment caution
+      editor epigraph example figure important note production
+      programlisting screen sidebar table tip warning) );
+
   $new->nix_X_codes(1);
   $new->nix_Z_codes(1);
   $new->nbsp_for_S(1);
@@ -59,6 +63,33 @@ sub start_over_text    { ++$_[0]{'Indent'} }
 sub end_over_text      { --$_[0]{'Indent'} }
 sub start_over_block   { ++$_[0]{'Indent'} }
 sub end_over_block     { --$_[0]{'Indent'} }
+
+sub start_for { ++$_[0]{'Indent'} }
+sub end_for   { $_[0]->emit(); --$_[0]{'Indent'} }
+
+sub start_sidebar { 
+  my ($self, $flags) = @_;
+  $self->{'scratch'} = '';
+  if ($flags->{'title'}) {
+    $self->{'scratch'} .= "Sidebar: " . $flags->{'title'} . "\n";
+  }
+  ++$self->{'Indent'};
+  $self->emit();
+}
+sub end_sidebar   { $_[0]->emit(); --$_[0]{'Indent'} }
+
+sub start_table { 
+  my ($self, $flags) = @_;
+  $self->{'scratch'} = '';
+  if ($flags->{'title'}) {
+    $self->{'scratch'} .= "Table: " . $flags->{'title'} . "\n";
+  }
+  ++$self->{'Indent'};
+}
+sub end_table { --$_[0]{'Indent'} }
+
+sub end_cell { $_[0]{'scratch'} .= " | "; }
+sub end_row  { $_[0]->emit() }
 
 sub start_N { $_[0]{'scratch'} .= ' [footnote: '; }
 sub end_N   { $_[0]{'scratch'} .= ']'; }

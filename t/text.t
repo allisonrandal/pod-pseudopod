@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 20;
+use Test::More tests => 26;
 
 use_ok('Pod::PseudoPod::Text') or exit;
 
@@ -209,7 +209,24 @@ This is a dummy for block.
 
 EOPOD
 is($results, <<"EOTXT", "a simple 'for' block");
-    This is a dummy for block.
+      This is a dummy for block.
+
+
+EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for editor
+
+This is a PseudoPod for with an end directive.
+
+=end
+
+EOPOD
+
+is($results, <<'EOTXT', "a for with an '=end' directive");
+      This is a PseudoPod for with an end directive.
+
 
 EOTXT
 
@@ -222,9 +239,28 @@ This is a dummy begin block.
 =end text
 EOPOD
 is($results, <<"EOTXT", "a simple 'begin' block");
-    This is a dummy begin block.
+      This is a dummy begin block.
+
 
 EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin sidebar Title Text
+
+This is the text of the sidebar.
+
+=end sidebar
+EOPOD
+
+is($results, <<'EOTXT', "a sidebar with a title");
+      Sidebar: Title Text
+
+      This is the text of the sidebar.
+
+
+EOTXT
+
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =pod
@@ -235,6 +271,97 @@ is($results, <<"EOTXT", "Link anchor entity in a paragraph");
     A plain paragraph with a link anchor.
 
 EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table
+
+=row
+
+=cell Cell 1
+
+=cell Cell 2
+
+=end table
+
+EOPOD
+
+is($results, <<'EOTXT', "a simple table");
+      Cell 1 | Cell 2 | 
+
+EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table An Example Table
+
+=row
+
+=cell Cell 1
+
+=cell Cell 2
+
+=end table
+
+EOPOD
+
+is($results, <<'EOTXT', "a table with a title");
+      Table: An Example Table
+      Cell 1 | Cell 2 | 
+
+EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table
+
+=headrow
+
+=row
+
+=cell Header 1
+
+=cell Header 2
+
+=bodyrows
+
+=row
+
+=cell Cell 1
+
+=cell Cell 2
+
+=end table
+
+EOPOD
+
+is($results, <<'EOTXT', "a table with a header row");
+      Header 1 | Header 2 | 
+
+      Cell 1 | Cell 2 | 
+
+EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table
+
+=row
+
+=cell This is a really, really long cell. So long, in fact that it
+wraps right around.
+
+=cell Cell 2
+
+=end table
+
+EOPOD
+is($results, <<'EOTXT', "lines in cells are wrapped");
+      This is a really, really long cell. So long, in fact that it wraps
+      right around. | Cell 2 | 
+
+EOTXT
+
 
 ######################################
 
