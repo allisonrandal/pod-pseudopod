@@ -351,6 +351,17 @@ is($results, <<"EOHTML", "Replaceable text in a paragraph");
 
 EOHTML
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a F<filename>.
+EOPOD
+is($results, <<"EOHTML", "File name in a paragraph");
+<p>A plain paragraph with a <i>filename</i>.</p>
+
+EOHTML
+
 ######################################
 
 sub initialize {
