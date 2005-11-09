@@ -16,19 +16,18 @@ sub new {
   my $self = shift;
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
-  $new->accept_target_as_text(qw( text plaintext plain ));
+  $new->accept_targets( 'html', 'HTML' );
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
+  $new->add_css_tags(0);
+  $new->add_body_tags(0);
   return $new;
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 sub handle_text { $_[0]{'scratch'} .= $_[1] }
-
-sub start_Document { $_[0]{'scratch'} .= "<html>\n<body>\n<link rel='stylesheet' href='style.css' type='text/css'>"; $_[0]->emit() }
-sub end_Document   { $_[0]{'scratch'} .= "</body>\n</html>"; $_[0]->emit() }
 
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>' }
@@ -68,31 +67,50 @@ sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_text   { $_[0]->emit() }
 
+sub start_Document { 
+  my ($self) = @_;
+  if ($self->{'body_tags'}) {
+    $self->{'scratch'} .= "<html>\n<body>";
+    $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
+    $_[0]->emit();
+  }
+}
+sub end_Document   { 
+  my ($self) = @_;
+  if ($self->{'body_tags'}) {
+    $self->{'scratch'} .= "</body>\n</html>";
+    $_[0]->emit();
+  }
+}
+
 # Handling code tags
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
-sub start_N { $_[0]{'scratch'} .= ' <font class="footnote">(footnote: ' }
-sub end_N   { $_[0]{'scratch'} .= ')</font>' }
+sub start_N {
+  my ($self) = @_;
+  $self->{'scratch'} .= '<font class="footnote">' if ($self->{'css_tags'});
+  $self->{'scratch'} .= ' (footnote: '; 
+}
+sub end_N {
+  my ($self) = @_;
+  $self->{'scratch'} .= ')'; 
+  $self->{'scratch'} .= '</font>' if $self->{'css_tags'};
+}
 
-sub start_U { $_[0]{'scratch'} .= '<font class="url">' }
-sub end_U   { $_[0]{'scratch'} .= '</font>' }
+sub start_U { $_[0]{'scratch'} .= '<font class="url">' if $_[0]{'css_tags'} }
+sub end_U   { $_[0]{'scratch'} .= '</font>' if $_[0]{'css_tags'} }
 
 sub emit {
   my($self, $nowrap) = @_;
-
   my $out = $self->{'scratch'} . "\n";
-
   $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
-
   if(Pod::PseudoPod::ASCII) {
     $out =~ tr{\xA0}{ };
     $out =~ tr{\xAD}{}d;
   }
-
   print {$self->{'output_fh'}} $out, "\n";
   $self->{'scratch'} = '';
-  
   return;
 }
 
