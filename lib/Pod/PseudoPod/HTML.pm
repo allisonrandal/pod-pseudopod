@@ -65,6 +65,13 @@ sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_text   { $_[0]->emit() }
 
+# Handling code tags
+sub start_C { $_[0]{'scratch'} .= '<code>' }
+sub end_C   { $_[0]{'scratch'} .= '</code>' }
+
+sub start_N { $_[0]{'scratch'} .= ' (footnote: ' }
+sub end_N   { $_[0]{'scratch'} .= ')' }
+
 sub emit {
   my($self, $nowrap) = @_;
 
