@@ -1,5 +1,13 @@
 Revision history for Pod::PseudoPod
 
+0.09 Apr 24, 2004
+	- Added a PseudoPod tutorial, based on O'Reilly's docs.
+	- Added rudimentary text index generation.
+	- Now supports 'Build' or 'make'.
+	- Makefile.PL explicitly generates list of tests (change
+	  suggested by Jeff Zucker because Win98 couldn't read the
+	  "*.t".)
+
 0.08 Feb 18, 2004
 	- Parse formatting codes in verbatim code blocks.
 	- Preserve entities in HTML formatter.
