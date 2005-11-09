@@ -1,15 +1,13 @@
-pod2text Pod::PseudoPod.pm > README
+DESCRIPTION
+    PseudoPOD is O'Reilly's extended set of POD tags for book manuscripts.
+    Standard POD doesn't have all the markup options you might want for
+    marking up files for publishing production. PseudoPOD adds a few extra
+    tags for footnotes and tables, and has extended uses of "=begin" 
+    elements.
 
-If this is still here it means the programmer was too lazy to create the readme file.
+INSTALLATION
+    perl Makefile.PL
+    make
+    make test
+    make install
 
-You can create it now by using the command shown above from this directory.
-
-At the very least you should be able to use this set of instructions
-to install the module...
-
-perl Makefile.PL
-make
-make test
-make install
-
-If you are on a windows box you should use 'nmake' rather than 'make'.
