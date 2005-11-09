@@ -3,7 +3,7 @@ DESCRIPTION
     Standard POD doesn't have all the markup options you might want for
     marking up files for publishing production. PseudoPOD adds a few extra
     tags for footnotes and tables, and has extended uses of "=begin" 
-    elements.
+    elements. See Pod::PseudoPod::Tutorial.
 
 INSTALLATION
     perl Makefile.PL
