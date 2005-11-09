@@ -4,6 +4,7 @@ Makefile.PL
 MANIFEST
 README
 Todo
+examples/podchecker
 examples/pod2html
 examples/style.css
 lib/Pod/PseudoPod.pm
