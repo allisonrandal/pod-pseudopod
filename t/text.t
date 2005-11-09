@@ -15,7 +15,29 @@ BEGIN {
 my $object = Pod::PseudoPod::Text->new ();
 isa_ok ($object, 'Pod::PseudoPod::Text');
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for text
+This is a dummy for block.
 
+EOPOD
+is($results, <<"EOTXT", "a simple 'for' block");
+    This is a dummy for block.
+
+EOTXT
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin text
+
+This is a dummy begin block.
+
+=end text
+EOPOD
+is($results, <<"EOTXT", "a simple 'begin' block");
+    This is a dummy begin block.
+
+EOTXT
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =pod
