@@ -123,6 +123,12 @@ sub end_Verbatim  {
   return;
 }
 
+sub end_Document   {
+  my ($self) = @_;
+  return if $self->{'Errata_seen'};
+  print { $self->{'output_fh'} } "\tNo errors seen!\n";
+}
+
 #@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 1;
 

@@ -1,5 +1,15 @@
 Revision history for Pod::PseudoPod
 
+0.11 Jun 26, 2004
+	- Applied patch from Boris Zentner to make example scripts 
+	  use File::Basename.
+	- Applied patch from chromatic to display figure titles in HTML
+	  formatter, and display a "no errors" message from the checker
+	  when the file parses without errors.
+	- Updated main Pod::PseudoPod module to take advantage of
+	  Pod::Simple 3.02.
+
+
 0.10 Apr 26, 2004
 	- Added the tutorial to the manifest, ooops.
 

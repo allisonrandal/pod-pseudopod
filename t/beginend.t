@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 18;
+use Test::More tests => 19;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -141,6 +141,8 @@ EOPOD
 is($results, <<'EOHTML', "a simple figure");
 <p><img src="sample.gif"></p>
 
+
+
 EOHTML
 
 initialize($parser, $results);
@@ -155,6 +157,25 @@ EOPOD
 
 is($results, <<'EOHTML', "a figure with a Z<> tag included.");
 <p><a name="figure1"> <img src="sample.gif"></p>
+
+
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin figure This is a sample figure
+
+Z<figure1>
+F<sample.gif>
+
+=end figure
+EOPOD
+
+is($results, <<'EOHTML', "a figure with a caption.");
+<p><a name="figure1"> <img src="sample.gif"></p>
+
+<p><em>This is a sample figure</em></p>
 
 EOHTML
 

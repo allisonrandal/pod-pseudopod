@@ -81,8 +81,25 @@ sub start_sidebar {
 
 sub end_sidebar { $_[0]{'scratch'} .= $_[0]->{'css_tags'} ?  '</div>' : '</blockquote>'; $_[0]->emit() }
 
-sub start_figure { $_[0]{'in_figure'} = 1 }
-sub end_figure { $_[0]{'in_figure'} = 0 }
+sub start_figure { 
+  my ($self, $flags)      = @_;
+  $self->{'in_figure'}    = 1;
+
+  $self->{'figure_title'} = $flags->{'title'} if $flags->{'title'};
+}
+
+sub end_figure { 
+  my ($self, $flags)   = @_;
+  $self->{'in_figure'} = 0;
+
+  if ($self->{'figure_title'})
+  {
+    $self->{'scratch'} .= "<p><em>" . $self->{'figure_title'} . "</em></p>";
+    delete $self->{'figure_title'};
+  }
+
+  $self->emit('nowrap');
+}
 
 # This handles =begin and =for blocks of all kinds.
 sub start_for { 
