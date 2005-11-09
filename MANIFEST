@@ -6,9 +6,9 @@ MANIFEST
 META.yml
 README
 Todo
-examples/ppodchecker
-examples/ppod2html
-examples/ppod2txt
+bin/ppodchecker
+bin/ppod2html
+bin/ppod2txt
 examples/ppodindex
 examples/style.css
 lib/Pod/PseudoPod.pm
