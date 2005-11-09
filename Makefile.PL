@@ -5,7 +5,7 @@ WriteMakefile(
     NAME         => 'Pod::PseudoPod',
     VERSION_FROM => 'lib/Pod/PseudoPod.pm', # finds $VERSION
     PREREQ_PM    => {
-        'Pod::Simple'   => 0.96,
+        'Pod::Simple'   => 2.05,
         'Text::Wrap'    => 98.112902,
     },
     test =>
