@@ -124,7 +124,7 @@ sub start_cell { $_[0]{'scratch'} .= $_[0]{'in_headrow'} ? '<th>' : '<td>'; }
 sub end_cell { 
   my $self = shift;
   $self->{'scratch'} .= ($self->{'in_headrow'}) ? '</th>' : '</td>';
-  $self->emit();
+  $self->emit('nowrap');
 }
 
 sub start_Document { 
