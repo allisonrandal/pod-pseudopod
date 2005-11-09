@@ -15,6 +15,9 @@ TODO list for Perl module Pod::PseudoPod
 - Add a utility to generate an index from a list of files (module and
   script, probably).
 
+- Add a utility to generate a table of contents from a list of files
+  (module and script, probably).
+
 - Handle "=begin programlisting" directives. They're basically a noop,
   text within them is handled just like normal text.
 
