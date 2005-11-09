@@ -1,7 +1,9 @@
 Revision history for Pod::PseudoPod
 
-0.08 Feb 14, 2004
+0.08 Feb 18, 2004
 	- Parse formatting codes in verbatim code blocks.
+	- Preserve entities in HTML formatter.
+	- Update text formatter to take advantage of new features.
 
 0.07 Jan 6, 2004
 	- Also allow =for directives with '=end for' directives. The
