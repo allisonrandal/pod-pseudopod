@@ -15,4 +15,7 @@ code {color: #000099; font-family: courier, monospaced;}
 .url { color: #000099; }
 .footnote { color: #333333; }
 
+div.sidebar { border: 1px solid black; padding: 10px; }
+div.epigraph { text-align: right; font-style: italic; }
+
 -->
