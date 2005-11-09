@@ -71,14 +71,14 @@ sub end_item_text   { $_[0]->emit() }
 
 sub start_sidebar { 
   my ($self, $flags) = @_;
-  $self->{'scratch'} = '<blockquote>';
+  $self->{'scratch'} = $self->{'css_tags'} ? '<div class="sidebar">' : '<blockquote>';
   if ($flags->{'title'}) {
     $self->{'scratch'} .= "\n<h3>" . $flags->{'title'} . "</h3>";
   }
   $self->emit('nowrap');
 }
 
-sub end_sidebar { $_[0]{'scratch'} .= '</blockquote>'; $_[0]->emit() }
+sub end_sidebar { $_[0]{'scratch'} .= $_[0]->{'css_tags'} ?  '</div>' : '</blockquote>'; $_[0]->emit() }
 
 sub start_figure { $_[0]{'in_figure'} = 1 }
 sub end_figure { $_[0]{'in_figure'} = 0 }
@@ -88,7 +88,7 @@ sub start_for {
   my ($self, $flags) = @_;
   if ($self->{'css_tags'}) {
     $self->{'scratch'} .= '<div';
-    $self->{'scratch'} .= ' class="'.$flags->{'target'}.'"' if ($flags->{'target'}) ;
+    $self->{'scratch'} .= ' class="'.$flags->{'target'}.'"' if ($flags->{'target'});
     $self->{'scratch'} .= '>';
     $self->emit('nowrap');
   }
