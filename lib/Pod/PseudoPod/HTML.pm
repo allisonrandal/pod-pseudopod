@@ -50,10 +50,10 @@ sub start_over_text   { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
 sub start_over_block  { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
 sub start_over_number { $_[0]{'scratch'} = '<ol>'; $_[0]->emit() }
 
-sub end_over_bullet { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
-sub end_over_text   { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
-sub end_over_block  { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
-sub end_over_number { $_[0]{'scratch'} .= '</ol>'; $_[0]->emit() }
+sub end_over_bullet { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
+sub end_over_text   { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
+sub end_over_block  { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
+sub end_over_number { $_[0]{'scratch'} .= '</ol>'; $_[0]->emit('nowrap') }
 
 # . . . . . Now the actual formatters:
 

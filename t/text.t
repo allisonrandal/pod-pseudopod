@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 26;
+use Test::More tests => 27;
 
 use_ok('Pod::PseudoPod::Text') or exit;
 
@@ -23,19 +23,19 @@ is($results, "Narf!\n\n", "head0 level output");
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head1 Poit!" );
-is($results, "Poit!\n\n", "head1 level output");
+is($results, " Poit!\n\n", "head1 level output");
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head2 I think so Brain." );
-is($results, " I think so Brain.\n\n", "head2 level output");
+is($results, "  I think so Brain.\n\n", "head2 level output");
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head3 I say, Brain..." );
-is($results, "  I say, Brain...\n\n", "head3 level output");
+is($results, "   I say, Brain...\n\n", "head3 level output");
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head4 Zort!" );
-is($results, "   Zort!\n\n", "head4 level output");
+is($results, "    Zort!\n\n", "head4 level output");
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
@@ -361,6 +361,29 @@ is($results, <<'EOTXT', "lines in cells are wrapped");
       right around. | Cell 2 | 
 
 EOTXT
+
+TODO: {
+local $TODO = "X<> codes get replaced with a space instead of nothing";
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=head2 Title Text
+
+X<link>
+X<anotherlink>
+This is some text after some X codes. Does it get indented oddly?
+
+How about the next paragraph?
+
+EOPOD
+is($results, <<'EOTXT', "Z<> and X<> codes in a paragraph");
+ Title Text
+
+    This is some text after some X codes. Does it get indented oddly?
+
+    How about the next paragraph?
+
+EOTXT
+}; # TODO
 
 
 ######################################

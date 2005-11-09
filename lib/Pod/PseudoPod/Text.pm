@@ -34,19 +34,19 @@ sub new {
 sub handle_text {  $_[0]{'scratch'} .= $_[1] }
 
 sub start_Para     {  $_[0]{'scratch'} = '' }
-sub end_Para       { $_[0]->emit( 0) }
+sub end_Para       { $_[0]->emit(0) }
 sub start_Verbatim { $_[0]{'scratch'} = ''   }
 
 sub start_head0 { $_[0]{'scratch'} = '' }
 sub end_head0   { $_[0]->emit(-4) }
 sub start_head1 { $_[0]{'scratch'} = '' }
-sub end_head1   { $_[0]->emit(-4) }
+sub end_head1   { $_[0]->emit(-3) }
 sub start_head2 { $_[0]{'scratch'} = '' }
-sub end_head2   { $_[0]->emit(-3) }
+sub end_head2   { $_[0]->emit(-2) }
 sub start_head3 { $_[0]{'scratch'} = '' }
-sub end_head3   { $_[0]->emit(-2) }
+sub end_head3   { $_[0]->emit(-1) }
 sub start_head4 { $_[0]{'scratch'} = '' }
-sub end_head4   { $_[0]->emit(-1) }
+sub end_head4   { $_[0]->emit(0) }
 
 sub start_item_bullet { $_[0]{'scratch'} = $FREAKYMODE ? '' : '* ' }
 sub end_item_bullet   { $_[0]->emit( 0) }
