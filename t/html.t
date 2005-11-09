@@ -6,6 +6,7 @@ BEGIN {
     chdir 't' if -d 't';
 }
 
+use strict;
 use lib '../lib';
 use Test::More tests => 27;
 
@@ -13,8 +14,6 @@ use_ok('Pod::PseudoPod::HTML') or exit;
 
 my $parser = Pod::PseudoPod::HTML->new ();
 isa_ok ($parser, 'Pod::PseudoPod::HTML');
-
-#$parser->filter( '../../../../../chapters/ch02.pod' )->any_errata_seen;
 
 my $results;
 
@@ -71,10 +70,6 @@ Grindelwald to drive the cog train to Murren. Can you repeat that?</p>
 <p>P: Mmmm, no, Brain, don't think I can.</p>
 
 EOHTML
-
-#initialize($parser, $results);
-#$parser->parse_string_document("=item Pinky");
-#is($results, "<li>Pinky</li>\n\n", "simple list item");
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');

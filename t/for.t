@@ -6,12 +6,13 @@ BEGIN {
     chdir 't' if -d 't';
 }
 
+use strict;
 use lib '../lib';
 use Test::More tests => 8;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
-my $results;
+my ($parser, $results);
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');

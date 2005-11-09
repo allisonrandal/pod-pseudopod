@@ -6,6 +6,7 @@ BEGIN {
     chdir 't' if -d 't';
 }
 
+use strict;
 use lib '../lib';
 use Test::More tests => 3;
 
