@@ -100,7 +100,7 @@ $parser->parse_string_document(<<'EOPOD');
 =end programlisting
 EOPOD
 
-is($results, <<'EOHTML', "programlising blocks with css tags turned on");
+is($results, <<'EOHTML', "programlisting blocks with css tags turned on");
 <div class='programlisting'>
 
 <pre><code>  This is used for code blocks
@@ -111,20 +111,23 @@ is($results, <<'EOHTML', "programlising blocks with css tags turned on");
 
 EOHTML
 
-initialize($parser, $results);
-$parser->parse_string_document(<<'EOPOD');
-=begin blockquote
+foreach my $target qw(blockquote comment caution epigraph 
+      example important note screen tip warning) {
+  initialize($parser, $results);
+  $parser->parse_string_document(<<"EOPOD");
+=begin $target
 
-This is quoted text.
+This is a $target.
 
-=end blockquote
+=end $target
 EOPOD
 
-is($results, <<'EOHTML', "blockquotes");
-<p>This is quoted text.</p>
+  is($results, <<"EOHTML", "allow $target blocks");
+<p>This is a $target.</p>
 
 EOHTML
 
+}
 
 ######################################
 
