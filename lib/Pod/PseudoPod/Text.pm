@@ -3,15 +3,8 @@ require 5;
 package Pod::PseudoPod::Text;
 use strict;
 use Carp ();
-#use Pod::PseudoPod::Methody ();
-#use Pod::PseudoPod ();
-use vars qw( @ISA $VERSION $FREAKYMODE);
-$VERSION = '1.02';
+use vars qw( $FREAKYMODE);
 use base qw( Pod::PseudoPod );
-BEGIN { *DEBUG = defined(&Pod::PseudoPod::DEBUG)
-          ? \&Pod::PseudoPod::DEBUG
-          : sub() {0}
-      }
 
 use Text::Wrap 98.112902 ();
 $Text::Wrap::wrap = 'overflow';
@@ -25,7 +18,8 @@ sub new {
   $new->nix_X_codes(1);
   $new->nix_Z_codes(1);
   $new->nbsp_for_S(1);
-  $new->{'Thispara'} = '';
+  $new->codes_in_data(1);
+  $new->{'scratch'} = '';
   $new->{'Indent'} = 0;
   $new->{'Indentstring'} = '   ';
   return $new;
@@ -33,53 +27,50 @@ sub new {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-sub handle_text {  $_[0]{'Thispara'} .= $_[1] }
+sub handle_text {  $_[0]{'scratch'} .= $_[1] }
 
-sub start_Para  {  $_[0]{'Thispara'} = '' }
-sub start_head0 {  $_[0]{'Thispara'} = '' }
-sub start_head1 {  $_[0]{'Thispara'} = '' }
-sub start_head2 {  $_[0]{'Thispara'} = '' }
-sub start_head3 {  $_[0]{'Thispara'} = '' }
-sub start_head4 {  $_[0]{'Thispara'} = '' }
+sub start_Para     {  $_[0]{'scratch'} = '' }
+sub end_Para       { $_[0]->emit( 0) }
+sub start_Verbatim { $_[0]{'scratch'} = ''   }
 
-sub start_Verbatim    { $_[0]{'Thispara'} = ''   }
-sub start_item_bullet { $_[0]{'Thispara'} = $FREAKYMODE ? '' : '* ' }
-sub start_item_number { $_[0]{'Thispara'} = $FREAKYMODE ? '' : "$_[1]{'number'}. "  }
-sub start_item_text   { $_[0]{'Thispara'} = ''   }
+sub start_head0 { $_[0]{'scratch'} = '' }
+sub end_head0   { $_[0]->emit(-4) }
+sub start_head1 { $_[0]{'scratch'} = '' }
+sub end_head1   { $_[0]->emit(-4) }
+sub start_head2 { $_[0]{'scratch'} = '' }
+sub end_head2   { $_[0]->emit(-3) }
+sub start_head3 { $_[0]{'scratch'} = '' }
+sub end_head3   { $_[0]->emit(-2) }
+sub start_head4 { $_[0]{'scratch'} = '' }
+sub end_head4   { $_[0]->emit(-1) }
+
+sub start_item_bullet { $_[0]{'scratch'} = $FREAKYMODE ? '' : '* ' }
+sub end_item_bullet   { $_[0]->emit( 0) }
+sub start_item_number { $_[0]{'scratch'} = $FREAKYMODE ? '' : "$_[1]{'number'}. "  }
+sub end_item_number   { $_[0]->emit( 0) }
+sub start_item_text   { $_[0]{'scratch'} = ''   }
+sub end_item_text     { $_[0]->emit(-2) }
 
 sub start_over_bullet  { ++$_[0]{'Indent'} }
+sub end_over_bullet    { --$_[0]{'Indent'} }
 sub start_over_number  { ++$_[0]{'Indent'} }
+sub end_over_number    { --$_[0]{'Indent'} }
 sub start_over_text    { ++$_[0]{'Indent'} }
+sub end_over_text      { --$_[0]{'Indent'} }
 sub start_over_block   { ++$_[0]{'Indent'} }
-
-sub   end_over_bullet  { --$_[0]{'Indent'} }
-sub   end_over_number  { --$_[0]{'Indent'} }
-sub   end_over_text    { --$_[0]{'Indent'} }
-sub   end_over_block   { --$_[0]{'Indent'} }
+sub end_over_block     { --$_[0]{'Indent'} }
 
 
-# . . . . . Now the actual formatters:
-
-sub end_head0       { $_[0]->emit_par(-4) }
-sub end_head1       { $_[0]->emit_par(-4) }
-sub end_head2       { $_[0]->emit_par(-3) }
-sub end_head3       { $_[0]->emit_par(-2) }
-sub end_head4       { $_[0]->emit_par(-1) }
-sub end_Para        { $_[0]->emit_par( 0) }
-sub end_item_bullet { $_[0]->emit_par( 0) }
-sub end_item_number { $_[0]->emit_par( 0) }
-sub end_item_text   { $_[0]->emit_par(-2) }
-
-sub emit_par {
+sub emit {
   my($self, $tweak_indent) = splice(@_,0,2);
   my $indent = ' ' x ( 2 * $self->{'Indent'} + 4 + ($tweak_indent||0) );
    # Yes, 'STRING' x NEGATIVE gives '', same as 'STRING' x 0
 
-  $self->{'Thispara'} =~ tr{\xAD}{}d if Pod::Simple::ASCII;
-  my $out = Text::Wrap::wrap($indent, $indent, $self->{'Thispara'} .= "\n");
+  $self->{'scratch'} =~ tr{\xAD}{}d if Pod::Simple::ASCII;
+  my $out = Text::Wrap::wrap($indent, $indent, $self->{'scratch'} .= "\n");
   $out =~ tr{\xA0}{ } if Pod::Simple::ASCII;
   print {$self->{'output_fh'}} $out, "\n";
-  $self->{'Thispara'} = '';
+  $self->{'scratch'} = '';
   
   return;
 }
@@ -89,20 +80,20 @@ sub emit_par {
 sub end_Verbatim  {
   my $self = shift;
   if(Pod::Simple::ASCII) {
-    $self->{'Thispara'} =~ tr{\xA0}{ };
-    $self->{'Thispara'} =~ tr{\xAD}{}d;
+    $self->{'scratch'} =~ tr{\xA0}{ };
+    $self->{'scratch'} =~ tr{\xAD}{}d;
   }
 
   my $i = ' ' x ( 2 * $self->{'Indent'} + 4);
   #my $i = ' ' x (4 + $self->{'Indent'});
   
-  $self->{'Thispara'} =~ s/^/$i/mg;
+  $self->{'scratch'} =~ s/^/$i/mg;
   
   print { $self->{'output_fh'} }   '', 
-    $self->{'Thispara'},
+    $self->{'scratch'},
     "\n\n"
   ;
-  $self->{'Thispara'} = '';
+  $self->{'scratch'} = '';
   return;
 }
 
