@@ -164,10 +164,6 @@ sub emit {
   my($self, $nowrap) = @_;
   my $out = $self->{'scratch'} . "\n";
   $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
-  if(Pod::PseudoPod::ASCII) {
-    $out =~ tr{\xA0}{ };
-    $out =~ tr{\xAD}{}d;
-  }
   print {$self->{'output_fh'}} $out, "\n";
   $self->{'scratch'} = '';
   return;
