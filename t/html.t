@@ -2,7 +2,7 @@
 
 # t/html.t - check module loading and create testing directory
 
-use Test::More tests => 5;
+use Test::More qw(no_plan);
 
 BEGIN {
     chdir 't' if -d 't';
@@ -17,4 +17,4 @@ isa_ok ($object, 'Pod::PseudoPod::HTML');
 
 
 print "\n";
-$object->filter( '/home/allison/projects/perforce/books/p6e/ch02.pod' )->any_errata_seen;
+$object->filter( '../../../../../chapters/ch02.pod' )->any_errata_seen;

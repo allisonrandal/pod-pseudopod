@@ -2,7 +2,7 @@
 
 # t/text.t - check module loading and create testing directory
 
-use Test::More tests => 5;
+use Test::More qw(no_plan);
 
 BEGIN {
     chdir 't' if -d 't';
@@ -21,5 +21,5 @@ isa_ok ($object, 'Pod::PseudoPod::Text');
 
 print "\n";
 #$object->output_fh( *STDOUT );
-#$object->parse_file( '/home/allison/projects/perforce/books/p6e/ch01.pod' );
-$object->filter( '/home/allison/projects/perforce/books/p6e/ch01.pod' )->any_errata_seen;
+#$object->parse_file( '../../../../../chapters/ch01.pod' );
+$object->filter( '../../../../../chapters/ch01.pod' )->any_errata_seen;

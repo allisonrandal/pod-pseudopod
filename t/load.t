@@ -1,8 +1,8 @@
 # -*- perl -*-
 
-# t/001_load.t - check module loading and create testing directory
+# t/load.t - check module loading and create testing directory
 
-use Test::More tests => 12;
+use Test::More qw(no_plan);
 
 BEGIN {
     chdir 't' if -d 't';
