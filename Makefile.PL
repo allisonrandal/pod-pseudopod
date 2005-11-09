@@ -1,6 +1,4 @@
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
 WriteMakefile(
     NAME         => 'Pod::PseudoPod',
     VERSION_FROM => 'lib/Pod/PseudoPod.pm', # finds $VERSION
@@ -12,4 +10,5 @@ WriteMakefile(
         {TESTS => 't/*.t t/*/*.t'},
     AUTHOR       => 'Allison Randal (allison@perl.org)',
     ABSTRACT     => "A framework for parsing O'Reilly's PseudoPod",
+    'PL_FILES' => {}, # ignore the Build.PL file
 );
