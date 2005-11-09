@@ -86,9 +86,9 @@ sub end_figure { $_[0]{'in_figure'} = 0 }
 sub start_for { 
   my ($self, $flags) = @_;
   if ($self->{'css_tags'}) {
-    $self->{'scratch'} .= "<div";
-    $self->{'scratch'} .= " class='".$flags->{'target'}."'" if ($flags->{'target'}) ;
-    $self->{'scratch'} .= ">";
+    $self->{'scratch'} .= '<div';
+    $self->{'scratch'} .= ' class="'.$flags->{'target'}.'"' if ($flags->{'target'}) ;
+    $self->{'scratch'} .= '>';
     $self->emit('nowrap');
   }
 
@@ -96,7 +96,7 @@ sub start_for {
 sub end_for { 
   my ($self) = @_;
   if ($self->{'css_tags'}) {
-    $self->{'scratch'} .= "</div>";
+    $self->{'scratch'} .= '</div>';
     $self->emit('nowrap');
   }
 }
@@ -151,8 +151,8 @@ sub end_B   { $_[0]{'scratch'} .= '</b>' }
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
-sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? "<img src='" : '<i>' }
-sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? "'>" : '</i>' }
+sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<img src="' : '<i>' }
+sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '">' : '</i>' }
 
 sub start_G { $_[0]{'scratch'} .= '<sup>' }
 sub end_G   { $_[0]{'scratch'} .= '</sup>' }
