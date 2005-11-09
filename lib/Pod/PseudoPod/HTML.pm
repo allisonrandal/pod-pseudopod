@@ -184,13 +184,17 @@ Pod::PseudoPod::HTML -- format PseudoPod as HTML
 
 =head1 SYNOPSIS
 
-  perl -MPod::PseudoPod::HTML -e \
-   "exit Pod::PseudoPod::HTML->filter(shift)->any_errata_seen" \
-   thingy.pod
+  use Pod::PseudoPod::HTML;
+
+  my $parser = Pod::PseudoPod::HTML->new();
+
+  ...
+
+  $parser->parse_file('path/to/file.pod');
 
 =head1 DESCRIPTION
 
-This class is a formatter that takes Pod and renders it as
+This class is a formatter that takes PseudoPod and renders it as
 wrapped html.
 
 Its wrapping is done by L<Text::Wrap>, so you can change
@@ -198,13 +202,33 @@ C<$Text::Wrap::columns> as you like.
 
 This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
 
+=head1 METHODS
+
+=head2 add_body_tags
+
+  $parser->add_body_tags(1);
+  $parser->parse_file($file);
+
+Adds beginning and ending "<html>" and "<body>" tags to the formatted
+document.
+
+=head2 add_css_tags
+
+  $parser->add_css_tags(1);
+  $parser->parse_file($file);
+
+Imports a css stylesheet to the html document and adds additional css
+tags to url, footnote, and sidebar elements for a nicer display. If
+you don't plan on writing a style.css file (or using the one provided
+in "examples/"), you probably don't want this option on.
+
 =head1 SEE ALSO
 
 L<Pod::PseudoPod>, L<Pod::Simple>
 
-=head1 COPYRIGHT AND DISCLAIMERS
+=head1 COPYRIGHT
 
-Copyright (c) 2003 Allison Randal.  All rights reserved.
+Copyright (c) 2003-2004 Allison Randal.  All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. The full text of the license

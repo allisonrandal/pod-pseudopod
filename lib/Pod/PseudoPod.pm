@@ -86,6 +86,12 @@ sub _treat_Zs {  # Nix Z<...>'s
   return;
 }
 
+# The _ponder_* methods override _ponder_paragraph_buffer from
+# Pod::Simple::BlackBox. It was so large that it wasn't much fun to
+# work with, so I split it out into multiple methods. Many of the
+# _ponder_* methods will move out of Pod::PseudoPod if the patch I
+# sent in for Pod::Simple::BlackBox goes into the next version.
+
 sub _ponder_paragraph_buffer {
 
   # Para-token types as found in the buffer.
@@ -940,7 +946,7 @@ __END__
 
 =head1 NAME
 
-Pod::PseudoPod - A framework for parsing PseudoPOD
+Pod::PseudoPod - A framework for parsing O'Reilly's PseudoPod
 
 =head1 SYNOPSIS
 
@@ -954,7 +960,7 @@ Pod::PseudoPod - A framework for parsing PseudoPOD
   }
 
   sub start_head1 {
-    my($self, $attrs) = @_;
+    my($self, $flags) = @_;
     ...
   }
   sub end_head1 {
@@ -965,30 +971,29 @@ Pod::PseudoPod - A framework for parsing PseudoPOD
   ...and start_*/end_* methods for whatever other events you
   want to catch.
 
-
 =head1 DESCRIPTION
 
-PseudoPOD is O'Reilly's extended set of POD tags for book manuscripts.
-Standard POD doesn't have all the markup options you might want for
-marking up files for publishing production. PseudoPOD adds a few extra
-tags for footnotes, etc.
+PseudoPod is an extended set of Pod tags used by O'Reilly and
+Associates publishing for book manuscripts. Standard Pod doesn't have
+all the markup options you need to mark up files for publishing
+production. PseudoPod adds a few extra tags for footnotes, tables,
+sidebars, etc.
 
-This class adds parsing support for the PseudoPOD tags. It also
+This class adds parsing support for the PseudoPod tags. It also
 overrides Pod::Simple's C<_handle_element_start>, C<_handle_text>, and
 C<_handle_element_end> methods so that parser events are turned into
-method calls. (Otherwise, this is a subclass of Pod::Simple and
-inherits all its methods.)
+method calls.
 
-You can use this class as the base class for a PseudoPod
-formatter/processor.
+In general, you'll only want to use this module as the base class for
+a PseudoPod formatter/processor.
 
 =head1 SEE ALSO
 
-L<Pod::Simple>
+L<Pod::Simple>, L<Pod::PseudoPod::HTML>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003 Allison Randal.  All rights reserved.
+Copyright (c) 2003-2004 Allison Randal.  All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. The full text of the license
