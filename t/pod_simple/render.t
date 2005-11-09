@@ -5,8 +5,7 @@ BEGIN { plan tests => 26 };
 
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../../blib/lib';
-    unshift @INC, '../../lib';
+    unshift @INC, '../../blib/lib';
 }
 
 use Pod::Simple::TextContent;
@@ -27,11 +26,11 @@ chdir "t" or die "Can't chdir: $!" if -e "t";
 
 
 foreach my $file (
-  "test_junk1.pod",
-  "test_junk2.pod",
-  "test_old_perlcygwin.pod",
-  "test_old_perlfaq3.pod",
-  "test_old_perlvar.pod",
+  "pod_simple/test_junk1.pod",
+  "pod_simple/test_junk2.pod",
+  "pod_simple/test_old_perlcygwin.pod",
+  "pod_simple/test_old_perlfaq3.pod",
+  "pod_simple/test_old_perlvar.pod",
 ) {
 
   unless(-e $file) {
