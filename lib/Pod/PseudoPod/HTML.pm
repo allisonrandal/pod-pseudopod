@@ -1,7 +1,7 @@
-
-require 5;
 package Pod::PseudoPod::HTML;
 use strict;
+use vars qw( $VERSION );
+$VERSION = '0.09';
 use Carp ();
 use base qw( Pod::PseudoPod );
 

@@ -4,6 +4,8 @@
 
 package Pod::PseudoPod::Checker;
 use strict;
+use vars qw( $VERSION );
+$VERSION = '0.09';
 use Carp ();
 use base qw( Pod::PseudoPod );
 BEGIN { *DEBUG = defined(&Pod::PseudoPod::DEBUG)
