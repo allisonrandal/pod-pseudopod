@@ -7,7 +7,12 @@
 #
 # usage:
 #
-# ./pod2html filename.pod > filename.html
+# ./pod2html filename1.pod filename2.pod
+#
+# Will produce one html file for each pod file passed in.
+#
+#   filename1.html
+#   filename2.html
 #
 ######################################################################
 
@@ -15,19 +20,27 @@ use strict;
 use lib "../lib"; # delete this line
 use Pod::PseudoPod::HTML;
 
-my $file = $ARGV[0];
-my $parser  = Pod::PseudoPod::HTML->new ();
+foreach my $file (@ARGV) {
+	my $parser = Pod::PseudoPod::HTML->new();
 
-$parser->add_body_tags(1);     # output a complete html document
-$parser->add_css_tags(1);      # add css tags for cleaner display
+	$file =~ /(\w+)\.pod$/;     # HTML output goes to the current working 
+	my $outfile = $1 . '.html'; # directory not the source directory.
 
-$parser->no_errata_section(1); # don't put errors in doc output
-$parser->complain_stderr(1);   # output errors on STDERR instead
+	open HTMLOUT, ">$outfile" or die "Can't write to $outfile: $!";
+	$parser->output_fh(*HTMLOUT);
 
-if (-e $file) {
-  $parser->parse_file($file);
-} else {
-  die "Unable to open file\n";
+	$parser->add_body_tags(1);     # output a complete html document
+	$parser->add_css_tags(1);      # add css tags for cleaner display
+
+	$parser->no_errata_section(1); # don't put errors in doc output
+	$parser->complain_stderr(1);   # output errors on STDERR instead
+
+	if (-e $file) {
+		$parser->parse_file($file);
+	} else {
+		die "Unable to open file\n";
+	}
+	close HTMLOUT;
 }
 
 exit;
