@@ -17,7 +17,7 @@ sub new {
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_target_as_text(qw( text plaintext plain ));
-#  $new->nix_X_codes(1);
+  $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
   return $new;
