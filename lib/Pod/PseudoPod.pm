@@ -15,7 +15,7 @@ $VERSION = '0.03';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
-@Known_formatting_codes = qw(A B C E F I L M N R S T U X Z _ ^);
+@Known_formatting_codes = qw(A B C E F G H I L M N R S T U X Z);
 %Known_formatting_codes = map(($_=>1), @Known_formatting_codes);
 @Known_directives       = qw(head0 head1 head2 head3 head4 item over back);
 %Known_directives       = map(($_=>'Plain'), @Known_directives);
