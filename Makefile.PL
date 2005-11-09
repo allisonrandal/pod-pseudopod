@@ -19,5 +19,5 @@ WriteMakefile(
         {TESTS => "@tests"},
     AUTHOR       => 'Allison Randal (allison@perl.org)',
     ABSTRACT     => "A framework for parsing O'Reilly's PseudoPod",
-    'PL_FILES' => {}, # ignore the Build.PL file
+    PL_FILES => {}, # ignore the Build.PL file
 );
