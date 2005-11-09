@@ -3,7 +3,7 @@
 
 use strict;
 use Test;
-BEGIN { plan tests => 8 };
+BEGIN { plan tests => 6 };
 
 BEGIN {
     chdir 't' if -d 't';
