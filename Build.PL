@@ -5,6 +5,7 @@ my $build = Module::Build->new (
     requires => {
         'Pod::Simple'   => 3.02,
         'Text::Wrap'    => 98.112902,
+        'HTML::Entities'    => 0,
     },
     recursive_test_files => 1,
     dist_author => 'Allison Randal (allison@perl.org)',

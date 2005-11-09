@@ -1,5 +1,11 @@
 Revision history for Pod::PseudoPod
 
+0.12 Jun 24, 2005
+	- Applied patch from chromatic and Timothy Appnel to
+	  HTML formatter to automatically escape certain characters in
+	  verbatim sections.
+	- Added support for listing blocks at the request of a user.
+
 0.11 Jun 26, 2004
 	- Applied patch from Boris Zentner to make example scripts 
 	  use File::Basename.
