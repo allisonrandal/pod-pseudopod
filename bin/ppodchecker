@@ -7,7 +7,7 @@
 #
 # usage:
 #
-# ./podchecker filename1.pod filename2.pod
+# $ ppodchecker filename1.pod filename2.pod
 #
 # Sends errors to STDOUT.
 #

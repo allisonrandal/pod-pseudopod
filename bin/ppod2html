@@ -7,7 +7,7 @@
 #
 # usage:
 #
-# ./pod2html filename1.pod filename2.pod
+# $ ppod2html filename1.pod filename2.pod
 #
 # Will produce one html file for each pod file passed in.
 #

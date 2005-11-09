@@ -7,7 +7,7 @@
 #
 # usage:
 #
-# ./pod2txt filename1.pod filename2.pod
+# $ ppod2txt filename1.pod filename2.pod
 #
 # Will produce one text file for each pod file passed in.
 #
