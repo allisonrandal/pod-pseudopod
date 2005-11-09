@@ -17,7 +17,7 @@ isa_ok ($object, 'Pod::PseudoPod');
 
 is ($object->{'accept_codes'}->{'F'}, 'F', 'standard formatting codes allowed');
 
-for my $code ('A', 'M', 'N', 'R', 'T', 'U', '_', '^') {
+for my $code ('A', 'G', 'H', 'M', 'N', 'R', 'T', 'U') {
     is ($object->{'accept_codes'}->{$code}, $code, "extra formatting code $code allowed");
 }
 
