@@ -103,6 +103,9 @@ sub end_B   { $_[0]{'scratch'} .= '</b>' }
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
+sub start_F { $_[0]{'scratch'} .= '<i>' }
+sub end_F   { $_[0]{'scratch'} .= '</i>' }
+
 sub start_G { $_[0]{'scratch'} .= '<sup>' }
 sub end_G   { $_[0]{'scratch'} .= '</sup>' }
 
