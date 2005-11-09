@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.05';
+$VERSION = '0.06';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -341,23 +341,41 @@ sub _ponder_for {
     );
     return 1;
   }
-  DEBUG > 1 and
-   print "Faking out a =for $target as a =begin $target / =end $target\n";
+
+  if (@$para > 3 or $para->[2]) {
+    # This is an ordinary =for and should be handled in the Pod::Simple way
+
+    DEBUG > 1 and
+     print "Faking out a =for $target as a =begin $target / =end $target\n";
   
-  $para->[0] = 'Data';
+    $para->[0] = 'Data';
   
-  unshift @$paras,
-    ['=begin',
-      {'start_line' => $para->[1]{'start_line'}, '~really' => '=for'},
-      $target,
-    ],
-    $para,
-    ['=end',
-      {'start_line' => $para->[1]{'start_line'}, '~really' => '=for'},
-      $target,
-    ],
-  ;
+    unshift @$paras,
+      ['=begin',
+        {'start_line' => $para->[1]{'start_line'}, '~really' => '=for'},
+        $target,
+      ],
+      $para,
+      ['=end',
+        {'start_line' => $para->[1]{'start_line'}, '~really' => '=for'},
+        $target,
+      ],
+    ;
   
+  } else {
+    # This is a =for with an =end tag
+
+    DEBUG > 1 and
+     print "Faking out a =for $target as a =begin $target\n";
+  
+    unshift @$paras,
+      ['=begin',
+        {'start_line' => $para->[1]{'start_line'}, '~really' => '=for'},
+        $target,
+      ],
+    ;
+
+  }
   return 1;
 }
 
@@ -378,7 +396,6 @@ sub _ponder_begin {
   $para->[1]{'target'} = $target;  # without any ':'
 
   return 1 unless $self->{'accept_targets'}{$target};
-#  $para->[1]{'target_matching'} = $target;
 
   $para->[0] = '=for';  # Just what we happen to call these, internally
   $para->[1]{'~really'} ||= '=begin';
@@ -487,16 +504,19 @@ sub _ponder_end {
   DEBUG and print "Ogling '=end $content' directive\n";
   
   unless(length($content)) {
-    $self->whine(
-      $para->[1]{'start_line'},
-      "'=end' without a target?" . (
-        ( @$curr_open and $curr_open->[-1][0] eq '=for' )
-        ? ( " (Should be \"=end " . $curr_open->[-1][1]{'target'} . '")' )
-        : ''
-      )
-    );
-    DEBUG and print "Ignoring targetless =end\n";
-    return 1;
+    if (@$curr_open and $curr_open->[-1][1]{'~really'} eq '=for') {
+      # =for allows an empty =end directive
+      $content = $curr_open->[-1][1]{'target'};
+    } else {
+      # Everything else should complain about an empty =end directive
+      my $complaint = "'=end' without a target?";
+      if ( @$curr_open and $curr_open->[-1][0] eq '=for' ) {
+        $complaint .= " (Should be \"=end " . $curr_open->[-1][1]{'target'} . '")';
+      }
+      $self->whine( $para->[1]{'start_line'}, $complaint);
+      DEBUG and print "Ignoring targetless =end\n";
+      return 1;
+    }
   }
   
   unless($content =~ m/^\S+$/) {  # i.e., unless it's one word

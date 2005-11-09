@@ -1,5 +1,8 @@
 Revision history for Pod::PseudoPod
 
+0.06 Jan 5, 2004
+	- Allow =for directives with =end directives.
+
 0.05 Jan 2, 2004
 	- Fixed sidebars and tables so they can handle codes within
 	  their text.

@@ -15,9 +15,10 @@ sub new {
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_targets( 'html', 'HTML' );
-  $new->accept_targets_as_text( qw(blockquote comment caution epigraph 
-        example important note programlisting screen sidebar table tip 
-	warning figure) );
+  $new->accept_targets_as_text( qw(author blockquote comment caution
+      editor epigraph example figure important note production
+      programlisting screen sidebar table tip warning) );
+
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';

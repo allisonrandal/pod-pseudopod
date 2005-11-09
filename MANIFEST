@@ -11,6 +11,7 @@ lib/Pod/PseudoPod/HTML.pm
 lib/Pod/PseudoPod/Text.pm
 t/basic.t
 t/beginend.t
+t/for.t
 t/html.t
 t/text.t
 t/table.t

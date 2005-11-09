@@ -61,6 +61,48 @@ is($results, <<'EOHTML', "an ended for with css tags");
 
 EOHTML
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for author
+
+This is a PseudoPod for with an end directive.
+
+=end
+
+EOPOD
+
+is($results, <<'EOHTML', "author for");
+<p>This is a PseudoPod for with an end directive.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for production
+
+This is a PseudoPod for with an end directive.
+
+=end
+
+EOPOD
+
+is($results, <<'EOHTML', "production for");
+<p>This is a PseudoPod for with an end directive.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=for ignore
+
+This is a PseudoPod for with an end directive.
+
+=end
+
+EOPOD
+
+is($results, '', "for with 'ignore' target is always ignored");
+
 ######################################
 
 sub initialize {

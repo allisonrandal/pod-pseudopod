@@ -6,6 +6,34 @@ This is a sample PseudoPod document. It includes most of the
 formatting elements added to O'Reilly's PseudoPod, and a few familiar
 ones from ordinary Pod.
 
+=head1 For Directives
+
+At the moment, Pod::PseudoPod handles two types of =for directives,
+the standard Pod style with no =end directive, and the PseudoPod style
+with an =end directive.
+
+=head2 For without End
+
+Without and =end directive, all the content in a =for must be in a
+single paragraph, and that paragraph immediately follows the =for (it
+cannot be separated by a blank line).
+
+=for editor
+This is the content of the for.
+
+=head2 For with End
+
+With an end directive, you can have multiple paragraphs. These must be
+separated from the =for by at least one blank line.
+
+=for editor
+
+This is some content of the for.
+
+This is more content of the for.
+
+=end
+
 =head1 Begin/End Directives
 
 Tables, sidebars, and figures are handled specially, all other

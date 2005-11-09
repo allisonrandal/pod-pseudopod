@@ -18,9 +18,6 @@ TODO list for Perl module Pod::PseudoPod
 - Add a utility to generate a table of contents from a list of files
   (module and script, probably).
 
-- Allow "=end" directives after "=for" directives (PseudoPod allows
-  them, even though Pod doesn't)..
-
 - Handle N<> tags so they output document-end footnotes instead of
   inline text.
 
