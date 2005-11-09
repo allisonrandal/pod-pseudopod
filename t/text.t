@@ -15,11 +15,23 @@ BEGIN {
 my $object = Pod::PseudoPod::Text->new ();
 isa_ok ($object, 'Pod::PseudoPod::Text');
 
-#is ($object->{'accept_codes'}->{'F'}, 'F', 'standard formatting codes allowed');
-#is ($object->{'accept_codes'}->{'U'}, 'U', 'extra formatting codes allowed');
-#is ($object->{'accept_directives'}->{'head0'}, 'Plain', 'extra directives allowed');
 
-print "\n";
-#$object->output_fh( *STDOUT );
-#$object->parse_file( '../../../../../chapters/ch01.pod' );
-$object->filter( '../../../../../chapters/ch01.pod' )->any_errata_seen;
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a link anchorZ<crossreferenceendpoint>.
+EOPOD
+is($results, <<"EOTXT", "Link anchor entity in a paragraph");
+    A plain paragraph with a link anchor.
+
+EOTXT
+
+######################################
+
+sub initialize {
+	$_[0] = Pod::PseudoPod::Text->new ();
+	$_[0]->output_string( \$results ); # Send the resulting output to a string
+	$_[1] = '';
+	return;
+}
