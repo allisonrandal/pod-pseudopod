@@ -19,12 +19,12 @@ INSTALLATION
     ./Build install
    
 
-EXTRAS
-    The "examples/" directory includes a pod2html converter and a
-    podchecker script that aren't in the standard installation.
+USAGE
+    The standard installation includes ppod2html and ppod2txt converters
+    and a ppodchecker script.
 
-      ./pod2html filename.pod
+      $ ppod2html filename.pod
 
-    If you also copy the sample style.css into the same directory as
-    the html files you generate, the output is a tolerable simulation
-    of O'Reilly's animal book format.
+    If you copy the sample style.css from the "examples/" directory into
+    the same directory as the html files you generate, the output is a
+    tolerable simulation of O'Reilly's animal book format.
