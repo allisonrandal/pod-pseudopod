@@ -132,8 +132,7 @@ sub _ponder_paragraph_buffer {
       " document\n"
     ;
     
-    $self->_handle_element_start(
-      ($scratch = 'Document'),
+    $self->_handle_element_start('Document',
       {
         'start_line' => $paras->[0][1]{'start_line'},
         $starting_contentless ? ( 'contentless' => 1 ) : (),
@@ -162,13 +161,187 @@ sub _ponder_paragraph_buffer {
     DEBUG > 1 and print "Pondering a $para_type paragraph, given the stack: (",
       $self->_dump_curr_open(), ")\n";
     
-    if($para_type eq '=for') { #//////////////////////////////////////////////
-      # Fake it out as a begin/end
-      my $target;
+    if($para_type eq '=for') {
+      next if $self->_ponder_for($para,$curr_open,$paras);
+    } elsif($para_type eq '=begin') {
+      next if $self->_ponder_begin($para,$curr_open,$paras);
+    } elsif($para_type eq '=end') {
+      next if $self->_ponder_end($para,$curr_open,$paras);
+    } elsif($para_type eq '~end') { # The virtual end-document signal
+      next if $self->_ponder_doc_end($para,$curr_open,$paras);
+    }
+
+
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    if(grep $_->[1]{'~ignore'}, @$curr_open) {
+      DEBUG > 1 and
+       print "Skipping $para_type paragraph because in ignore mode.\n";
+      next;
+    }
+    #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+
+    if($para_type eq '=pod') {
+      $self->_ponder_pod($para,$curr_open,$paras);
+    } elsif($para_type eq '=over') {
+      next if $self->_ponder_over($para,$curr_open,$paras);
+    } elsif($para_type eq '=back') {
+      next if $self->_ponder_back($para,$curr_open,$paras);
+      
+    } else { #////////////////////////////////////////////////////////////////
+      # All non-magical codes!!!
+      
+      # Here we start using $para_type for our own twisted purposes, to
+      #  mean how it should get treated, not as what the element name
+      #  should be.
+
+      DEBUG > 1 and print "Pondering non-magical $para_type\n";
+
+      if($para_type eq '=item') {
+        next if $self->_ponder_item($para,$curr_open,$paras);
+        $para_type = 'Plain';
+        # Now fall thru and process it.
+
+      } elsif($para_type eq '=extend') {
+        # Well, might as well implement it here.
+        $self->_ponder_extend($para);
+        next;  # and skip
+      } elsif($para_type eq '~Verbatim') {
+        $para->[0] = 'Verbatim';
+        $para_type = '?Verbatim';
+      } elsif($para_type eq '~Para') {
+        $para->[0] = 'Para';
+        $para_type = '?Plain';
+      } elsif($para_type eq 'Data') {
+        $para->[0] = 'Data';
+        $para_type = '?Data';
+      } elsif( $para_type =~ s/^=//s
+        and defined( $para_type = $self->{'accept_directives'}{$para_type} )
+      ) {
+        DEBUG > 1 and print " Pondering known directive ${$para}[0] as $para_type\n";
+      } else {
+        # An unknown directive!
+        DEBUG > 1 and printf "Unhandled directive %s (Handled: %s)\n",
+         $para->[0], join(' ', sort keys %{$self->{'accept_directives'}} )
+        ;
+        $self->whine(
+          $para->[1]{'start_line'},
+          "Unknown directive: $para->[0]"
+        );
+
+        # And maybe treat it as text instead of just letting it go?
+        next;
+      }
+
+      if($para_type =~ s/^\?//s) {
+        if(! @$curr_open) {  # usual case
+          DEBUG and print "Treating $para_type paragraph as such because stack is empty.\n";
+        } else {
+          my @fors = grep $_->[0] eq '=for', @$curr_open;
+          DEBUG > 1 and print "Containing fors: ",
+            join(',', map $_->[1]{'target'}, @fors), "\n";
+          
+          if(! @fors) {
+            DEBUG and print "Treating $para_type paragraph as such because stack has no =for's\n";
+            
+          #} elsif(grep $_->[1]{'~resolve'}, @fors) {
+          #} elsif(not grep !$_->[1]{'~resolve'}, @fors) {
+          } elsif( $fors[-1][1]{'~resolve'} ) {
+            # Look to the immediately containing for
+          
+            if($para_type eq 'Data') {
+              DEBUG and print "Treating Data paragraph as Plain/Verbatim because the containing =for ($fors[-1][1]{'target'}) is a resolver\n";
+              $para->[0] = 'Para';
+              $para_type = 'Plain';
+            } else {
+              DEBUG and print "Treating $para_type paragraph as such because the containing =for ($fors[-1][1]{'target'}) is a resolver\n";
+            }
+          } else {
+            DEBUG and print "Treating $para_type paragraph as Data because the containing =for ($fors[-1][1]{'target'}) is a non-resolver\n";
+            $para->[0] = $para_type = 'Data';
+          }
+        }
+      }
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      if($para_type eq 'Plain') {
+        DEBUG and print " giving plain treatment...\n";
+        unless( @$para == 2 or ( @$para == 3 and $para->[2] eq '' )
+          or $para->[1]{'~cooked'}
+        ) {
+          push @$para,
+          @{$self->_make_treelet(
+            join("\n", splice(@$para, 2)),
+            $para->[1]{'start_line'}
+          )};
+        }
+        # Empty paragraphs don't need a treelet for any reason I can see.
+        # And precooked paragraphs already have a treelet.
+        
+      } elsif($para_type eq 'Verbatim') {
+        DEBUG and print " giving verbatim treatment...\n";
+      
+        $para->[1]{'xml:space'} = 'preserve';
+        for(my $i = 2; $i < @$para; $i++) {
+          foreach my $line ($para->[$i]) { # just for aliasing
+            while( $line =~
+              # Sort of adapted from Text::Tabs -- yes, it's hardwired in that
+              # tabs are at every EIGHTH column.  For portability, it has to be
+              # one setting everywhere, and 8th wins.
+              s/^([^\t]*)(\t+)/$1.(" " x ((length($2)<<3)-(length($1)&7)))/e
+            ) {}
+
+            # TODO: whinge about (or otherwise treat) unindented or overlong lines
+
+          }
+        }
+        
+        # Now the VerbatimFormatted hoodoo...
+        if( $self->{'accept_codes'} and
+            $self->{'accept_codes'}{'VerbatimFormatted'}
+        ) {
+          while(@$para > 3 and $para->[-1] !~ m/\S/) { pop @$para }
+           # Kill any number of terminal newlines
+          $self->_verbatim_format($para);
+        } else {
+          push @$para, join "\n", splice(@$para, 2) if @$para > 3;
+          $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
+        }
+        
+      } elsif($para_type eq 'Data') {
+        DEBUG and print " giving data treatment...\n";
+        $para->[1]{'xml:space'} = 'preserve';
+        push @$para, join "\n", splice(@$para, 2) if @$para > 3;
+        
+      } else {
+        die "\$para type is $para_type -- how did that happen?";
+        # Shouldn't happen.
+      }
+
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      $para->[0] =~ s/^[~=]//s;
+
+      DEBUG and print "\n", pretty($para), "\n";
+
+      # traverse the treelet (which might well be just one string scalar)
+      $self->{'content_seen'} ||= 1;
+      $self->_traverse_treelet_bit(@$para);
+    }
+  }
+  
+  return;
+}
+
+sub _ponder_for {
+  my ($self,$para,$curr_open,$paras) = @_;
+
+  # Fake it out as a begin/end
+  my $target;
 
       if(grep $_->[1]{'~ignore'}, @$curr_open) {
         DEBUG > 1 and print "Ignoring ignorable =for\n";
-        next;
+        return 1;
       }
 
       for(my $i = 2; $i < @$para; ++$i) {
@@ -182,7 +355,7 @@ sub _ponder_paragraph_buffer {
           $para->[1]{'start_line'},
           "=for without a target?"
         );
-        next;
+        return 1;
       }
       DEBUG > 1 and
        print "Faking out a =for $target as a =begin $target / =end $target\n";
@@ -201,10 +374,11 @@ sub _ponder_paragraph_buffer {
         ],
       ;
       
-      next;
-      
-    } elsif($para_type eq '=begin') { #///////////////////////////////////////
+      return 1;
+}
 
+sub _ponder_begin {
+  my ($self,$para,$curr_open,$paras) = @_;
       my $content = join ' ', splice @$para, 2;
       $content =~ s/^\s+//s;
       $content =~ s/\s+$//s;
@@ -214,7 +388,7 @@ sub _ponder_paragraph_buffer {
           "=begin without a target?"
         );
         DEBUG and print "Ignoring targetless =begin\n";
-        next;
+        return 1;
       }
       
       unless($content =~ m/^\S+$/s) {  # i.e., unless it's one word
@@ -223,7 +397,7 @@ sub _ponder_paragraph_buffer {
           "'=begin' only takes one parameter, not several as in '=begin $content'"
         );
         DEBUG and print "Ignoring unintelligible =begin $content\n";
-        next;
+        return 1;
       }
 
 
@@ -282,13 +456,14 @@ sub _ponder_paragraph_buffer {
         DEBUG > 1 and print "Ignoring ignorable =begin\n";
       } else {
         $self->{'content_seen'} ||= 1;
-        $self->_handle_element_start(($scratch='for'), $para->[1]);
+        $self->_handle_element_start('for', $para->[1]);
       }
 
-      next;
-      
-    } elsif($para_type eq '=end') { #/////////////////////////////////////////
+      return 1;
+}
 
+sub _ponder_end {
+  my ($self,$para,$curr_open,$paras) = @_;
       my $content = join ' ', splice @$para, 2;
       $content =~ s/^\s+//s;
       $content =~ s/\s+$//s;
@@ -304,7 +479,7 @@ sub _ponder_paragraph_buffer {
           )
         );
         DEBUG and print "Ignoring targetless =end\n";
-        next;
+        return 1;
       }
       
       unless($content =~ m/^\S+$/) {  # i.e., unless it's one word
@@ -314,7 +489,7 @@ sub _ponder_paragraph_buffer {
           . $self->_dump_curr_open() . ')'
         );
         DEBUG and print "Ignoring mistargetted =end $content\n";
-        next;
+        return 1;
       }
       
       unless(@$curr_open and $curr_open->[-1][0] eq '=for') {
@@ -324,7 +499,7 @@ sub _ponder_paragraph_buffer {
           . $self->_dump_curr_open() . ')'
         );
         DEBUG and print "Ignoring mistargetted =end $content\n";
-        next;
+        return 1;
       }
       
       unless($content eq $curr_open->[-1][1]{'target'}) {
@@ -336,7 +511,7 @@ sub _ponder_paragraph_buffer {
           . $self->_dump_curr_open() . ')'
         );
         DEBUG and print "Ignoring mistargetted =end $content at line $para->[1]{'start_line'}\n";
-        next;
+        return 1;
       }
 
       # Else it's okay to close...
@@ -349,16 +524,16 @@ sub _ponder_paragraph_buffer {
           # what's that for?
         
         $self->{'content_seen'} ||= 1;
-        $self->_handle_element_end( $scratch = 'for' );
+        $self->_handle_element_end('for');
       }
       DEBUG > 1 and print "Popping $curr_open->[-1][0] $curr_open->[-1][1]{'target'} because of =end $content\n";
       pop @$curr_open;
 
-      next;
-      
-    } elsif($para_type eq '~end') { #/////////////////////////////////////////
-      # The virtual end-document signal
-      
+      return 1;
+} 
+
+sub _ponder_doc_end {
+  my ($self,$para,$curr_open,$paras) = @_;
       if(@$curr_open) { # Deal with things left open
         DEBUG and print "Stack is nonempty at end-document: (",
           $self->_dump_curr_open(), ")\n";
@@ -391,7 +566,7 @@ sub _ponder_paragraph_buffer {
          # We need two -- once for the next cycle where we
          #  generate errata, and then another to be at the end
          #  when that loop back around to process the errata.
-        next;
+        return 1;
         
       } else {
         DEBUG and print "Okay, stack is empty now.\n";
@@ -404,39 +579,30 @@ sub _ponder_paragraph_buffer {
         if(@extras) {
           unshift @$paras, @extras;
           DEBUG and print "Generated errata... relooping...\n";
-          next;  # I.e., loop around again to process these fake-o paragraphs
+          return 1;  # I.e., loop around again to process these fake-o paragraphs
         }
       }
       
       splice @$paras; # Well, that's that for this paragraph buffer.
       DEBUG and print "Throwing end-document event.\n";
 
-      $self->_handle_element_end( $scratch = 'Document' );
-      next; # Hasta la byebye
-    }
+      $self->_handle_element_end('Document');
+      return 1; # Hasta la byebye
+}
 
+sub _ponder_pod {
+  my ($self,$para,$curr_open,$paras) = @_;
+  $self->whine(
+    $para->[1]{'start_line'},
+    "=pod directives shouldn't be over one line long!  Ignoring all "
+     . (@$para - 2) . " lines of content"
+  ) if @$para > 3;
+  # Content is always ignored.
+}
 
-    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-    #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-    if(grep $_->[1]{'~ignore'}, @$curr_open) {
-      DEBUG > 1 and
-       print "Skipping $para_type paragraph because in ignore mode.\n";
-      next;
-    }
-    #~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
-
-    if($para_type eq '=pod') { #//////////////////////////////////////////////
-      $self->whine(
-        $para->[1]{'start_line'},
-        "=pod directives shouldn't be over one line long!  Ignoring all "
-         . (@$para - 2) . " lines of content"
-      ) if @$para > 3;
-      # Content is always ignored.
-      
-
-    } elsif($para_type eq '=over') { #////////////////////////////////////////
-      next unless @$paras;
+sub _ponder_over {
+  my ($self,$para,$curr_open,$paras) = @_;
+      return unless @$paras;
       my $list_type;
 
       if($paras->[0][0] eq '=item') { # most common case
@@ -445,14 +611,14 @@ sub _ponder_paragraph_buffer {
       } elsif($paras->[0][0] eq '=back') {
         # Ignore empty lists.  TODO: make this an option?
         shift @$paras;
-        next;
+        return 1;
         
       } elsif($paras->[0][0] eq '~end') {
         $self->whine(
           $para->[1]{'start_line'},
           "=over is the last thing in the document?!"
         );
-        next; # But feh, ignore it.
+        return 1; # But feh, ignore it.
       } else {
         $list_type = 'block';
       }
@@ -484,10 +650,14 @@ sub _ponder_paragraph_buffer {
       DEBUG > 1 and print "=over found of type $list_type\n";
       
       $self->{'content_seen'} ||= 1;
-      $self->_handle_element_start(($scratch = 'over-' . $list_type), $para->[1]);
-      
-    } elsif($para_type eq '=back') { #////////////////////////////////////////
+      $self->_handle_element_start(('over-' . $list_type), $para->[1]);
 
+  return;
+}
+      
+
+sub _ponder_back {
+  my ($self,$para,$curr_open,$paras) = @_;
       # TODO: fire off </item-number> or </item-bullet> or </item-text> ??
 
       my $content = join ' ', splice @$para, 2;
@@ -503,9 +673,7 @@ sub _ponder_paragraph_buffer {
         # Expected case: we're closing the most recently opened thing
         #my $over = pop @$curr_open;
         $self->{'content_seen'} ||= 1;
-        $self->_handle_element_end( $scratch =
-          'over-' . ( (pop @$curr_open)->[1]{'~type'} )
-        );
+        $self->_handle_element_end( 'over-' . ( (pop @$curr_open)->[1]{'~type'} ));
       } else {
         DEBUG > 1 and print "=back found without a matching =over.  Stack: (",
             join(', ', map $_->[0], @$curr_open), ").\n";
@@ -515,20 +683,11 @@ sub _ponder_paragraph_buffer {
         );
         next; # and ignore it
       }
-      
-    } else { #////////////////////////////////////////////////////////////////
-      # All non-magical codes!!!
-      
-      # Here we start using $para_type for our own twisted purposes, to
-      #  mean how it should get treated, not as what the element name
-      #  should be.
+}
 
-      DEBUG > 1 and print "Pondering non-magical $para_type\n";
 
-      my $i;
-      
-      if($para_type eq '=item') {
-
+sub _ponder_item {
+  my ($self,$para,$curr_open,$paras) = @_;
         my $over;
         unless(@$curr_open and ($over = $curr_open->[-1])->[0] eq '=over') {
           $self->whine(
@@ -539,7 +698,7 @@ sub _ponder_paragraph_buffer {
             ['=over', {'start_line' => $para->[1]{'start_line'}}, ''],
             $para
           ;
-          next;
+          return 1;
         }
         
         
@@ -563,7 +722,7 @@ sub _ponder_paragraph_buffer {
           # Just turn it into a paragraph and reconsider it
           $para->[0] = '~Para';
           unshift @$paras, $para;
-          next;
+          return 1;
 
         } elsif($over_type eq 'text') {
           my $item_type = $self->_get_item_type($para);
@@ -690,139 +849,8 @@ sub _ponder_paragraph_buffer {
           die "Unhandled =over type \"$over_type\"?";
           # Shouldn't happen!
         }
-
-        $para_type = 'Plain';
         $para->[0] .= '-' . $over_type;
-        # Whew.  Now fall thru and process it.
 
-
-      } elsif($para_type eq '=extend') {
-        # Well, might as well implement it here.
-        $self->_ponder_extend($para);
-        next;  # and skip
-      } elsif($para_type eq '~Verbatim') {
-        $para->[0] = 'Verbatim';
-        $para_type = '?Verbatim';
-      } elsif($para_type eq '~Para') {
-        $para->[0] = 'Para';
-        $para_type = '?Plain';
-      } elsif($para_type eq 'Data') {
-        $para->[0] = 'Data';
-        $para_type = '?Data';
-      } elsif( $para_type =~ s/^=//s
-        and defined( $para_type = $self->{'accept_directives'}{$para_type} )
-      ) {
-        DEBUG > 1 and print " Pondering known directive ${$para}[0] as $para_type\n";
-      } else {
-        # An unknown directive!
-        DEBUG > 1 and printf "Unhandled directive %s (Handled: %s)\n",
-         $para->[0], join(' ', sort keys %{$self->{'accept_directives'}} )
-        ;
-        $self->whine(
-          $para->[1]{'start_line'},
-          "Unknown directive: $para->[0]"
-        );
-
-        # And maybe treat it as text instead of just letting it go?
-        next;
-      }
-
-      if($para_type =~ s/^\?//s) {
-        if(! @$curr_open) {  # usual case
-          DEBUG and print "Treating $para_type paragraph as such because stack is empty.\n";
-        } else {
-          my @fors = grep $_->[0] eq '=for', @$curr_open;
-          DEBUG > 1 and print "Containing fors: ",
-            join(',', map $_->[1]{'target'}, @fors), "\n";
-          
-          if(! @fors) {
-            DEBUG and print "Treating $para_type paragraph as such because stack has no =for's\n";
-            
-          #} elsif(grep $_->[1]{'~resolve'}, @fors) {
-          #} elsif(not grep !$_->[1]{'~resolve'}, @fors) {
-          } elsif( $fors[-1][1]{'~resolve'} ) {
-            # Look to the immediately containing for
-          
-            if($para_type eq 'Data') {
-              DEBUG and print "Treating Data paragraph as Plain/Verbatim because the containing =for ($fors[-1][1]{'target'}) is a resolver\n";
-              $para->[0] = 'Para';
-              $para_type = 'Plain';
-            } else {
-              DEBUG and print "Treating $para_type paragraph as such because the containing =for ($fors[-1][1]{'target'}) is a resolver\n";
-            }
-          } else {
-            DEBUG and print "Treating $para_type paragraph as Data because the containing =for ($fors[-1][1]{'target'}) is a non-resolver\n";
-            $para->[0] = $para_type = 'Data';
-          }
-        }
-      }
-
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      if($para_type eq 'Plain') {
-        DEBUG and print " giving plain treatment...\n";
-        unless( @$para == 2 or ( @$para == 3 and $para->[2] eq '' )
-          or $para->[1]{'~cooked'}
-        ) {
-          push @$para,
-          @{$self->_make_treelet(
-            join("\n", splice(@$para, 2)),
-            $para->[1]{'start_line'}
-          )};
-        }
-        # Empty paragraphs don't need a treelet for any reason I can see.
-        # And precooked paragraphs already have a treelet.
-        
-      } elsif($para_type eq 'Verbatim') {
-        DEBUG and print " giving verbatim treatment...\n";
-      
-        $para->[1]{'xml:space'} = 'preserve';
-        for($i = 2; $i < @$para; $i++) {
-          foreach my $line ($para->[$i]) { # just for aliasing
-            while( $line =~
-              # Sort of adapted from Text::Tabs -- yes, it's hardwired in that
-              # tabs are at every EIGHTH column.  For portability, it has to be
-              # one setting everywhere, and 8th wins.
-              s/^([^\t]*)(\t+)/$1.(" " x ((length($2)<<3)-(length($1)&7)))/e
-            ) {}
-
-            # TODO: whinge about (or otherwise treat) unindented or overlong lines
-
-          }
-        }
-        
-        # Now the VerbatimFormatted hoodoo...
-        if( $self->{'accept_codes'} and
-            $self->{'accept_codes'}{'VerbatimFormatted'}
-        ) {
-          while(@$para > 3 and $para->[-1] !~ m/\S/) { pop @$para }
-           # Kill any number of terminal newlines
-          $self->_verbatim_format($para);
-        } else {
-          push @$para, join "\n", splice(@$para, 2) if @$para > 3;
-          $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
-        }
-        
-      } elsif($para_type eq 'Data') {
-        DEBUG and print " giving data treatment...\n";
-        $para->[1]{'xml:space'} = 'preserve';
-        push @$para, join "\n", splice(@$para, 2) if @$para > 3;
-        
-      } else {
-        die "\$para type is $para_type -- how did that happen?";
-        # Shouldn't happen.
-      }
-
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      $para->[0] =~ s/^[~=]//s;
-
-      DEBUG and print "\n", pretty($para), "\n";
-
-      # traverse the treelet (which might well be just one string scalar)
-      $self->{'content_seen'} ||= 1;
-      $self->_traverse_treelet_bit(@$para);
-    }
-  }
-  
   return;
 }
 
