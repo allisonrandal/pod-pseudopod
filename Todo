@@ -1,5 +1,15 @@
 TODO list for Perl module Pod::PseudoPod
 
-- Nothing yet
+- Override _ponder_paragraph_buffer() in Pod::Simple::BlackBox to
+  correctly handle PseudoPod's "=begin" entities (e.g. "=begin sidebar
+  Sidebar Title").
 
+- Handle N<> tags so they output semi-reasonable footnotes instead of
+  inline text.
 
+- Handle Z<> tags with content (override _treat_Zs() in Pod::Simple).
+
+- Handle numbered E<> tags (e.g. "E<#xF6>").
+
+- Handle X<> tags for html output, should create an html anchor (just
+  removed from text output).
