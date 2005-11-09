@@ -1,6 +1,6 @@
 # -*- perl -*-
 
-# t/text.t - check module loading and create testing directory
+# t/text.t - check output from Pod::PseudoPod::Text
 
 use Test::More qw(no_plan);
 
