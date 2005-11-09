@@ -3,17 +3,13 @@ require 5;
 package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
-use Pod::PseudoPod ();
-use vars qw( @ISA $VERSION );
-$VERSION = '1.02';
-@ISA = ('Pod::PseudoPod');
-BEGIN { *DEBUG = defined(&Pod::PseudoPod::DEBUG)
-          ? \&Pod::PseudoPod::DEBUG
-          : sub() {0}
-      }
+use vars qw( $VERSION );
+$VERSION = '0.02';
+use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
 $Text::Wrap::wrap = 'overflow';
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 sub new {
@@ -23,58 +19,56 @@ sub new {
   $new->accept_target_as_text(qw( text plaintext plain ));
 #  $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
-  $new->{'Thispara'} = '';
-  $new->{'Indent'} = 0;
-  $new->{'Indentstring'} = '   ';
+  $new->{'scratch'} = '';
   return $new;
 }
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-sub handle_text { $_[0]{'Thispara'} .= $_[1] }
+sub handle_text { $_[0]{'scratch'} .= $_[1] }
 
-sub start_Para     { $_[0]{'Thispara'} = '<p>' }
-sub start_Verbatim { $_[0]{'Thispara'} = '<pre><code>' }
+sub start_Para     { $_[0]{'scratch'} = '<p>' }
+sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>' }
 
-sub start_head0 {  $_[0]{'Thispara'} = '<h1>' }
-sub start_head1 {  $_[0]{'Thispara'} = '<h2>' }
-sub start_head2 {  $_[0]{'Thispara'} = '<h3>' }
-sub start_head3 {  $_[0]{'Thispara'} = '<h4>' }
-sub start_head4 {  $_[0]{'Thispara'} = '<h5>' }
+sub start_head0 {  $_[0]{'scratch'} = '<h1>' }
+sub start_head1 {  $_[0]{'scratch'} = '<h2>' }
+sub start_head2 {  $_[0]{'scratch'} = '<h3>' }
+sub start_head3 {  $_[0]{'scratch'} = '<h4>' }
+sub start_head4 {  $_[0]{'scratch'} = '<h5>' }
 
-sub start_item_bullet { $_[0]{'Thispara'} = '<li>' }
-sub start_item_number { $_[0]{'Thispara'} = "<li>$_[1]{'number'}. "  }
-sub start_item_text   { $_[0]{'Thispara'} = '<li>'   }
+sub start_item_bullet { $_[0]{'scratch'} = '<li>' }
+sub start_item_number { $_[0]{'scratch'} = "<li>$_[1]{'number'}. "  }
+sub start_item_text   { $_[0]{'scratch'} = '<li>'   }
 
-sub start_over_bullet { $_[0]{'Thispara'} = '<ul>'; $_[0]->emit_par() }
-sub start_over_text   { $_[0]{'Thispara'} = '<ul>'; $_[0]->emit_par() }
-sub start_over_block  { $_[0]{'Thispara'} = '<ul>'; $_[0]->emit_par() }
-sub start_over_number { $_[0]{'Thispara'} = '<ol>'; $_[0]->emit_par() }
+sub start_over_bullet { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
+sub start_over_text   { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
+sub start_over_block  { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
+sub start_over_number { $_[0]{'scratch'} = '<ol>'; $_[0]->emit() }
 
-sub end_over_bullet { $_[0]{'Thispara'} .= '</ul>'; $_[0]->emit_par() }
-sub end_over_text   { $_[0]{'Thispara'} .= '</ul>'; $_[0]->emit_par() }
-sub end_over_block  { $_[0]{'Thispara'} .= '</ul>'; $_[0]->emit_par() }
-sub end_over_number { $_[0]{'Thispara'} .= '</ol>'; $_[0]->emit_par() }
+sub end_over_bullet { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
+sub end_over_text   { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
+sub end_over_block  { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit() }
+sub end_over_number { $_[0]{'scratch'} .= '</ol>'; $_[0]->emit() }
 
 # . . . . . Now the actual formatters:
 
-sub end_Para     { $_[0]{'Thispara'} .= '</p>'; $_[0]->emit_par() }
-sub end_Verbatim { $_[0]{'Thispara'} .= '</code></pre>'; $_[0]->emit_par('nowrap') }
+sub end_Para     { $_[0]{'scratch'} .= '</p>'; $_[0]->emit() }
+sub end_Verbatim { $_[0]{'scratch'} .= '</code></pre>'; $_[0]->emit('nowrap') }
 
-sub end_head0       { $_[0]{'Thispara'} .= '</h1>'; $_[0]->emit_par() }
-sub end_head1       { $_[0]{'Thispara'} .= '</h2>'; $_[0]->emit_par() }
-sub end_head2       { $_[0]{'Thispara'} .= '</h3>'; $_[0]->emit_par() }
-sub end_head3       { $_[0]{'Thispara'} .= '</h4>'; $_[0]->emit_par() }
-sub end_head4       { $_[0]{'Thispara'} .= '</h5>'; $_[0]->emit_par() }
+sub end_head0       { $_[0]{'scratch'} .= '</h1>'; $_[0]->emit() }
+sub end_head1       { $_[0]{'scratch'} .= '</h2>'; $_[0]->emit() }
+sub end_head2       { $_[0]{'scratch'} .= '</h3>'; $_[0]->emit() }
+sub end_head3       { $_[0]{'scratch'} .= '</h4>'; $_[0]->emit() }
+sub end_head4       { $_[0]{'scratch'} .= '</h5>'; $_[0]->emit() }
 
-sub end_item_bullet { $_[0]{'Thispara'} .= '</li>'; $_[0]->emit_par() }
-sub end_item_number { $_[0]{'Thispara'} .= '</li>'; $_[0]->emit_par() }
-sub end_item_text   { $_[0]->emit_par() }
+sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
+sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
+sub end_item_text   { $_[0]->emit() }
 
-sub emit_par {
+sub emit {
   my($self, $nowrap) = @_;
 
-  my $out = $self->{'Thispara'} . "\n";
+  my $out = $self->{'scratch'} . "\n";
 
   $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
 
@@ -84,7 +78,7 @@ sub emit_par {
   }
 
   print {$self->{'output_fh'}} $out, "\n";
-  $self->{'Thispara'} = '';
+  $self->{'scratch'} = '';
   
   return;
 }
@@ -121,10 +115,11 @@ L<Pod::PseudoPod>, L<Pod::Simple>
 
 Copyright (c) 2003 Allison Randal.  All rights reserved.
 
-This library is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself. The full text of the license
+can be found in the LICENSE file included with this module.
 
-This program is distributed in the hope that it will be useful, but
+This library is distributed in the hope that it will be useful, but
 without any warranty; without even the implied warranty of
 merchantability or fitness for a particular purpose.
 
