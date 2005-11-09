@@ -150,7 +150,7 @@ merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 
-Allison Randal C<allison@cpan.org>
+Allison Randal <allison@perl.org>
 
 =cut
 

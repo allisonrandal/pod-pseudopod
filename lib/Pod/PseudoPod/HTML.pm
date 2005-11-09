@@ -4,7 +4,7 @@ package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
 use vars qw( $VERSION );
-$VERSION = '0.02';
+$VERSION = '0.01';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -164,7 +164,7 @@ merchantability or fitness for a particular purpose.
 
 =head1 AUTHOR
 
-Allison Randal C<allison@cpan.org>
+Allison Randal <allison@perl.org>
 
 =cut
 
