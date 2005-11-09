@@ -6,6 +6,10 @@ h3 { font-family: sans-serif; }
 h4 { font-family: sans-serif; }
 h5 { font-family: sans-serif; }
 
+table { font-size: 12px; font-family: sans-serif; }
+
+th { background: #CCCCCC; text-align: left;}
+
 code {color: #000099; font-family: courier, monospaced;}
 
 .url { color: #000099; }
