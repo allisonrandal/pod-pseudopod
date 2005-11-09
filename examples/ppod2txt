@@ -19,13 +19,15 @@
 use strict;
 use lib "../lib"; # delete this line
 use Pod::PseudoPod::Text;
+use File::Basename;
 
 foreach my $file (@ARGV) {
 	my $parser = Pod::PseudoPod::Text->new();
 
-	$file =~ /(\w+)\.pod$/;     # Text output goes to the current working 
-	my $outfile = $1 . '.txt'; # directory not the source directory.
-
+	# Text output goes to the current working 
+	# directory not the source directory.
+	my $outfile = fileparse( $file, qr{\..*} ) . '.txt';
+	
 	open TXTOUT, ">$outfile" or die "Can't write to $outfile: $!";
 	$parser->output_fh(*TXTOUT);
 

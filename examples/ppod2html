@@ -19,13 +19,15 @@
 use strict;
 use lib "../lib"; # delete this line
 use Pod::PseudoPod::HTML;
+use File::Basename;
 
 foreach my $file (@ARGV) {
 	my $parser = Pod::PseudoPod::HTML->new();
 
-	$file =~ /(\w+)\.pod$/;     # HTML output goes to the current working 
-	my $outfile = $1 . '.html'; # directory not the source directory.
-
+	# HTML output goes to the current working 
+	# directory not the source directory.
+	my $outfile = fileparse( $file, qr{\..*} ) . '.html';
+	
 	open HTMLOUT, ">$outfile" or die "Can't write to $outfile: $!";
 	$parser->output_fh(*HTMLOUT);
 
