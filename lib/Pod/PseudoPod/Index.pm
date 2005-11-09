@@ -1,5 +1,3 @@
-
-require 5;
 package Pod::PseudoPod::Index;
 use strict;
 use Carp ();
@@ -65,16 +63,17 @@ sub get_index { return $_[0]{'index'} }
 sub output_text {
   my $self = shift;
   $self->_print_index($self->{'index'},'');
+  print {$self->{'output_fh'}} $self->{'scratch'};
 }
 
 # recursively print out index tree structure
 sub _print_index {
   my ($self,$node,$indent) = @_;
-  foreach my $key (sort keys %{$node}) {
+  foreach my $key (sort {lc($a) cmp lc($b)} keys %{$node}) {
     if ($key eq 'page') {
-       print {$self->{'output_fh'}} ', ', join(", ", @{$node->{'page'}});
+       $self->{'scratch'} .= ', '. join(", ", @{$node->{'page'}});
     } else {
-       print {$self->{'output_fh'}} "\n", $indent, $key;
+       $self->{'scratch'} .= "\n". $indent. $key;
        $self->_print_index($node->{$key}, $indent.'    ');
     }
   }
