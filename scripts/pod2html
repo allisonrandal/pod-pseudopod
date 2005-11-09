@@ -1,0 +1,15 @@
+#!/usr/bin/perl
+
+use lib "../lib";
+use Pod::PseudoPod::HTML;
+
+my $file = $ARGV[0];
+my $parser  = Pod::PseudoPod::HTML->new ();
+
+if (-e $file) {
+  $parser->filter($file)->any_errata_seen;
+} else {
+  die "Unable to open file\n";
+}
+
+exit;
