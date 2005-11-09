@@ -17,7 +17,7 @@ sub new {
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_target_as_text(qw( text plaintext plain ));
   $new->accept_targets_as_text( qw(author blockquote comment caution
-      editor epigraph example figure important note production
+      editor epigraph example figure important listing note production
       programlisting screen sidebar table tip warning) );
 
   $new->nix_X_codes(1);
