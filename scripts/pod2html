@@ -7,7 +7,7 @@
 #
 # usage:
 #
-# ./pod2html <filename>
+# ./pod2html filename.pod > filename.html
 #
 ######################################################################
 
