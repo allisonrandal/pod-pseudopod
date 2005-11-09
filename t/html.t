@@ -318,6 +318,39 @@ is($results, <<"EOHTML", "Subscript in a paragraph");
 
 EOHTML
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with B<bold text>.
+EOPOD
+is($results, <<"EOHTML", "Bold text in a paragraph");
+<p>A plain paragraph with <b>bold text</b>.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with I<italic text>.
+EOPOD
+is($results, <<"EOHTML", "Italic text in a paragraph");
+<p>A plain paragraph with <i>italic text</i>.</p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with R<replaceable text>.
+EOPOD
+is($results, <<"EOHTML", "Replaceable text in a paragraph");
+<p>A plain paragraph with <em>replaceable text</em>.</p>
+
+EOHTML
+
 ######################################
 
 sub initialize {
