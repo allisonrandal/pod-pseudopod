@@ -21,10 +21,10 @@ sub new {
 
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
-  $new->{'scratch'} = '';
   $new->add_css_tags(0);
   $new->add_body_tags(0);
   $new->codes_in_data(1);
+  $new->{'scratch'} = '';
   return $new;
 }
 
@@ -153,6 +153,9 @@ sub end_B   { $_[0]{'scratch'} .= '</b>' }
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
+sub start_E { $_[0]{'scratch'} .= '&' }
+sub end_E   { $_[0]{'scratch'} .= ';' }
+
 sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<img src="' : '<i>' }
 sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '">' : '</i>' }
 
@@ -198,6 +201,9 @@ sub emit {
 
 sub add_body_tags { $_[0]{'body_tags'} = $_[1] }
 sub add_css_tags { $_[0]{'css_tags'} = $_[1] }
+
+# bypass built-in E<> handling to preserve entity encoding
+sub _treat_Es {} 
 
 1;
 
