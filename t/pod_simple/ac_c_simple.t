@@ -19,36 +19,38 @@ print "# Pod::PseudoPod version $Pod::PseudoPod::VERSION\n";
 sub e ($$) { Pod::PseudoPod::DumpAsXML->_duo(@_) }
 
 my $x = 'Pod::PseudoPod::XMLOutStream';
-sub accept_N { $_[0]->accept_codes('N') }
+
+# changed N to Q, because N is a valid code in PseudoPod
+sub accept_Q { $_[0]->accept_codes('Q') }
 
 print "# Some sanity tests...\n";
 ok( $x->_out( "=pod\n\nI like pie.\n"), # without acceptor
   '<Document><Para>I like pie.</Para></Document>'
 );
-ok( $x->_out( \&accept_N, "=pod\n\nI like pie.\n"),
+ok( $x->_out( \&accept_Q, "=pod\n\nI like pie.\n"),
   '<Document><Para>I like pie.</Para></Document>'
 );
 ok( $x->_out( "=pod\n\nB<foo\t>\n"), # without acceptor
   '<Document><Para><B>foo </B></Para></Document>'
 );
-ok( $x->_out( \&accept_N,  "=pod\n\nB<foo\t>\n"),
+ok( $x->_out( \&accept_Q,  "=pod\n\nB<foo\t>\n"),
   '<Document><Para><B>foo </B></Para></Document>'
 );
 
 print "# Some real tests...\n";
 
-ok( $x->_out( \&accept_N,  "=pod\n\nN<foo\t>\n"),
-  '<Document><Para><N>foo </N></Para></Document>'
+ok( $x->_out( \&accept_Q,  "=pod\n\nQ<foo\t>\n"),
+  '<Document><Para><Q>foo </Q></Para></Document>'
 );
-ok( $x->_out( \&accept_N,  "=pod\n\nB<N<foo\t>>\n"),
-  '<Document><Para><B><N>foo </N></B></Para></Document>'
+ok( $x->_out( \&accept_Q,  "=pod\n\nB<Q<foo\t>>\n"),
+  '<Document><Para><B><Q>foo </Q></B></Para></Document>'
 );
-ok( $x->_out( "=pod\n\nB<N<foo\t>>\n") # without the mutor
-  ne '<Document><Para><B><N>foo </N></B></Para></Document>'
-  # make sure it DOESN'T pass thru the N<...> when not accepted
+ok( $x->_out( "=pod\n\nB<Q<foo\t>>\n") # without the mutor
+  ne '<Document><Para><B><Q>foo </Q></B></Para></Document>'
+  # make sure it DOESN'T pass thru the Q<...> when not accepted
 );
-ok( $x->_out( \&accept_N,  "=pod\n\nB<pieF<zorch>N<foo>I<pling>>\n"),
-  '<Document><Para><B>pie<F>zorch</F><N>foo</N><I>pling</I></B></Para></Document>'
+ok( $x->_out( \&accept_Q,  "=pod\n\nB<pieF<zorch>Q<foo>I<pling>>\n"),
+  '<Document><Para><B>pie<F>zorch</F><Q>foo</Q><I>pling</I></B></Para></Document>'
 );
 
 print "# Tests of nonacceptance...\n";
@@ -69,21 +71,20 @@ sub starts_with {
 }
 
 
-ok( starts_with( $x->_out( "=pod\n\nB<N<foo\t>>\n"), # without the mutor
+ok( starts_with( $x->_out( "=pod\n\nB<Q<foo\t>>\n"), # without the mutor
   '<Document><Para><B>foo </B></Para>'
-  # make sure it DOESN'T pass thru the N<...>, when not accepted
+  # make sure it DOESN'T pass thru the Q<...>, when not accepted
 ));
 
-ok( starts_with( $x->_out( "=pod\n\nB<pieF<zorch>N<foo>I<pling>>\n"), # !mutor
+ok( starts_with( $x->_out( "=pod\n\nB<pieF<zorch>Q<foo>I<pling>>\n"), # !mutor
   '<Document><Para><B>pie<F>zorch</F>foo<I>pling</I></B></Para>'
-  # make sure it DOESN'T pass thru the N<...>, when not accepted
+  # make sure it DOESN'T pass thru the Q<...>, when not accepted
 ));
 
-ok( starts_with( $x->_out( "=pod\n\nB<pieF<zorch>N<C<foo>>I<pling>>\n"), # !mutor
+ok( starts_with( $x->_out( "=pod\n\nB<pieF<zorch>Q<C<foo>>I<pling>>\n"), # !mutor
   '<Document><Para><B>pie<F>zorch</F><C>foo</C><I>pling</I></B></Para>'
-  # make sure it DOESN'T pass thru the N<...>, when not accepted
+  # make sure it DOESN'T pass thru the Q<...>, when not accepted
 ));
-
 
 
 
