@@ -266,54 +266,11 @@ sub _ponder_paragraph_buffer {
 
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       if($para_type eq 'Plain') {
-        DEBUG and print " giving plain treatment...\n";
-        unless( @$para == 2 or ( @$para == 3 and $para->[2] eq '' )
-          or $para->[1]{'~cooked'}
-        ) {
-          push @$para,
-          @{$self->_make_treelet(
-            join("\n", splice(@$para, 2)),
-            $para->[1]{'start_line'}
-          )};
-        }
-        # Empty paragraphs don't need a treelet for any reason I can see.
-        # And precooked paragraphs already have a treelet.
-        
+        $self->_ponder_Plain($para);
       } elsif($para_type eq 'Verbatim') {
-        DEBUG and print " giving verbatim treatment...\n";
-      
-        $para->[1]{'xml:space'} = 'preserve';
-        for(my $i = 2; $i < @$para; $i++) {
-          foreach my $line ($para->[$i]) { # just for aliasing
-            while( $line =~
-              # Sort of adapted from Text::Tabs -- yes, it's hardwired in that
-              # tabs are at every EIGHTH column.  For portability, it has to be
-              # one setting everywhere, and 8th wins.
-              s/^([^\t]*)(\t+)/$1.(" " x ((length($2)<<3)-(length($1)&7)))/e
-            ) {}
-
-            # TODO: whinge about (or otherwise treat) unindented or overlong lines
-
-          }
-        }
-        
-        # Now the VerbatimFormatted hoodoo...
-        if( $self->{'accept_codes'} and
-            $self->{'accept_codes'}{'VerbatimFormatted'}
-        ) {
-          while(@$para > 3 and $para->[-1] !~ m/\S/) { pop @$para }
-           # Kill any number of terminal newlines
-          $self->_verbatim_format($para);
-        } else {
-          push @$para, join "\n", splice(@$para, 2) if @$para > 3;
-          $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
-        }
-        
+        $self->_ponder_Verbatim($para);
       } elsif($para_type eq 'Data') {
-        DEBUG and print " giving data treatment...\n";
-        $para->[1]{'xml:space'} = 'preserve';
-        push @$para, join "\n", splice(@$para, 2) if @$para > 3;
-        
+        $self->_ponder_Data($para);
       } else {
         die "\$para type is $para_type -- how did that happen?";
         # Shouldn't happen.
@@ -851,6 +808,64 @@ sub _ponder_item {
         }
         $para->[0] .= '-' . $over_type;
 
+  return;
+}
+
+sub _ponder_Plain {
+  my ($self,$para) = @_;
+        DEBUG and print " giving plain treatment...\n";
+        unless( @$para == 2 or ( @$para == 3 and $para->[2] eq '' )
+          or $para->[1]{'~cooked'}
+        ) {
+          push @$para,
+          @{$self->_make_treelet(
+            join("\n", splice(@$para, 2)),
+            $para->[1]{'start_line'}
+          )};
+        }
+        # Empty paragraphs don't need a treelet for any reason I can see.
+        # And precooked paragraphs already have a treelet.
+  return;
+}
+
+sub _ponder_Verbatim {
+  my ($self,$para) = @_;
+        DEBUG and print " giving verbatim treatment...\n";
+      
+        $para->[1]{'xml:space'} = 'preserve';
+        for(my $i = 2; $i < @$para; $i++) {
+          foreach my $line ($para->[$i]) { # just for aliasing
+            while( $line =~
+              # Sort of adapted from Text::Tabs -- yes, it's hardwired in that
+              # tabs are at every EIGHTH column.  For portability, it has to be
+              # one setting everywhere, and 8th wins.
+              s/^([^\t]*)(\t+)/$1.(" " x ((length($2)<<3)-(length($1)&7)))/e
+            ) {}
+
+            # TODO: whinge about (or otherwise treat) unindented or overlong lines
+
+          }
+        }
+        
+        # Now the VerbatimFormatted hoodoo...
+        if( $self->{'accept_codes'} and
+            $self->{'accept_codes'}{'VerbatimFormatted'}
+        ) {
+          while(@$para > 3 and $para->[-1] !~ m/\S/) { pop @$para }
+           # Kill any number of terminal newlines
+          $self->_verbatim_format($para);
+        } else {
+          push @$para, join "\n", splice(@$para, 2) if @$para > 3;
+          $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
+        }
+  return;
+}
+
+sub _ponder_Data {
+  my ($self,$para) = @_;
+        DEBUG and print " giving data treatment...\n";
+        $para->[1]{'xml:space'} = 'preserve';
+        push @$para, join "\n", splice(@$para, 2) if @$para > 3;
   return;
 }
 
