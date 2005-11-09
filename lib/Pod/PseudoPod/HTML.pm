@@ -3,8 +3,6 @@ require 5;
 package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
-use vars qw( $VERSION );
-$VERSION = '0.05';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -16,7 +14,8 @@ sub new {
   my $self = shift;
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
-  $new->accept_targets( 'html', 'HTML', 'sidebar', 'table' );
+  $new->accept_targets( 'html', 'HTML' );
+  $new->accept_targets_as_text( 'sidebar', 'table', 'programlisting' );
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
@@ -77,6 +76,25 @@ sub start_sidebar {
 }
 
 sub end_sidebar { $_[0]{'scratch'} .= '</blockquote>'; $_[0]->emit() }
+
+# This handles =begin and =for blocks of all kinds.
+sub start_for { 
+  my ($self, $flags) = @_;
+  if ($self->{'css_tags'}) {
+    $self->{'scratch'} .= "<div";
+    $self->{'scratch'} .= " class='".$flags->{'target'}."'" if ($flags->{'target'}) ;
+    $self->{'scratch'} .= ">";
+    $self->emit('nowrap');
+  }
+
+}
+sub end_for { 
+  my ($self) = @_;
+  if ($self->{'css_tags'}) {
+    $self->{'scratch'} .= "</div>";
+    $self->emit('nowrap');
+  }
+}
 
 sub start_table { 
   my ($self, $flags) = @_;
