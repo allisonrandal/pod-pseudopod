@@ -4,7 +4,8 @@ Makefile.PL
 MANIFEST
 README
 Todo
-scripts/pod2html
+examples/pod2html
+examples/style.css
 lib/Pod/PseudoPod.pm
 lib/Pod/PseudoPod/HTML.pm
 lib/Pod/PseudoPod/Text.pm
