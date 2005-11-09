@@ -12,7 +12,7 @@
 ######################################################################
 
 use strict;
-use lib "../lib";
+use lib "../lib"; # delete this line
 use Pod::PseudoPod::HTML;
 
 my $file = $ARGV[0];
@@ -25,7 +25,7 @@ $parser->no_errata_section(1); # don't put errors in doc output
 $parser->complain_stderr(1);   # output errors on STDERR instead
 
 if (-e $file) {
-  $parser->parse_file($file)->any_errata_seen;
+  $parser->parse_file($file);
 } else {
   die "Unable to open file\n";
 }
