@@ -309,9 +309,9 @@ table lays out the tags and their meanings:
 
    F    Filename                       Edit the file F<.cshrc>.
 
-   G    Superscript                    E = MC^<2>
+   G    Superscript                    E = MCG<2>
 
-   H    Subscript                      H_<2>O
+   H    Subscript                      HH<2>O
 
    I    Italic                         Do I<not> eat that.
 
