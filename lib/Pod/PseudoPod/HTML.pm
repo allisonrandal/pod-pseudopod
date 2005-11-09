@@ -24,6 +24,7 @@ sub new {
   $new->{'scratch'} = '';
   $new->add_css_tags(0);
   $new->add_body_tags(0);
+  $new->codes_in_data(1);
   return $new;
 }
 
