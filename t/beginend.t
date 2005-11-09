@@ -129,6 +129,20 @@ EOHTML
 
 }
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin figure
+
+F<sample.gif>
+
+=end figure
+EOPOD
+
+is($results, <<'EOHTML', "a simple figure");
+<p><img src='sample.gif'></p>
+
+EOHTML
+
 ######################################
 
 sub initialize {
