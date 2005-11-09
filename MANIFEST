@@ -8,8 +8,8 @@ scripts/pod2html
 lib/Pod/PseudoPod.pm
 lib/Pod/PseudoPod/HTML.pm
 lib/Pod/PseudoPod/Text.pm
+t/basic.t
 t/html.t
-t/load.t
 t/text.t
 t/pod_simple/ac_c_extend.t
 t/pod_simple/ac_c_simple.t
