@@ -4,6 +4,12 @@
 
 A POD Extension for Authoring Large Documents
 
+=head2 Source
+
+This tutorial is an updated version of O'Reilly's documentation on
+PseudoPOD. It is included with the distribution of Pod::PseudoPod by
+permission from O'Reilly and Associates.
+
 =head2 Introduction
 
 Perl's "Plain Old Documentation" format (POD) is not, by any means, a
