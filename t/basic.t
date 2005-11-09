@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/basic.t - check PseudoPod formatting codes and directives
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod' );
 }
+
+use lib '../lib';
+use Test::More tests => 12;
+
+use_ok('Pod::PseudoPod') or exit;
 
 my $object = Pod::PseudoPod->new ();
 isa_ok ($object, 'Pod::PseudoPod');

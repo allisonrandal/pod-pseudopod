@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/for.t - check PseudoPod for blocks
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod::HTML' );
 }
+
+use lib '../lib';
+use Test::More tests => 8;
+
+use_ok('Pod::PseudoPod::HTML') or exit;
 
 my $results;
 

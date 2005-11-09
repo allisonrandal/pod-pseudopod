@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/checker.t - test Checker.pm
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod::Checker' );
 }
+
+use lib '../lib';
+use Test::More tests => 3;
+
+use_ok('Pod::PseudoPod::Checker') or exit;
 
 my $parser = Pod::PseudoPod::Checker->new ();
 isa_ok ($parser, 'Pod::PseudoPod::Checker');

@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/beginend.t - check additions to =begin and =end
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod::HTML' );
 }
+
+use lib '../lib';
+use Test::More tests => 18;
+
+use_ok('Pod::PseudoPod::HTML') or exit;
 
 my $results;
 

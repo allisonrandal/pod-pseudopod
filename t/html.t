@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/html.t - check output from Pod::PseudoPod::HTML
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod::HTML' );
 }
+
+use lib '../lib';
+use Test::More tests => 27;
+
+use_ok('Pod::PseudoPod::HTML') or exit;
 
 my $parser = Pod::PseudoPod::HTML->new ();
 isa_ok ($parser, 'Pod::PseudoPod::HTML');

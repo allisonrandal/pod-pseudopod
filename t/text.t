@@ -1,16 +1,15 @@
-# -*- perl -*-
+#!/usr/bin/perl -w
 
 # t/text.t - check output from Pod::PseudoPod::Text
 
-use Test::More qw(no_plan);
-
 BEGIN {
     chdir 't' if -d 't';
-#    unshift @INC, '../blib/lib';
-    unshift @INC, '../lib';
-
-	use_ok( 'Pod::PseudoPod::Text' );
 }
+
+use lib '../lib';
+use Test::More tests => 5;
+
+use_ok('Pod::PseudoPod::Text') or exit;
 
 my $object = Pod::PseudoPod::Text->new ();
 isa_ok ($object, 'Pod::PseudoPod::Text');
