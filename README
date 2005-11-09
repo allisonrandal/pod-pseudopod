@@ -12,8 +12,8 @@ INSTALLATION
     make install
 
 EXTRAS
-    The "examples/" directory includes a pod2html converter that isn't
-    in the standard installation.
+    The "examples/" directory includes a pod2html converter and a
+    podchecker script that aren't in the standard installation.
 
       ./pod2html filename.pod
 
