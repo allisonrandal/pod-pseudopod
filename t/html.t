@@ -274,6 +274,16 @@ class="url">http://test.url.com/stuff/and/junk.txt</font>.</p>
 
 EOHTML
 
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a Z<crossreferenceendpoint>.
+EOPOD
+is($results, <<"EOHTML", "Link anchor entity in a paragraph");
+<p>A plain paragraph with a <a name="crossreferenceendpoint">.</p>
+
+EOHTML
 
 ######################################
 
