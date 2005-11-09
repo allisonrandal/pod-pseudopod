@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.07';
+$VERSION = '0.08';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -54,6 +54,7 @@ sub _handle_element_end {
 }
 
 sub nix_Z_codes { $_[0]{'nix_Z_codes'} = $_[1] }
+sub codes_in_data { $_[0]{'codes_in_data'} = $_[1] }
 
 # Largely copied from Pod::Simple::_treat_Zs, modified to optionally
 # keep Z elements, and so it doesn't complain about Zs with content.
@@ -950,6 +951,13 @@ sub _ponder_Verbatim {
     while(@$para > 3 and $para->[-1] !~ m/\S/) { pop @$para }
      # Kill any number of terminal newlines
     $self->_verbatim_format($para);
+  } elsif ($self->{'codes_in_data'}) {
+    push @$para,
+    @{$self->_make_treelet(
+      join("\n", splice(@$para, 2)),
+      $para->[1]{'start_line'}, $para->[1]{'xml:space'}
+    )};
+    $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
   } else {
     push @$para, join "\n", splice(@$para, 2) if @$para > 3;
     $para->[-1] =~ s/\n+$//s; # Kill any number of terminal newlines
@@ -963,6 +971,158 @@ sub _ponder_Data {
   $para->[1]{'xml:space'} = 'preserve';
   push @$para, join "\n", splice(@$para, 2) if @$para > 3;
   return;
+}
+
+sub _treelet_from_formatting_codes {
+  # Given a paragraph, returns a treelet.  Full of scary tokenizing code.
+  #  Like [ '~Top', {'start_line' => $start_line},
+  #            "I like ",
+  #            [ 'B', {}, "pie" ],
+  #            "!"
+  #       ]
+  
+  my($self, $para, $start_line, $preserve_space) = @_;
+  my $treelet = ['~Top', {'start_line' => $start_line},];
+  
+  unless ($preserve_space) {
+    $para =~ s/\s+/ /g; # collapse and trim all whitespace first.
+    $para =~ s/ $//g;
+    $para =~ s/^ //g;
+  }
+  
+  # Only apparent problem the above code is that N<<  >> turns into
+  # N<< >>.  But then, word wrapping does that too!  So don't do that!
+  
+  my @stack;
+  my @lineage = ($treelet);
+
+  DEBUG > 4 and print "Paragraph:\n$para\n\n";
+  
+  while($para =~  # Here begins our frightening tokenizer RE.
+    m/\G
+      (?:
+        ([A-Z]<(<+\ )?) # that's $1 and $2 for both kinds of start-codes
+        |
+        (\ >{2,})       # $3: end-codes of the type " >>", " >>>", etc.
+        |
+        (\ ?>)          # $4: simple end-codes
+        |
+        (               # $5: stuff containing no start-codes or end-codes
+          (?:
+            [^A-Z\ >]+
+            |
+            (?:
+              [A-Z](?!<)
+            )
+            |
+            (?:
+              \ (?!>)
+            )
+          )+
+        )
+      )
+    /xgo
+  ) {
+    DEBUG > 4 and print "\nParagraphic tokenstack = (@stack)\n";
+    if(defined $1) {
+      if(defined $2) {
+        DEBUG > 3 and print "Found complex start-text code \"$1\"\n";
+        push @stack, length($1) - 1; 
+          # length of the necessary complex end-code string
+      } else {
+        DEBUG > 3 and print "Found simple start-text code \"$1\"\n";
+        push @stack, 0;  # signal that we're looking for simple
+      }
+      push @lineage, [ substr($1,0,1), {}, ];  # new node object
+      push @{ $lineage[-2] }, $lineage[-1];
+      
+    } elsif(defined $3) {
+      DEBUG > 3 and print "Found apparent complex end-text code \"$3\"\n";
+      # This is where it gets messy...
+      if(! @stack) {
+        # We saw " >>>>" but needed nothing.  This is ALL just stuff then.
+        DEBUG > 4 and print " But it's really just stuff.\n";
+        push @{ $lineage[-1] }, $3;
+        next;
+      } elsif(!$stack[-1]) {
+        # We saw " >>>>" but needed only ">".  Back pos up.
+        DEBUG > 4 and print " And that's more than we needed to close simple.\n";
+        push @{ $lineage[-1] }, ' '; # That was a for-real space, too.
+        pos($para) = pos($para) - length($3) + 2;
+      } elsif($stack[-1] == length($3)) {
+        # We found " >>>>", and it was exactly what we needed.  Commonest case.
+        DEBUG > 4 and print " And that's exactly what we needed to close complex.\n";
+      } elsif($stack[-1] < length($3)) {
+        # We saw " >>>>" but needed only " >>".  Back pos up.
+        DEBUG > 4 and print " And that's more than we needed to close complex.\n";
+        pos($para) = pos($para) - length($3) + $stack[-1];
+      } else {
+        # We saw " >>>>" but needed " >>>>>>".  So this is all just stuff!
+        DEBUG > 4 and print " But it's really just stuff, because we needed more.\n";
+        push @{ $lineage[-1] }, $3;
+        next;
+      }
+      #print "\nHOOBOY ", scalar(@{$lineage[-1]}), "!!!\n";
+      
+      push @{ $lineage[-1] }, '' if 2 == @{ $lineage[-1] };
+      # Keep the element from being childless
+      
+      pop @stack;
+      pop @lineage;
+      
+    } elsif(defined $4) {
+      DEBUG > 3 and print "Found apparent simple end-text code \"$4\"\n";
+
+      if(@stack and ! $stack[-1]) {
+        # We're indeed expecting a simple end-code
+        DEBUG > 4 and print " It's indeed an end-code.\n";
+
+        if(length($4) == 2) { # There was a space there: " >"
+          push @{ $lineage[-1] }, ' ';
+        } elsif( 2 == @{ $lineage[-1] } ) { # Closing a childless element
+          push @{ $lineage[-1] }, ''; # keep it from being really childless
+        }
+
+        pop @stack;
+        pop @lineage;
+      } else {
+        DEBUG > 4 and print " It's just stuff.\n";
+        push @{ $lineage[-1] }, $4;
+      }
+
+    } elsif(defined $5) {
+      DEBUG > 3 and print "Found stuff \"$5\"\n";
+      push @{ $lineage[-1] }, $5;
+      
+    } else {
+      # should never ever ever ever happen
+      DEBUG and print "AYYAYAAAAA at line ", __LINE__, "\n";
+      die "SPORK 512512!";
+    }
+  }
+
+  if(@stack) { # Uhoh, some sequences weren't closed.
+    my $x= "...";
+    while(@stack) {
+      push @{ $lineage[-1] }, '' if 2 == @{ $lineage[-1] };
+      # Hmmmmm!
+
+      my $code         = (pop @lineage)->[0];
+      my $ender_length =  pop @stack;
+      if($ender_length) {
+        --$ender_length;
+        $x = $code . ("<" x $ender_length) . " $x " . (">" x $ender_length);
+      } else {
+        $x = $code . "<$x>";
+      }
+    }
+    DEBUG > 1 and print "Unterminated $x sequence\n";
+    $self->whine($start_line,
+      "Unterminated $x sequence",
+    );
+  }
+  
+  return $treelet;
 }
 
 1; 
