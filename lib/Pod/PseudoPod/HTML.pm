@@ -27,6 +27,9 @@ sub new {
 
 sub handle_text { $_[0]{'scratch'} .= $_[1] }
 
+sub start_Document { $_[0]{'scratch'} .= "<html>\n<body>\n<link rel='stylesheet' href='style.css' type='text/css'>"; $_[0]->emit() }
+sub end_Document   { $_[0]{'scratch'} .= "</body>\n</html>"; $_[0]->emit() }
+
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>' }
 
@@ -69,8 +72,11 @@ sub end_item_text   { $_[0]->emit() }
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
-sub start_N { $_[0]{'scratch'} .= ' (footnote: ' }
-sub end_N   { $_[0]{'scratch'} .= ')' }
+sub start_N { $_[0]{'scratch'} .= ' <font class="footnote">(footnote: ' }
+sub end_N   { $_[0]{'scratch'} .= ')</font>' }
+
+sub start_U { $_[0]{'scratch'} .= '<font class="url">' }
+sub end_U   { $_[0]{'scratch'} .= '</font>' }
 
 sub emit {
   my($self, $nowrap) = @_;
@@ -89,6 +95,11 @@ sub emit {
   
   return;
 }
+
+# Set additional options
+
+sub add_body_tags { $_[0]{'body_tags'} = $_[1] }
+sub add_css_tags { $_[0]{'css_tags'} = $_[1] }
 
 1;
 
