@@ -1,6 +1,6 @@
 # -*- perl -*-
 
-# t/html.t - check module loading and create testing directory
+# t/html.t - check output from Pod::PseudoPod::HTML
 
 use Test::More qw(no_plan);
 
@@ -12,9 +12,182 @@ BEGIN {
 	use_ok( 'Pod::PseudoPod::HTML' );
 }
 
-my $object = Pod::PseudoPod::HTML->new ();
-isa_ok ($object, 'Pod::PseudoPod::HTML');
+my $parser = Pod::PseudoPod::HTML->new ();
+isa_ok ($parser, 'Pod::PseudoPod::HTML');
+
+#$parser->filter( '../../../../../chapters/ch02.pod' )->any_errata_seen;
+
+my $results;
+
+initialize($parser, $results);
+$parser->parse_string_document( "=head0 Narf!" );
+is($results, "<h1>Narf!</h1>\n\n", "head0 level output");
+
+initialize($parser, $results);
+$parser->parse_string_document( "=head1 Poit!" );
+is($results, "<h2>Poit!</h2>\n\n", "head1 level output");
+
+initialize($parser, $results);
+$parser->parse_string_document( "=head2 I think so Brain." );
+is($results, "<h3>I think so Brain.</h3>\n\n", "head2 level output");
+
+initialize($parser, $results);
+$parser->parse_string_document( "=head3 I say, Brain..." );
+is($results, "<h4>I say, Brain...</h4>\n\n", "head3 level output");
+
+initialize($parser, $results);
+$parser->parse_string_document( "=head4 Zort!" );
+is($results, "<h5>Zort!</h5>\n\n", "head4 level output");
 
 
-print "\n";
-$object->filter( '../../../../../chapters/ch02.pod' )->any_errata_seen;
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+Gee, Brain, what do you want to do tonight?
+EOPOD
+
+is($results, <<'EOHTML', "simple paragraph");
+<p>Gee, Brain, what do you want to do tonight?</p>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+B: Now, Pinky, if by any chance you are captured during this mission,
+remember you are Gunther Heindriksen from Appenzell. You moved to
+Grindelwald to drive the cog train to Murren. Can you repeat that?
+
+P: Mmmm, no, Brain, don't think I can.
+EOPOD
+
+is($results, <<'EOHTML', "multiple paragraphs");
+<p>B: Now, Pinky, if by any chance you are captured during this mission,
+remember you are Gunther Heindriksen from Appenzell. You moved to
+Grindelwald to drive the cog train to Murren. Can you repeat that?</p>
+
+<p>P: Mmmm, no, Brain, don't think I can.</p>
+
+EOHTML
+
+#initialize($parser, $results);
+#$parser->parse_string_document("=item Pinky");
+#is($results, "<li>Pinky</li>\n\n", "simple list item");
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=over
+
+=item *
+
+P: Gee, Brain, what do you want to do tonight?
+
+=item *
+
+B: The same thing we do every night, Pinky. Try to take over the world!
+
+=back
+
+EOPOD
+
+is($results, <<'EOHTML', "simple bulleted list");
+<ul>
+
+<li>P: Gee, Brain, what do you want to do tonight?</li>
+
+<li>B: The same thing we do every night, Pinky. Try to take over the
+world!</li>
+
+</ul>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=over
+
+=item 1
+
+P: Gee, Brain, what do you want to do tonight?
+
+=item 2
+
+B: The same thing we do every night, Pinky. Try to take over the world!
+
+=back
+
+EOPOD
+
+is($results, <<'EOHTML', "numbered list");
+<ol>
+
+<li>1. P: Gee, Brain, what do you want to do tonight?</li>
+
+<li>2. B: The same thing we do every night, Pinky. Try to take over the
+world!</li>
+
+</ol>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=over
+
+=item Pinky
+
+Gee, Brain, what do you want to do tonight?
+
+=item Brain
+
+The same thing we do every night, Pinky. Try to take over the world!
+
+=back
+
+EOPOD
+
+is($results, <<'EOHTML', "list with text headings");
+<ul>
+
+<li>Pinky
+
+<p>Gee, Brain, what do you want to do tonight?</p>
+
+<li>Brain
+
+<p>The same thing we do every night, Pinky. Try to take over the world!</p>
+
+</ul>
+
+EOHTML
+
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+  1 + 1 = 2;
+  2 + 2 = 4;
+
+EOPOD
+
+is($results, <<'EOHTML', "code block");
+<pre><code>  1 + 1 = 2;
+  2 + 2 = 4;</code></pre>
+
+EOHTML
+
+
+######################################
+
+sub initialize {
+	$_[0] = Pod::PseudoPod::HTML->new ();
+	$_[0]->output_string( \$results ); # Send the resulting output to a string
+	$_[1] = '';
+	return;
+}
