@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.01';
+$VERSION = '0.03';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -30,12 +30,12 @@ sub new {
 }
 
 sub _handle_element_start {
-  my ($self, $element, $arg) = @_;
+  my ($self, $element, $flags) = @_;
 
   $element =~ tr/-:./__/;
 
   my $sub = $self->can('start_' . $element);
-  $sub->($self,$arg) if $sub; 
+  $sub->($self,$flags) if $sub; 
 }
 
 sub _handle_text {
@@ -298,7 +298,7 @@ sub _ponder_paragraph_buffer {
       #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
       $para->[0] =~ s/^[~=]//s;
 
-      DEBUG and print "\n", pretty($para), "\n";
+      DEBUG and print "\n", Pod::Simple::BlackBox::pretty($para), "\n";
 
       # traverse the treelet (which might well be just one string scalar)
       $self->{'content_seen'} ||= 1;
@@ -359,40 +359,27 @@ sub _ponder_begin {
   $content =~ s/^\s+//s;
   $content =~ s/\s+$//s;
   unless(length($content)) {
-    $self->whine(
-      $para->[1]{'start_line'},
-      "=begin without a target?"
-    );
+    $self->whine($para->[1]{'start_line'}, "=begin without a target?");
     DEBUG and print "Ignoring targetless =begin\n";
     return 1;
   }
   
-  unless($content =~ m/^\S+$/s) {  # i.e., unless it's one word
-    $self->whine(
-      $para->[1]{'start_line'},
-      "'=begin' only takes one parameter, not several as in '=begin $content'"
-    );
-    DEBUG and print "Ignoring unintelligible =begin $content\n";
-    return 1;
-  }
+  my ($target, $title) = $content =~ m/^(\S+)\s*(.*)$/;
+  $para->[1]{'title'} = $title if ($title);
 
+  $para->[1]{'target'} = $target;  # without any ':'
 
-  $para->[1]{'target'} = $content;  # without any ':'
-
-  $content =~ s/^:!/!:/s;
+  $target =~ s/^:!/!:/s;
   my $neg;  # whether this is a negation-match
-  $neg = 1        if $content =~ s/^!//s;
+  $neg = 1        if $target =~ s/^!//s;
   my $to_resolve;  # whether to process formatting codes
-  $to_resolve = 1 if $content =~ s/^://s;
-  
+  $to_resolve = 1 if $target =~ s/^://s;
+
   my $dont_ignore; # whether this target matches us
   
-  foreach my $target_name (
-    split(',', $content, -1),
-    $neg ? () : '*'
-  ) {
+  foreach my $target_name ( split(',', $target, -1), $neg ? () : '*') {
     DEBUG > 2 and
-     print " Considering whether =begin $content matches $target_name\n";
+     print " Considering whether =begin $target matches $target_name\n";
     next unless $self->{'accept_targets'}{$target_name};
     
     DEBUG > 2 and
