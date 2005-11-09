@@ -4,7 +4,7 @@ package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
 use vars qw( $VERSION );
-$VERSION = '0.01';
+$VERSION = '0.03';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -16,7 +16,7 @@ sub new {
   my $self = shift;
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
-  $new->accept_targets( 'html', 'HTML' );
+  $new->accept_targets( 'html', 'HTML', 'sidebar' );
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
@@ -66,6 +66,16 @@ sub end_head4       { $_[0]{'scratch'} .= '</h5>'; $_[0]->emit() }
 sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_text   { $_[0]->emit() }
+
+sub start_for { 
+  my ($self, $flags) = @_;
+  $self->{'scratch'} = "<blockquote>\n";
+  if ($flags->{'title'}) {
+    $self->{'scratch'} .= "<h3>" . $flags->{'title'} . "</h3>\n";
+  }
+}
+
+sub end_for   { $_[0]{'scratch'} .= "\n</blockquote>"; $_[0]->emit() }
 
 sub start_Document { 
   my ($self) = @_;
