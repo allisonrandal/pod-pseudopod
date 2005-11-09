@@ -579,12 +579,16 @@ and =bodyrows to mark the start of the main body of the table:
   =cell Header for first column (row 1, col 1)
   =cell Header for 2nd column (row 1, col 2)
   =bodyrows
+  =row
   =cell Cell for row 2, col 1
   =cell Cell for row 2, col 2
+  =row
+  =cell Cell for row 3, col 1
+  =cell Cell for row 3, col 2
   =end table
 
 The second method is a freestyle, anything-goes format. Make your own
-columns and headers anyway you want. The plus side is: infinite
+columns and headers any way you want. The plus side is: infinite
 creativity! The downside is: we will end up recoding the whole table
 ourselves in production which slows us down a bit. Just try to make it
 clear what is in which column and on what row, and it will be okay
