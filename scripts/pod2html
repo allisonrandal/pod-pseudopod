@@ -16,8 +16,12 @@ use Pod::PseudoPod::HTML;
 
 my $file = $ARGV[0];
 my $parser  = Pod::PseudoPod::HTML->new ();
-$parser->add_body_tags(1);
-$parser->add_css_tags(1);
+
+$parser->add_body_tags(1);     # output a complete html document
+$parser->add_css_tags(1);      # add css tags for cleaner display
+
+$parser->no_errata_section(1); # don't put errors in doc output
+$parser->complain_stderr(1);   # output errors on STDERR instead
 
 if (-e $file) {
   $parser->parse_file($file)->any_errata_seen;
