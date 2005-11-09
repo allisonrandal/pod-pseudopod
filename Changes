@@ -1,5 +1,8 @@
 Revision history for Pod::PseudoPod
 
+0.10 Apr 26, 2004
+	- Added the tutorial to the manifest, ooops.
+
 0.09 Apr 24, 2004
 	- Added a PseudoPod tutorial, based on O'Reilly's docs.
 	- Added rudimentary text index generation.
