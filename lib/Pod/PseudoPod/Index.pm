@@ -4,7 +4,7 @@ use Carp ();
 use base qw( Pod::PseudoPod );
 
 use vars qw( $VERSION );
-$VERSION = '0.09';
+$VERSION = '0.11';
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -28,15 +28,10 @@ sub new {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 sub start_X { $_[0]{'X'} = 1; }
-#sub end_X   { $_[0]{'X'} = 0; }
 sub end_X {
   my $self = shift;
   my $text = $self->{'scratch'};
   $self->{'scratch'} = '';
-
-#  my @elems = split ';', $text;
-#  _build_index($self->{'index'},\@elems,$cross_ref);
-#  $self->{'index'}{$text}{'page'} = $cross_ref;
 
   my $cross_ref = $self->{'index_file'} || $self->set_filename;
   &_build_index($self->{'index'},$cross_ref,split(';', $text));

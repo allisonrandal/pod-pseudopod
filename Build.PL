@@ -3,7 +3,7 @@ my $build = Module::Build->new (
     module_name => 'Pod::PseudoPod',
     license => 'perl',
     requires => {
-        'Pod::Simple'   => 2.05,
+        'Pod::Simple'   => 3.02,
         'Text::Wrap'    => 98.112902,
     },
     recursive_test_files => 1,

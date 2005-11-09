@@ -4,7 +4,7 @@ package Pod::PseudoPod::Text;
 use strict;
 use Carp ();
 use vars qw( $VERSION $FREAKYMODE );
-$VERSION = '0.09';
+$VERSION = '0.11';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -23,7 +23,7 @@ sub new {
   $new->nix_X_codes(1);
   $new->nix_Z_codes(1);
   $new->nbsp_for_S(1);
-  $new->codes_in_data(1);
+  $new->codes_in_verbatim(1);
   $new->{'scratch'} = '';
   $new->{'Indent'} = 0;
   $new->{'Indentstring'} = '   ';

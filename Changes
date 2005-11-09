@@ -7,8 +7,8 @@ Revision history for Pod::PseudoPod
 	  formatter, and display a "no errors" message from the checker
 	  when the file parses without errors.
 	- Updated main Pod::PseudoPod module to take advantage of
-	  Pod::Simple 3.02.
-
+	  Pod::Simple 3.02 (pieces of Pod::PseudoPod were integrated
+	  into Pod::Simple).
 
 0.10 Apr 26, 2004
 	- Added the tutorial to the manifest, ooops.

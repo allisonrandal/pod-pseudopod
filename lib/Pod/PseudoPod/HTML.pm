@@ -1,7 +1,7 @@
 package Pod::PseudoPod::HTML;
 use strict;
 use vars qw( $VERSION );
-$VERSION = '0.09';
+$VERSION = '0.11';
 use Carp ();
 use base qw( Pod::PseudoPod );
 
@@ -23,7 +23,7 @@ sub new {
   $new->nbsp_for_S(1);
   $new->add_css_tags(0);
   $new->add_body_tags(0);
-  $new->codes_in_data(1);
+  $new->codes_in_verbatim(1);
   $new->{'scratch'} = '';
   return $new;
 }
