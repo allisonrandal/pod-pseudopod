@@ -7,8 +7,6 @@ TODO list for Perl module Pod::PseudoPod
   (randomly generated number?), and an index list at the end of the
   document.
 
-- Handle code tags within Verbatim text (but still don't wrap).
-
 - Modify E<> entity handling so E<lt> and E<gt> are properly encoded
   as html entities, not as literal "<" and ">".
 
