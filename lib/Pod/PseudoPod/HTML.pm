@@ -101,6 +101,9 @@ sub end_N {
 sub start_U { $_[0]{'scratch'} .= '<font class="url">' if $_[0]{'css_tags'} }
 sub end_U   { $_[0]{'scratch'} .= '</font>' if $_[0]{'css_tags'} }
 
+sub start_Z { $_[0]{'scratch'} .= '<a name="' }
+sub end_Z   { $_[0]{'scratch'} .= '">' }
+
 sub emit {
   my($self, $nowrap) = @_;
   my $out = $self->{'scratch'} . "\n";

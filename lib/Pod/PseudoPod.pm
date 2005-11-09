@@ -51,6 +51,39 @@ sub _handle_element_end {
   $sub->($self) if $sub;
 }
 
+sub nix_Z_codes { $_[0]{'nix_Z_codes'} = $_[1] }
+
+# Largely copied from Pod::Simple::_treat_Zs, modified to optionally
+# keep Z elements, and so it doesn't complain about Zs with content.
+#
+sub _treat_Zs {  # Nix Z<...>'s
+  my($self,@stack) = @_;
+
+  my($i, $treelet);
+  my $start_line = $stack[0][1]{'start_line'};
+
+  # A recursive algorithm implemented iteratively!  Whee!
+
+  while($treelet = shift @stack) {
+    for($i = 2; $i < @$treelet; ++$i) { # iterate over children
+      next unless ref $treelet->[$i];  # text nodes are uninteresting
+      unless($treelet->[$i][0] eq 'Z') {
+        unshift @stack, $treelet->[$i]; # recurse
+        next;
+      }
+        
+      if ($self->{'nix_Z_codes'}) {
+        #DEBUG > 1 and print "Nixing Z node @{$treelet->[$i]}\n";
+        splice(@$treelet, $i, 1); # thereby just nix this node.
+        --$i;
+      }
+
+    }
+  }
+  
+  return;
+}
+
 1; 
 
 __END__
