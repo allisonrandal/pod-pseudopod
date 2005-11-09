@@ -101,7 +101,7 @@ $parser->parse_string_document(<<'EOPOD');
 EOPOD
 
 is($results, <<'EOHTML', "programlisting blocks with css tags turned on");
-<div class='programlisting'>
+<div class="programlisting">
 
 <pre><code>  This is used for code blocks
   and should have no effect
@@ -139,7 +139,22 @@ F<sample.gif>
 EOPOD
 
 is($results, <<'EOHTML', "a simple figure");
-<p><img src='sample.gif'></p>
+<p><img src="sample.gif"></p>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin figure
+
+Z<figure1>
+F<sample.gif>
+
+=end figure
+EOPOD
+
+is($results, <<'EOHTML', "a figure with a Z<> tag included.");
+<p><a name="figure1"> <img src="sample.gif"></p>
 
 EOHTML
 
