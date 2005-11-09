@@ -1,0 +1,39 @@
+=pod
+
+=head0 Chapter Title
+
+This is a sample PseudoPod document. It includes most of the
+formatting elements added to O'Reilly's PseudoPod, and a few familiar
+ones from ordinary Pod.
+
+=head1 Begin/End Directives
+
+Tables, sidebars, and figures are handled specially, all other
+begin/end pairs are simply treated as ordinary text. In the html
+formatter, if the "add_css_tags" option is turned on each is wrapped
+in a E<lt>divE<gt> tag with the class set to the target ("=begin
+comment" is "E<lt>div class='comment'E<gt>") so you can format them
+however you like. A default set of formats in included in the sample
+style.css.
+
+=head2 Program listings
+
+=begin programlisting
+
+  Used for code blocks.
+  They don't have any impact
+  on text format (code still
+  has to be indented).
+
+=end programlisting
+
+=head2 Epigraphs
+
+=begin epigraph
+
+This is a sample epigraph. These are generally italic, and often
+aligned right.
+
+=end epigraph
+
+=cut
