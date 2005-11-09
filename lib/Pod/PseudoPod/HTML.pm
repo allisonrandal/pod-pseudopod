@@ -16,8 +16,8 @@ sub new {
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_targets( 'html', 'HTML' );
   $new->accept_targets_as_text( qw(blockquote comment caution epigraph 
-        example important note programlisting screen sidebar table 
-	tip warning) );
+        example important note programlisting screen sidebar table tip 
+	warning figure) );
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
   $new->{'scratch'} = '';
@@ -78,6 +78,9 @@ sub start_sidebar {
 }
 
 sub end_sidebar { $_[0]{'scratch'} .= '</blockquote>'; $_[0]->emit() }
+
+sub start_figure { $_[0]{'in_figure'} = 1 }
+sub end_figure { $_[0]{'in_figure'} = 0 }
 
 # This handles =begin and =for blocks of all kinds.
 sub start_for { 
@@ -148,8 +151,8 @@ sub end_B   { $_[0]{'scratch'} .= '</b>' }
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
 
-sub start_F { $_[0]{'scratch'} .= '<i>' }
-sub end_F   { $_[0]{'scratch'} .= '</i>' }
+sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? "<img src='" : '<i>' }
+sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? "'>" : '</i>' }
 
 sub start_G { $_[0]{'scratch'} .= '<sup>' }
 sub end_G   { $_[0]{'scratch'} .= '</sup>' }
