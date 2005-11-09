@@ -28,7 +28,9 @@ EOPOD
 
 is($results, <<'EOHTML', "a simple sidebar");
 <blockquote>
-This is the text of the sidebar.
+
+<p>This is the text of the sidebar.</p>
+
 </blockquote>
 
 EOHTML
@@ -45,13 +47,13 @@ EOPOD
 is($results, <<'EOHTML', "a sidebar with a title");
 <blockquote>
 <h3>Title Text</h3>
-This is the text of the sidebar.
+
+<p>This is the text of the sidebar.</p>
+
 </blockquote>
 
 EOHTML
 
-TODO: {
-local $TODO = "need to process as text without killing begin_for event";
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =begin sidebar Title Text
@@ -64,11 +66,12 @@ EOPOD
 is($results, <<'EOHTML', "a sidebar with a Z<> entity");
 <blockquote>
 <h3>Title Text</h3>
-This is the text of the <a name="strange"> sidebar.
+
+<p>This is the text of the <a name="strange"> sidebar.</p>
+
 </blockquote>
 
 EOHTML
-};
 
 ######################################
 

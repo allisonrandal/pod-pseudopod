@@ -4,7 +4,7 @@ package Pod::PseudoPod::HTML;
 use strict;
 use Carp ();
 use vars qw( $VERSION );
-$VERSION = '0.04';
+$VERSION = '0.05';
 use base qw( Pod::PseudoPod );
 
 use Text::Wrap 98.112902 ();
@@ -67,25 +67,27 @@ sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
 sub end_item_text   { $_[0]->emit() }
 
-sub start_for { 
+sub start_sidebar { 
   my ($self, $flags) = @_;
-  $self->{'scratch'} = "<blockquote>\n";
+  $self->{'scratch'} = '<blockquote>';
   if ($flags->{'title'}) {
-    $self->{'scratch'} .= "<h3>" . $flags->{'title'} . "</h3>\n";
+    $self->{'scratch'} .= "\n<h3>" . $flags->{'title'} . "</h3>";
   }
+  $self->emit('nowrap');
 }
 
-sub end_for   { $_[0]{'scratch'} .= "\n</blockquote>"; $_[0]->emit() }
+sub end_sidebar { $_[0]{'scratch'} .= '</blockquote>'; $_[0]->emit() }
 
 sub start_table { 
   my ($self, $flags) = @_;
   if ($flags->{'title'}) {
     $self->{'scratch'} .= "<i>Table: " . $flags->{'title'} . "</i>\n";
   }
-  $self->{'scratch'} .= "<table>\n\n";
+  $self->{'scratch'} .= '<table>';
+  $self->emit('nowrap');
 }
 
-sub end_table   { $_[0]{'scratch'} .= "</table>"; $_[0]->emit() }
+sub end_table   { $_[0]{'scratch'} .= '</table>'; $_[0]->emit('nowrap') }
 
 sub start_headrow { $_[0]{'in_headrow'} = 1 }
 sub start_bodyrows { $_[0]{'in_headrow'} = 0 }
@@ -105,14 +107,14 @@ sub start_Document {
   if ($self->{'body_tags'}) {
     $self->{'scratch'} .= "<html>\n<body>";
     $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
-    $_[0]->emit();
+    $self->emit('nowrap');
   }
 }
 sub end_Document   { 
   my ($self) = @_;
   if ($self->{'body_tags'}) {
     $self->{'scratch'} .= "</body>\n</html>";
-    $_[0]->emit();
+    $self->emit('nowrap');
   }
 }
 

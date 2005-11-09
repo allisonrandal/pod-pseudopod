@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -357,31 +357,77 @@ sub _ponder_for {
 
 sub _ponder_begin {
   my ($self,$para,$curr_open,$paras) = @_;
+
+  unless ($para->[2] =~ /^\s*(?:table|sidebar|figure)/) {
+    return $self->_super_ponder_begin($para,$curr_open,$paras);
+  }
+
   my $content = join ' ', splice @$para, 2;
   $content =~ s/^\s+//s;
   $content =~ s/\s+$//s;
-  unless(length($content)) {
-    $self->whine($para->[1]{'start_line'}, "=begin without a target?");
-    DEBUG and print "Ignoring targetless =begin\n";
-    return 1;
-  }
-  
+
   my ($target, $title) = $content =~ m/^(\S+)\s*(.*)$/;
   $title =~ s/^(picture|html)\s*// if ($target eq 'table');
   $para->[1]{'title'} = $title if ($title);
   $para->[1]{'target'} = $target;  # without any ':'
 
-  $target =~ s/^:!/!:/s;
-  my $neg;  # whether this is a negation-match
-  $neg = 1        if $target =~ s/^!//s;
-  my $to_resolve;  # whether to process formatting codes
-  $to_resolve = 1 if $target =~ s/^://s;
+  return 1 unless $self->{'accept_targets'}{$target};
+#  $para->[1]{'target_matching'} = $target;
 
+  $para->[0] = '=for';  # Just what we happen to call these, internally
+  $para->[1]{'~really'} ||= '=begin';
+#  $para->[1]{'~ignore'}  = 0;
+  $para->[1]{'~resolve'} = 1;
+
+  push @$curr_open, $para;
+  $self->{'content_seen'} ||= 1;
+  $self->_handle_element_start($target, $para->[1]);
+
+  return 1;
+}
+
+# This will eventually be SUPER::_ponder_begin, if my patch is added
+# to the next version of Pod::Simple.
+sub _super_ponder_begin {
+  my ($self,$para,$curr_open,$paras) = @_;
+  my $content = join ' ', splice @$para, 2;
+  $content =~ s/^\s+//s;
+  $content =~ s/\s+$//s;
+  unless(length($content)) {
+    $self->whine(
+      $para->[1]{'start_line'},
+      "=begin without a target?"
+    );
+    DEBUG and print "Ignoring targetless =begin\n";
+    return 1;
+  }
+  
+  unless($content =~ m/^\S+$/s) {  # i.e., unless it's one word
+    $self->whine(
+      $para->[1]{'start_line'},
+      "'=begin' only takes one parameter, not several as in '=begin $content'"
+    );
+    DEBUG and print "Ignoring unintelligible =begin $content\n";
+    return 1;
+  }
+
+
+  $para->[1]{'target'} = $content;  # without any ':'
+
+  $content =~ s/^:!/!:/s;
+  my $neg;  # whether this is a negation-match
+  $neg = 1        if $content =~ s/^!//s;
+  my $to_resolve;  # whether to process formatting codes
+  $to_resolve = 1 if $content =~ s/^://s;
+  
   my $dont_ignore; # whether this target matches us
   
-  foreach my $target_name ( split(',', $target, -1), $neg ? () : '*') {
+  foreach my $target_name (
+    split(',', $content, -1),
+    $neg ? () : '*'
+  ) {
     DEBUG > 2 and
-     print " Considering whether =begin $target matches $target_name\n";
+     print " Considering whether =begin $content matches $target_name\n";
     next unless $self->{'accept_targets'}{$target_name};
     
     DEBUG > 2 and
@@ -421,11 +467,7 @@ sub _ponder_begin {
     DEBUG > 1 and print "Ignoring ignorable =begin\n";
   } else {
     $self->{'content_seen'} ||= 1;
-    if ($target eq 'table') {
-      $self->_handle_element_start($target, $para->[1]);
-    } else {
-      $self->_handle_element_start('for', $para->[1]);
-    }
+    $self->_handle_element_start((my $scratch='for'), $para->[1]);
   }
 
   return 1;
@@ -495,7 +537,7 @@ sub _ponder_end {
       # what's that for?
     
     $self->{'content_seen'} ||= 1;
-    if ($content eq 'table') {
+    if ($content eq 'table' or $content eq 'sidebar' or $content eq 'figure') {
       $self->_handle_element_end( $content );
     } else {
       $self->_handle_element_end( 'for' );

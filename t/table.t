@@ -177,6 +177,39 @@ initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =begin table
 
+Z<table1>
+
+=row
+
+=cell Cell 1
+
+=cell Cell 2
+
+=end table
+
+EOPOD
+
+is($results, <<'EOHTML', "a table with a Z<> tag inside");
+<table>
+
+<p><a name="table1"></p>
+
+<tr>
+
+<td>Cell 1</td>
+
+<td>Cell 2</td>
+
+</tr>
+
+</table>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table
+
 =row
 
 =cell This is a really, really long cell. So long, in fact that it
