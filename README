@@ -11,3 +11,12 @@ INSTALLATION
     make test
     make install
 
+EXTRAS
+    The "scripts/" directory includes a pod2html converter that isn't
+    in the standard installation.
+
+      ./pod2html filename.pod > filename.html
+
+    If you also copy the sample style.css into the same directory as
+    the html files you generate, the output is a tolerable simulation
+    of O'Reilly's animal book format.
