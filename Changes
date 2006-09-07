@@ -1,5 +1,9 @@
 Revision history for Pod::PseudoPod
 
+0.13 Aug 03, 2006
+	- Resolve failing tests, check for encoded entities with
+	  pattern match instead of exact text match.
+
 0.12 Jul 17, 2005
 	- Now install ppod2html, ppod2txt, and ppodchecker during the
 	  make or build process.
