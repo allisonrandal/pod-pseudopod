@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.13';
+$VERSION = '0.14';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 
@@ -549,11 +549,10 @@ Pod::PseudoPod - A framework for parsing O'Reilly's PseudoPod
 
 =head1 DESCRIPTION
 
-PseudoPod is an extended set of Pod tags used by O'Reilly and
-Associates publishing for book manuscripts. Standard Pod doesn't have
-all the markup options you need to mark up files for publishing
-production. PseudoPod adds a few extra tags for footnotes, tables,
-sidebars, etc.
+PseudoPod is an extended set of Pod tags used by O'Reilly Media, Inc.
+for book manuscripts. Standard Pod doesn't have all the markup options
+you need to mark up files for publishing production. PseudoPod adds a
+few extra tags for footnotes, tables, sidebars, etc.
 
 This class adds parsing support for the PseudoPod tags. It also
 overrides Pod::Simple's C<_handle_element_start>, C<_handle_text>, and

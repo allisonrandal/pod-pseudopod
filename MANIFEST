@@ -13,6 +13,7 @@ examples/ppodindex
 examples/style.css
 lib/Pod/PseudoPod.pm
 lib/Pod/PseudoPod/Checker.pm
+lib/Pod/PseudoPod/DocBook.pm
 lib/Pod/PseudoPod/DumpAsXML.pm
 lib/Pod/PseudoPod/HTML.pm
 lib/Pod/PseudoPod/Index.pm
@@ -22,6 +23,7 @@ lib/Pod/PseudoPod/XMLOutStream.pm
 t/basic.t
 t/beginend.t
 t/checker.t
+t/docbook.t
 t/fcodes.t
 t/for.t
 t/html.t
