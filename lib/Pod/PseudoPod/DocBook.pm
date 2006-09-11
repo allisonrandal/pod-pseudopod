@@ -22,7 +22,7 @@ sub new {
   $new->nbsp_for_S(1);
   $new->codes_in_verbatim(1);
   $new->{'scratch'} = '';
-  $new->{'sections'} = ();
+  $new->{'sections'} = (); # a stack for tracking section nesting
   $new->{'sectionname'} = {
       0 => 'chapter',
       1 => 'sect1',
@@ -66,7 +66,7 @@ sub close_sections {
             && @$sections > 0
             && $level <= $sections->[-1]) {
         my $closing = pop @$sections;
-        $scratch .= "</" . $self->{'sectionname'}{$closing} . ">";
+        $scratch .= "</" . $self->{'sectionname'}{$closing} . ">\n";
     }
     return $scratch;
 }
