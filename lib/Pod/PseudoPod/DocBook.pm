@@ -74,19 +74,37 @@ sub close_sections {
     return $scratch;
 }
 
-sub start_item_bullet { $_[0]{'scratch'} = '<li>' }
-sub start_item_number { $_[0]{'scratch'} = "<li>$_[1]{'number'}. "  }
-sub start_item_text   { $_[0]{'scratch'} = '<li>'   }
+sub start_over_bullet { $_[0]{'scratch'} = '<itemizedlist>'; $_[0]->emit() }
+sub start_over_block  { $_[0]{'scratch'} = '<itemizedlist>'; $_[0]->emit() }
+sub start_over_number { $_[0]{'scratch'} = '<orderedlist>'; $_[0]->emit() }
+sub start_over_text   { $_[0]{'scratch'} = '<variablelist>'; $_[0]->emit() }
 
-sub start_over_bullet { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_text   { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_block  { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_number { $_[0]{'scratch'} = '<ol>'; $_[0]->emit() }
+sub end_over_bullet { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit('nowrap') }
+sub end_over_block  { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit('nowrap') }
+sub end_over_number { $_[0]{'scratch'} .= '</orderedlist>'; $_[0]->emit('nowrap') }
+sub end_over_text   { 
+  $_[0]{'scratch'} .= "</listitem>\n</varlistentry>\n" if ($_[0]{'in_varlist'});
+  $_[0]{'in_varlist'} = 0;
+  $_[0]{'scratch'} .= '</variablelist>';
+  $_[0]->emit('nowrap');
+}
 
-sub end_over_bullet { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
-sub end_over_text   { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
-sub end_over_block  { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
-sub end_over_number { $_[0]{'scratch'} .= '</ol>'; $_[0]->emit('nowrap') }
+sub start_item_bullet { $_[0]{'scratch'} = '<listitem>' }
+sub start_item_number { $_[0]{'scratch'} = "<listitem>$_[1]{'number'}. "  }
+sub end_item_bullet { $_[0]{'scratch'} .= '</listitem>'; $_[0]->emit() }
+sub end_item_number { $_[0]{'scratch'} .= '</listitem>'; $_[0]->emit() }
+
+sub start_item_text   { 
+    $_[0]{'scratch'} .= "</listitem>\n</varlistentry>\n" if ($_[0]{'in_varlist'});
+    $_[0]{'scratch'} .= "<varlistentry>\n<term>"; 
+    $_[0]{'in_varlist'} = 1; 
+}
+
+sub end_item_text { 
+    $_[0]{'scratch'} .= "</term>\n<listitem>";
+    $_[0]->emit() 
+ }
+
 
 # . . . . . Now the actual formatters:
 
@@ -108,20 +126,17 @@ sub end_head2       { $_[0]{'scratch'} .= '</title>'; $_[0]->emit() }
 sub end_head3       { $_[0]{'scratch'} .= '</title>'; $_[0]->emit() }
 sub end_head4       { $_[0]{'scratch'} .= '</title>'; $_[0]->emit() }
 
-sub end_item_bullet { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
-sub end_item_number { $_[0]{'scratch'} .= '</li>'; $_[0]->emit() }
-sub end_item_text   { $_[0]->emit() }
 
 sub start_sidebar { 
   my ($self, $flags) = @_;
-  $self->{'scratch'} = '<div class="sidebar">';
+  $self->{'scratch'} = '<sidebar>';
   if ($flags->{'title'}) {
     $self->{'scratch'} .= "\n<title>" . $flags->{'title'} . "</title>";
   }
   $self->emit('nowrap');
 }
 
-sub end_sidebar { $_[0]{'scratch'} .= '</div>'; $_[0]->emit() }
+sub end_sidebar { $_[0]{'scratch'} .= '</sidebar>'; $_[0]->emit() }
 
 sub start_figure { 
   my ($self, $flags)      = @_;
@@ -143,44 +158,43 @@ sub end_figure {
 
 # This handles =begin and =for blocks of all kinds.
 sub start_for { 
-  my ($self, $flags) = @_;
-  if ($self->{'css_tags'}) {
-    $self->{'scratch'} .= '<div';
-    $self->{'scratch'} .= ' class="'.$flags->{'target'}.'"' if ($flags->{'target'});
-    $self->{'scratch'} .= '>';
+    my ($self, $flags) = @_;
+    $self->{'scratch'} .= '<'.$flags->{'target'}.'>';
     $self->emit('nowrap');
-  }
 
 }
 sub end_for { 
-  my ($self) = @_;
-  if ($self->{'css_tags'}) {
-    $self->{'scratch'} .= '</div>';
+    my ($self, $flags) = @_;
+    $self->{'scratch'} .= '</'.$flags->{'target'}.'>';
     $self->emit('nowrap');
-  }
 }
 
 sub start_table { 
   my ($self, $flags) = @_;
+  $self->{'scratch'} .= '<table id="">';
   if ($flags->{'title'}) {
-    $self->{'scratch'} .= "<i>Table: " . $flags->{'title'} . "</i>\n";
+    $self->{'scratch'} .= "<title>" . $flags->{'title'} . "</title>\n";
   }
-  $self->{'scratch'} .= '<table>';
   $self->emit('nowrap');
 }
 
-sub end_table   { $_[0]{'scratch'} .= '</table>'; $_[0]->emit('nowrap') }
+sub end_table   { $_[0]{'scratch'} .= '</tbody></table>'; $_[0]->emit('nowrap') }
 
-sub start_headrow { $_[0]{'in_headrow'} = 1 }
-sub start_bodyrows { $_[0]{'in_headrow'} = 0 }
+sub start_headrow { $_[0]{'scratch'} .= '<thead>'; $_[0]{'headrow'} = 1 }
+sub start_bodyrows {
+    my ($self, $flags) = @_;
+    $self->{'scratch'} .= '</thead>' if ($self->{'headrow'});
+    $self->{'headrow'} = 0;
+    $self->{'scratch'} .= '<tbody>';
+}
 
-sub start_row { $_[0]{'scratch'} .= "<tr>\n\n" }
-sub end_row { $_[0]{'scratch'} .= '</tr>'; $_[0]->emit() }
+sub start_row { $_[0]{'scratch'} .= "<row>\n\n" }
+sub end_row { $_[0]{'scratch'} .= '</row>'; $_[0]->emit() }
 
-sub start_cell { $_[0]{'scratch'} .= $_[0]{'in_headrow'} ? '<th>' : '<td>'; }
+sub start_cell { $_[0]{'scratch'} .= '<entry align="left"><para>'; }
 sub end_cell { 
   my $self = shift;
-  $self->{'scratch'} .= ($self->{'in_headrow'}) ? '</th>' : '</td>';
+  $self->{'scratch'} .= '</para></entry>';
   $self->emit('nowrap');
 }
 
@@ -193,9 +207,9 @@ sub end_Document   {
     $self->emit('nowrap');
 }
 
-# Handling code tags
-sub start_A { $_[0]{'scratch'} .= '<a href="#' }
-sub end_A   { $_[0]{'scratch'} .= '">link</a>' }
+# Handling entity tags
+sub start_A { $_[0]{'scratch'} .= '<link linkend="#' }
+sub end_A   { $_[0]{'scratch'} .= '">link</link>' }
 
 sub start_B { $_[0]{'scratch'} .= '<emphasis role="strong">' }
 sub end_B   { $_[0]{'scratch'} .= '</emphasis>' }
@@ -209,29 +223,32 @@ sub end_E   { $_[0]{'scratch'} .= ';' }
 sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<imagedata fileref="' : '<filename>' }
 sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '"/>' : '</filename>' }
 
-sub start_G { $_[0]{'scratch'} .= '<sup>' }
-sub end_G   { $_[0]{'scratch'} .= '</sup>' }
+sub start_G { $_[0]{'scratch'} .= '<superscript>' }
+sub end_G   { $_[0]{'scratch'} .= '</superscript>' }
 
-sub start_H { $_[0]{'scratch'} .= '<sub>' }
-sub end_H   { $_[0]{'scratch'} .= '</sub>' }
+sub start_H { $_[0]{'scratch'} .= '<subscript>' }
+sub end_H   { $_[0]{'scratch'} .= '</subscript>' }
 
 sub start_I { $_[0]{'scratch'} .= '<emphasis>' }
 sub end_I   { $_[0]{'scratch'} .= '</emphasis>' }
 
 sub start_N {
   my ($self) = @_;
-  $self->{'scratch'} .= '<footnote label="*"><para>';
+  $self->{'scratch'} .= '<footnote id="" label="*"><para>';
 }
 sub end_N {
   my ($self) = @_;
   $self->{'scratch'} .= '</para></footnote>';
 }
 
-sub start_R { $_[0]{'scratch'} .= '<em>' }
-sub end_R   { $_[0]{'scratch'} .= '</em>' }
+sub start_R { $_[0]{'scratch'} .= '<replaceable>' }
+sub end_R   { $_[0]{'scratch'} .= '</replaceable>' }
 
 sub start_U { $_[0]{'scratch'} .= '<systemitem role="url">' }
 sub end_U   { $_[0]{'scratch'} .= '</systemitem>' }
+
+sub start_X { $_[0]{'scratch'} .= '<indexterm id="">' }
+sub end_X   { $_[0]{'scratch'} .= '</indexterm>' }
 
 sub start_Z { $_[0]{'scratch'} .= '<a name="' }
 sub end_Z   { $_[0]{'scratch'} .= '">' }

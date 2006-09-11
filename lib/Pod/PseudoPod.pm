@@ -35,7 +35,7 @@ sub _handle_element_start {
   $element =~ tr/-:./__/;
 
   my $sub = $self->can('start_' . $element);
-  $sub->($self,$flags) if $sub; 
+  $sub->($self, $flags) if $sub; 
 }
 
 sub _handle_text {
@@ -46,11 +46,11 @@ sub _handle_text {
 }
 
 sub _handle_element_end {
-  my ($self,$element) = @_;
+  my ($self, $element, $flags) = @_;
   $element =~ tr/-:./__/;
 
   my $sub = $self->can('end_' . $element);
-  $sub->($self) if $sub;
+  $sub->($self, $flags) if $sub;
 }
 
 sub nix_Z_codes { $_[0]{'nix_Z_codes'} = $_[1] }
@@ -481,7 +481,7 @@ sub _ponder_end {
     if ($content eq 'table' or $content eq 'sidebar' or $content eq 'figure' or $content eq 'listing') {
       $self->_handle_element_end( $content );
     } else {
-      $self->_handle_element_end( 'for' );
+      $self->_handle_element_end( 'for', { 'target' => $content } );
     }
   }
   DEBUG > 1 and print "Popping $curr_open->[-1][0] $curr_open->[-1][1]{'target'} because of =end $content\n";
