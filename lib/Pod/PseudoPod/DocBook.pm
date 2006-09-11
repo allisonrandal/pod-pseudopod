@@ -5,8 +5,6 @@ $VERSION = '0.12';
 use Carp ();
 use base qw( Pod::PseudoPod );
 
-#use Text::Wrap 98.112902 ();
-#$Text::Wrap::wrap = 'overflow';
 use HTML::Entities 'encode_entities';
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -17,12 +15,11 @@ sub new {
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_targets( 'docbook', 'DocBook' );
   $new->accept_targets_as_text( qw(author blockquote comment caution
-      editor epigraph example figure important listing literal note
-      production programlisting screen sidebar table tip warning) );
+      editor epigraph example figure important literal note
+      production screen sidebar table tip warning) );
 
   $new->nix_X_codes(1);
   $new->nbsp_for_S(1);
-  $new->add_body_tags(0);
   $new->codes_in_verbatim(1);
   $new->{'scratch'} = '';
   $new->{'sections'} = ();
@@ -55,7 +52,7 @@ sub start_head4 { $_[0]->set_section(4); }
 sub set_section {
     my ($self, $level) = @_;
     $self->{'scratch'} = $self->close_sections($level);
-    $self->{'scratch'} .= "<" . $self->{'sectionname'}{$level} . ">";
+    $self->{'scratch'} .= "<" . $self->{'sectionname'}{$level} . ' id="" label="" role="">';
     $self->{'scratch'} .= "\n<title>";
     push @{$self->{'sections'}}, $level;
 }
@@ -79,20 +76,21 @@ sub start_over_block  { $_[0]{'scratch'} = '<itemizedlist>'; $_[0]->emit() }
 sub start_over_number { $_[0]{'scratch'} = '<orderedlist>'; $_[0]->emit() }
 sub start_over_text   { $_[0]{'scratch'} = '<variablelist>'; $_[0]->emit() }
 
-sub end_over_bullet { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit('nowrap') }
-sub end_over_block  { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit('nowrap') }
-sub end_over_number { $_[0]{'scratch'} .= '</orderedlist>'; $_[0]->emit('nowrap') }
+sub end_over_bullet { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit() }
+sub end_over_block  { $_[0]{'scratch'} .= '</itemizedlist>'; $_[0]->emit() }
+sub end_over_number { $_[0]{'scratch'} .= '</orderedlist>'; $_[0]->emit() }
 sub end_over_text   { 
   $_[0]{'scratch'} .= "</listitem>\n</varlistentry>\n" if ($_[0]{'in_varlist'});
   $_[0]{'in_varlist'} = 0;
   $_[0]{'scratch'} .= '</variablelist>';
-  $_[0]->emit('nowrap');
+  $_[0]->emit();
 }
 
 sub start_item_bullet { $_[0]{'scratch'} = '<listitem>' }
-sub start_item_number { $_[0]{'scratch'} = "<listitem>$_[1]{'number'}. "  }
+sub start_item_number { $_[0]{'scratch'} = "<listitem><para>"  }
+
 sub end_item_bullet { $_[0]{'scratch'} .= '</listitem>'; $_[0]->emit() }
-sub end_item_number { $_[0]{'scratch'} .= '</listitem>'; $_[0]->emit() }
+sub end_item_number { $_[0]{'scratch'} .= '</para></listitem>'; $_[0]->emit() }
 
 sub start_item_text   { 
     $_[0]{'scratch'} .= "</listitem>\n</varlistentry>\n" if ($_[0]{'in_varlist'});
@@ -115,9 +113,9 @@ sub end_Para {
     }
 }
 sub end_Verbatim {
-    $_[0]{'scratch'}     .= '</programlisting>';
+    $_[0]{'scratch'}     .= "\n</programlisting>";
     $_[0]{'in_verbatim'}  = 0;
-    $_[0]->emit('nowrap');
+    $_[0]->emit();
 }
 
 sub end_head0       { $_[0]{'scratch'} .= '</title>'; $_[0]->emit() }
@@ -133,7 +131,7 @@ sub start_sidebar {
   if ($flags->{'title'}) {
     $self->{'scratch'} .= "\n<title>" . $flags->{'title'} . "</title>";
   }
-  $self->emit('nowrap');
+  $self->emit();
 }
 
 sub end_sidebar { $_[0]{'scratch'} .= '</sidebar>'; $_[0]->emit() }
@@ -153,49 +151,49 @@ sub end_figure {
   $self->{'scratch'} .= "</imageobject></mediaobject>\n";
   $self->{'scratch'} .= "</figure>";
 
-  $self->emit('nowrap');
+  $self->emit();
 }
 
 # This handles =begin and =for blocks of all kinds.
 sub start_for { 
     my ($self, $flags) = @_;
     $self->{'scratch'} .= '<'.$flags->{'target'}.'>';
-    $self->emit('nowrap');
+    $self->emit();
 
 }
 sub end_for { 
     my ($self, $flags) = @_;
     $self->{'scratch'} .= '</'.$flags->{'target'}.'>';
-    $self->emit('nowrap');
+    $self->emit();
 }
 
 sub start_table { 
   my ($self, $flags) = @_;
-  $self->{'scratch'} .= '<table id="">';
+  $self->{'scratch'} .= '<table id="" label="" frame="topbot" colsep="0" rowsep="0">';
   if ($flags->{'title'}) {
-    $self->{'scratch'} .= "<title>" . $flags->{'title'} . "</title>\n";
+    $self->{'scratch'} .= '<title>' . $flags->{'title'} . '</title>';
   }
-  $self->emit('nowrap');
+  $self->emit();
 }
 
-sub end_table   { $_[0]{'scratch'} .= '</tbody></table>'; $_[0]->emit('nowrap') }
+sub end_table   { $_[0]{'scratch'} .= '</tbody></table>'; $_[0]->emit() }
 
-sub start_headrow { $_[0]{'scratch'} .= '<thead>'; $_[0]{'headrow'} = 1 }
+sub start_headrow { $_[0]{'scratch'} .= "<thead>\n"; $_[0]{'headrow'} = 1 }
 sub start_bodyrows {
     my ($self, $flags) = @_;
-    $self->{'scratch'} .= '</thead>' if ($self->{'headrow'});
+    $self->{'scratch'} .= "</thead>\n" if ($self->{'headrow'});
     $self->{'headrow'} = 0;
-    $self->{'scratch'} .= '<tbody>';
+    $self->{'scratch'} .= "<tbody>\n";
 }
 
-sub start_row { $_[0]{'scratch'} .= "<row>\n\n" }
+sub start_row { $_[0]{'scratch'} .= "<row>\n" }
 sub end_row { $_[0]{'scratch'} .= '</row>'; $_[0]->emit() }
 
 sub start_cell { $_[0]{'scratch'} .= '<entry align="left"><para>'; }
 sub end_cell { 
   my $self = shift;
   $self->{'scratch'} .= '</para></entry>';
-  $self->emit('nowrap');
+  $self->emit();
 }
 
 sub start_Document { 
@@ -204,7 +202,7 @@ sub start_Document {
 sub end_Document   { 
     my ($self) = @_;
     $self->{'scratch'} .= $self->close_sections(-1);
-    $self->emit('nowrap');
+    $self->emit();
 }
 
 # Handling entity tags
@@ -254,20 +252,14 @@ sub start_Z { $_[0]{'scratch'} .= '<a name="' }
 sub end_Z   { $_[0]{'scratch'} .= '">' }
 
 sub emit {
-  my($self, $nowrap) = @_;
+  my($self) = @_;
   if ($self->{'scratch'}) {
       my $out = $self->{'scratch'} . "\n";
-#  $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
-      print {$self->{'output_fh'}} $out, "\n";
+      print {$self->{'output_fh'}} $out;
       $self->{'scratch'} = '';
   }
   return;
 }
-
-# Set additional options
-
-sub add_body_tags { $_[0]{'body_tags'} = $_[1] }
-sub add_css_tags { $_[0]{'css_tags'} = $_[1] }
 
 # bypass built-in E<> handling to preserve entity encoding
 sub _treat_Es {} 
@@ -293,32 +285,9 @@ Pod::PseudoPod::DocBook -- format PseudoPod as DocBook
 =head1 DESCRIPTION
 
 This class is a formatter that takes PseudoPod and renders it as
-wrapped html.
-
-Its wrapping is done by L<Text::Wrap>, so you can change
-C<$Text::Wrap::columns> as you like.
+DocBook 4.4.
 
 This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
-
-=head1 METHODS
-
-=head2 add_body_tags
-
-  $parser->add_body_tags(1);
-  $parser->parse_file($file);
-
-Adds beginning and ending "<html>" and "<body>" tags to the formatted
-document.
-
-=head2 add_css_tags
-
-  $parser->add_css_tags(1);
-  $parser->parse_file($file);
-
-Imports a css stylesheet to the html document and adds additional css
-tags to url, footnote, and sidebar elements for a nicer display. If
-you don't plan on writing a style.css file (or using the one provided
-in "examples/"), you probably don't want this option on.
 
 =head1 SEE ALSO
 
@@ -326,7 +295,7 @@ L<Pod::PseudoPod>, L<Pod::Simple>
 
 =head1 COPYRIGHT
 
-Copyright (c) 2003-2004 Allison Randal.  All rights reserved.
+Copyright (c) 2003-2006 Allison Randal.  All rights reserved.
 
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself. The full text of the license

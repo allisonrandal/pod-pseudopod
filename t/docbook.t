@@ -19,24 +19,43 @@ my $results;
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head0 Narf!" );
-is($results, "<chapter>\n<title>Narf!</title>\n\n</chapter>\n\n", "head0 level output");
+is($results, <<'EODB', "head0 level output");
+<chapter id="" label="" role="">
+<title>Narf!</title>
+</chapter>
+EODB
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head1 Poit!" );
-is($results, "<sect1>\n<title>Poit!</title>\n\n</sect1>\n\n", "head1 level output");
+is($results, <<'EODB', "head1 level output");
+<sect1 id="" label="" role="">
+<title>Poit!</title>
+</sect1>
+EODB
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head2 I think so Brain." );
-is($results, "<sect2>\n<title>I think so Brain.</title>\n\n</sect2>\n\n", "head2 level output");
+is($results, <<'EODB', "head2 level output");
+<sect2 id="" label="" role="">
+<title>I think so Brain.</title>
+</sect2>
+EODB
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head3 I say, Brain..." );
-is($results, "<sect3>\n<title>I say, Brain...</title>\n\n</sect3>\n\n", "head3 level output");
+is($results, <<'EODB', "head3 level output");
+<sect3 id="" label="" role="">
+<title>I say, Brain...</title>
+</sect3>
+EODB
 
 initialize($parser, $results);
 $parser->parse_string_document( "=head4 Zort!" );
-is($results, "<sect4>\n<title>Zort!</title>\n\n</sect4>\n\n", "head4 level output");
-
+is($results, <<'EODB', "head4 level output");
+<sect4 id="" label="" role="">
+<title>Zort!</title>
+</sect4>
+EODB
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
@@ -47,7 +66,6 @@ EOPOD
 
 is($results, <<'EODB', "simple paragraph");
 <para>Gee, Brain, what do you want to do tonight?</para>
-
 EODB
 
 
@@ -64,9 +82,7 @@ EOPOD
 
 is($results, <<'EODB', "multiple paragraphs");
 <para>B: Now, Pinky, if by any chance you are captured during this mission, remember you are Gunther Heindriksen from Appenzell. You moved to Grindelwald to drive the cog train to Murren. Can you repeat that?</para>
-
 <para>P: Mmmm, no, Brain, don't think I can.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -87,13 +103,9 @@ EOPOD
 
 is($results, <<'EODB', "simple bulleted list");
 <itemizedlist>
-
 <listitem>P: Gee, Brain, what do you want to do tonight?</listitem>
-
 <listitem>B: The same thing we do every night, Pinky. Try to take over the world!</listitem>
-
 </itemizedlist>
-
 EODB
 
 
@@ -115,13 +127,9 @@ EOPOD
 
 is($results, <<'EODB', "numbered list");
 <orderedlist>
-
-<listitem>1. P: Gee, Brain, what do you want to do tonight?</listitem>
-
-<listitem>2. B: The same thing we do every night, Pinky. Try to take over the world!</listitem>
-
+<listitem><para>P: Gee, Brain, what do you want to do tonight?</para></listitem>
+<listitem><para>B: The same thing we do every night, Pinky. Try to take over the world!</para></listitem>
 </orderedlist>
-
 EODB
 
 
@@ -143,25 +151,19 @@ EOPOD
 
 is($results, <<'EODB', "list with text headings");
 <variablelist>
-
 <varlistentry>
 <term>Pinky</term>
 <listitem>
-
 <para>Gee, Brain, what do you want to do tonight?</para>
-
 </listitem>
 </varlistentry>
 <varlistentry>
 <term>Brain</term>
 <listitem>
-
 <para>The same thing we do every night, Pinky. Try to take over the world!</para>
-
 </listitem>
 </varlistentry>
 </variablelist>
-
 EODB
 
 
@@ -177,8 +179,8 @@ EOPOD
 is($results, <<'EODB', "code block");
 <programlisting>
   1 + 1 = 2;
-  2 + 2 = 4;</programlisting>
-
+  2 + 2 = 4;
+</programlisting>
 EODB
 
 
@@ -190,7 +192,6 @@ A plain paragraph with a C<functionname>.
 EOPOD
 is($results, <<"EODB", "code entity in a paragraph");
 <para>A plain paragraph with a <literal>functionname</literal>.</para>
-
 EODB
 
 
@@ -202,12 +203,10 @@ A plain paragraph with a footnote.N<And the footnote is...>
 EOPOD
 is($results, <<"EODB", "footnote entity in a paragraph");
 <para>A plain paragraph with a footnote.<footnote id="" label="*"><para>And the footnote is...</para></footnote></para>
-
 EODB
 
 
 initialize($parser, $results);
-$parser->add_css_tags(1);
 $parser->parse_string_document(<<'EOPOD');
 =pod
 
@@ -215,7 +214,6 @@ A plain paragraph with a U<http://test.url.com/stuff/and/junk.txt>.
 EOPOD
 is($results, <<"EODB", "URL entity in a paragraph");
 <para>A plain paragraph with a <systemitem role="url">http://test.url.com/stuff/and/junk.txt</systemitem>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -226,7 +224,6 @@ A plain paragraph with a Z<crossreferenceendpoint>.
 EOPOD
 is($results, <<"EODB", "Link anchor entity in a paragraph");
 <para>A plain paragraph with a <a name="crossreferenceendpoint">.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -237,7 +234,6 @@ A plain paragraph with a A<crossreferencelink>.
 EOPOD
 is($results, <<"EODB", "Link entity in a paragraph");
 <para>A plain paragraph with a <link linkend="#crossreferencelink">link</link>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -248,7 +244,6 @@ A plain paragraph with a G<superscript>.
 EOPOD
 is($results, <<"EODB", "Superscript in a paragraph");
 <para>A plain paragraph with a <superscript>superscript</superscript>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -259,7 +254,6 @@ A plain paragraph with a H<subscript>.
 EOPOD
 is($results, <<"EODB", "Subscript in a paragraph");
 <para>A plain paragraph with a <subscript>subscript</subscript>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -270,7 +264,6 @@ A plain paragraph with B<bold text>.
 EOPOD
 is($results, <<"EODB", "Bold text in a paragraph");
 <para>A plain paragraph with <emphasis role="strong">bold text</emphasis>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -281,7 +274,6 @@ A plain paragraph with I<italic text>.
 EOPOD
 is($results, <<"EODB", "Italic text in a paragraph");
 <para>A plain paragraph with <emphasis>italic text</emphasis>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -292,7 +284,6 @@ A plain paragraph with R<replaceable text>.
 EOPOD
 is($results, <<"EODB", "Replaceable text in a paragraph");
 <para>A plain paragraph with <replaceable>replaceable text</replaceable>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -303,7 +294,6 @@ A plain paragraph with a F<filename>.
 EOPOD
 is($results, <<"EODB", "File name in a paragraph");
 <para>A plain paragraph with a <filename>filename</filename>.</para>
-
 EODB
 
 initialize($parser, $results);
@@ -316,11 +306,8 @@ A paragraph inside a block.
 EOPOD
 is($results, <<"EODB", "File name in a paragraph");
 <author>
-
 <para>A paragraph inside a block.</para>
-
 </author>
-
 EODB
 
 initialize($parser, $results);

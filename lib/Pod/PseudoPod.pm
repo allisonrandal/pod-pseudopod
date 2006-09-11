@@ -201,6 +201,12 @@ sub _ponder_paragraph_buffer {
 
       DEBUG > 1 and print "Pondering non-magical $para_type\n";
 
+      # In tables, the start of a headrow or bodyrow also terminates an 
+      # existing open row.
+      if($para_type eq '=headrow' || $para_type eq '=bodyrows') {
+        $self->_ponder_row_end($para,$curr_open,$paras);
+      }
+
       # Enforce some =headN discipline
       if($para_type =~ m/^=head\d$/s
          and ! $self->{'accept_heads_anywhere'}
