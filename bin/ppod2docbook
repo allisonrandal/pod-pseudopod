@@ -57,14 +57,39 @@ if ( $opts{'n'} && open INCLUDE, $opts{'n'}) {
 	close INCLUDE;
 }
 
-my $book_xml;
+my ($book_xml, $index_count);
 foreach my $file (@ARGV) {
-	my $filename = fileparse( $file, qr{\..*} );
-
 	my $parser = Pod::PseudoPod::DocBook->new();
+	$parser->index_count($index_count);
+	$parser->book_id($bookid);
+
+	# Figures out the type of chapter and chapter number by the
+	# filename. This assumes the standard naming convention of
+	# ch01.pod (for the first chapter), appa.pod (for the first
+	# appendix), and colophon.pod for the colophon. The preface may
+	# be either ch00.pod, or preface.pod. For any other chapter
+	# naming convention, you'll need to modify this code to
+	# correctly identify the appropriate chapter information, so it
+	# can generate the right DocBook tags.
+
+	my $filename = fileparse( $file, qr{\..*} );
+	if ($filename =~ /preface/) {
+		$parser->chapter_type('preface');
+        } elsif ($filename =~ /colophon/) {
+		$parser->chapter_type('colophon');
+        } elsif ($filename =~ /^app(\w)/) {
+		$parser->chapter_type('appendix');
+		$parser->chapter_num(uc($1));
+        }
+
+	if ($filename =~ /(\d+)/) {
+		$parser->chapter_num(int($1));
+		if ($1 == 0) {
+			$parser->chapter_type('preface');
+		}
+        }
 
 	$parser->output_string($book_xml);
-
 	$parser->no_errata_section(1); # don't put errors in doc output
 	$parser->complain_stderr(1);   # output errors on STDERR instead
 
@@ -73,6 +98,7 @@ foreach my $file (@ARGV) {
 	} else {
 		die "Unable to open file\n";
 	}
+	$index_count = $parser->index_count();
 }
 print XMLOUT $book_xml;
 
