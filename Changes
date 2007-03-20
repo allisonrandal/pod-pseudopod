@@ -1,5 +1,9 @@
 Revision history for Pod::PseudoPod
 
+0.14 Mar 20, 2007
+	- Add a DocBook 4.4. formatter, to output the new format
+	  O'Reilly needs for book production.
+
 0.13 Aug 03, 2006
 	- Resolve failing tests, check for encoded entities with
 	  pattern match instead of exact text match.

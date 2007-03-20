@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 29;
+use Test::More tests => 27;
 
 use_ok('Pod::PseudoPod::DocBook') or exit;
 
@@ -18,43 +18,64 @@ isa_ok ($parser, 'Pod::PseudoPod::DocBook');
 my $results;
 
 initialize($parser, $results);
-$parser->parse_string_document( "=head0 Narf!" );
-is($results, <<'EODB', "head0 level output");
-<chapter id="" label="" role="">
+$parser->chapter_num(5);
+$parser->parse_string_document( <<'EOPOD' );
+=head0 Narf!
+
+=head1 Poit!
+
+=head2 I think so Brain.
+
+=head3 I say, Brain...
+
+=head3 What do you want to do tonight, Brain?
+
+=head4 Zort!
+
+=head1 Egads!
+EOPOD
+
+is($results, <<'EODB', "multiple head level output");
+<chapter id="CHP-5" label="" role="">
 <title>Narf!</title>
-</chapter>
-EODB
-
-initialize($parser, $results);
-$parser->parse_string_document( "=head1 Poit!" );
-is($results, <<'EODB', "head1 level output");
-<sect1 id="" label="" role="">
+<sect1 id="CHP-5-SECT-1" label="1" role="">
 <title>Poit!</title>
-</sect1>
-EODB
-
-initialize($parser, $results);
-$parser->parse_string_document( "=head2 I think so Brain." );
-is($results, <<'EODB', "head2 level output");
-<sect2 id="" label="" role="">
+<sect2 id="CHP-5-SECT-1.1" label="1.1" role="">
 <title>I think so Brain.</title>
-</sect2>
-EODB
-
-initialize($parser, $results);
-$parser->parse_string_document( "=head3 I say, Brain..." );
-is($results, <<'EODB', "head3 level output");
-<sect3 id="" label="" role="">
+<sect3 id="CHP-5-SECT-1.1.1" label="1.1.1" role="">
 <title>I say, Brain...</title>
 </sect3>
+<sect3 id="CHP-5-SECT-1.1.2" label="1.1.2" role="">
+<title>What do you want to do tonight, Brain?</title>
+<sect4 id="CHP-5-SECT-1.1.2.1" label="1.1.2.1" role="">
+<title>Zort!</title>
+</sect4>
+</sect3>
+</sect2>
+</sect1>
+<sect1 id="CHP-5-SECT-2" label="2" role="">
+<title>Egads!</title>
+</sect1>
+</chapter>
+
 EODB
 
 initialize($parser, $results);
-$parser->parse_string_document( "=head4 Zort!" );
-is($results, <<'EODB', "head4 level output");
-<sect4 id="" label="" role="">
-<title>Zort!</title>
-</sect4>
+$parser->chapter_type('preface');
+$parser->parse_string_document( <<'EOPOD' );
+=head0 Narf!
+
+=head1 Poit!
+EOPOD
+
+is($results, <<'EODB', "multiple head level output (preface chapter)");
+<preface id="PREFACE" role="">
+<title>Narf!</title>
+<sect1 id="PREFACE-SECT-1" role="">
+<title>Poit!</title>
+</sect1>
+</preface>
+
 EODB
 
 initialize($parser, $results);
@@ -103,8 +124,8 @@ EOPOD
 
 is($results, <<'EODB', "simple bulleted list");
 <itemizedlist>
-<listitem>P: Gee, Brain, what do you want to do tonight?</listitem>
-<listitem>B: The same thing we do every night, Pinky. Try to take over the world!</listitem>
+<listitem><para>P: Gee, Brain, what do you want to do tonight?</para></listitem>
+<listitem><para>B: The same thing we do every night, Pinky. Try to take over the world!</para></listitem>
 </itemizedlist>
 EODB
 
@@ -127,8 +148,10 @@ EOPOD
 
 is($results, <<'EODB', "numbered list");
 <orderedlist>
-<listitem><para>P: Gee, Brain, what do you want to do tonight?</para></listitem>
-<listitem><para>B: The same thing we do every night, Pinky. Try to take over the world!</para></listitem>
+<listitem><para>P: Gee, Brain, what do you want to do tonight?
+</para></listitem>
+<listitem><para>B: The same thing we do every night, Pinky. Try to take over the world!
+</para></listitem>
 </orderedlist>
 EODB
 
@@ -196,13 +219,25 @@ EODB
 
 
 initialize($parser, $results);
+$parser->chapter_num(9);
 $parser->parse_string_document(<<'EOPOD');
 =pod
 
 A plain paragraph with a footnote.N<And the footnote is...>
 EOPOD
 is($results, <<"EODB", "footnote entity in a paragraph");
-<para>A plain paragraph with a footnote.<footnote id="" label="*"><para>And the footnote is...</para></footnote></para>
+<para>A plain paragraph with a footnote.<footnote id="CHP-9-FNOTE-1" label="*"><para>And the footnote is...</para></footnote></para>
+EODB
+
+initialize($parser, $results);
+$parser->chapter_type('preface');
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+A plain paragraph with a footnote.N<And the footnote is...>
+EOPOD
+is($results, <<"EODB", "footnote entity in a paragraph (preface chapter)");
+<para>A plain paragraph with a footnote.<footnote id="PREFACE-FNOTE-1" label="*"><para>And the footnote is...</para></footnote></para>
 EODB
 
 

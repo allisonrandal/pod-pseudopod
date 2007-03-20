@@ -18,7 +18,6 @@ sub new {
       editor epigraph example figure important literal note
       production screen sidebar table tip warning) );
 
-  $new->nix_Z_codes(1);
   $new->nbsp_for_S(1);
   $new->codes_in_verbatim(1);
   $new->chapter_type('chapter'); # default chapter type
@@ -57,12 +56,12 @@ sub set_section {
     my ($self, $level) = @_;
     $self->{'scratch'} = $self->close_sections($level);
     $self->{'sectionnum'}[$level]++ if ($level > 0);
-    my $label = join '.', @{$self->{'sectionnum'}};
+    my $label = '';
     my $id = $self->chapter_id();
     if ($level > 0) {
-      $id .= '-SECT-';
       my @sectionnum = @{$self->{'sectionnum'}};
-      $id .= join '.', @sectionnum[1 ..  $#sectionnum];
+      $label = join '.', @sectionnum[1 ..  $#sectionnum];
+      $id .= '-SECT-'. $label;
     }
     $self->{'scratch'} .= '<' . $self->{'sectionname'}[$level];
     $self->{'scratch'} .= ' id="' . $id;
@@ -295,6 +294,9 @@ sub index_next {
   my $idx = ++$self->{'index_count'}; 
   return sprintf("%04d", $idx);
 }
+
+sub start_Z { $_[0]{'scratch'} .= '<a name="' }
+sub end_Z   { $_[0]{'scratch'} .= '">' }
 
 sub emit {
   my($self) = @_;
