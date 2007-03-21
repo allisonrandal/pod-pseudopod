@@ -321,8 +321,6 @@ table lays out the tags and their meanings:
    N    Footnote                       TheoreticallyN<Meaning,
                                        "not really>, it's possible.
 
-   Q    Quoted text
-
    R    Replaceable thing              C< R<n> + 2 >, where
                                        R<n> is the number of pages
 
