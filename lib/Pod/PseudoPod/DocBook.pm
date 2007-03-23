@@ -56,17 +56,14 @@ sub set_section {
     my ($self, $level) = @_;
     $self->{'scratch'} = $self->close_sections($level);
     $self->{'sectionnum'}[$level]++ if ($level > 0);
-    my $label = '';
     my $id = $self->chapter_id();
     if ($level > 0) {
       my @sectionnum = @{$self->{'sectionnum'}};
-      $label = join '.', @sectionnum[1 ..  $#sectionnum];
-      $id .= '-SECT-'. $label;
+      $id .= '-SECT-';
+      $id .= join '.', @sectionnum[1 ..  $#sectionnum];
     }
     $self->{'scratch'} .= '<' . $self->{'sectionname'}[$level];
-    $self->{'scratch'} .= ' id="' . $id;
-    $self->{'scratch'} .= '" label="' . $label unless $self->{'chapter_type'} eq 'preface';
-    $self->{'scratch'} .= '" role="">';
+    $self->{'scratch'} .= ' id="' . $id . '">';
     $self->{'scratch'} .= "\n<title>";
     push @{$self->{'sections'}}, $level;
 }
@@ -242,8 +239,8 @@ sub end_Document   {
 }
 
 # Handling entity tags
-sub start_A { $_[0]{'scratch'} .= '<link linkend="#' }
-sub end_A   { $_[0]{'scratch'} .= '">link</link>' }
+sub start_A { $_[0]{'scratch'} .= '<xref linkend="' }
+sub end_A   { $_[0]{'scratch'} .= '"/>' }
 
 sub start_B { $_[0]{'scratch'} .= '<emphasis role="strong">' }
 sub end_B   { $_[0]{'scratch'} .= '</emphasis>' }
@@ -280,8 +277,8 @@ sub footnote_next { ++$_[0]{'footnote_count'} }
 sub start_R { $_[0]{'scratch'} .= '<replaceable>' }
 sub end_R   { $_[0]{'scratch'} .= '</replaceable>' }
 
-sub start_U { $_[0]{'scratch'} .= '<systemitem role="url">' }
-sub end_U   { $_[0]{'scratch'} .= '</systemitem>' }
+sub start_U { $_[0]{'scratch'} .= '<ulink url="' }
+sub end_U   { $_[0]{'scratch'} .= '"/>' }
 
 sub start_X {
   my ($self) = @_;

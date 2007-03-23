@@ -36,24 +36,24 @@ $parser->parse_string_document( <<'EOPOD' );
 EOPOD
 
 is($results, <<'EODB', "multiple head level output");
-<chapter id="CHP-5" label="" role="">
+<chapter id="CHP-5">
 <title>Narf!</title>
-<sect1 id="CHP-5-SECT-1" label="1" role="">
+<sect1 id="CHP-5-SECT-1">
 <title>Poit!</title>
-<sect2 id="CHP-5-SECT-1.1" label="1.1" role="">
+<sect2 id="CHP-5-SECT-1.1">
 <title>I think so Brain.</title>
-<sect3 id="CHP-5-SECT-1.1.1" label="1.1.1" role="">
+<sect3 id="CHP-5-SECT-1.1.1">
 <title>I say, Brain...</title>
 </sect3>
-<sect3 id="CHP-5-SECT-1.1.2" label="1.1.2" role="">
+<sect3 id="CHP-5-SECT-1.1.2">
 <title>What do you want to do tonight, Brain?</title>
-<sect4 id="CHP-5-SECT-1.1.2.1" label="1.1.2.1" role="">
+<sect4 id="CHP-5-SECT-1.1.2.1">
 <title>Zort!</title>
 </sect4>
 </sect3>
 </sect2>
 </sect1>
-<sect1 id="CHP-5-SECT-2" label="2" role="">
+<sect1 id="CHP-5-SECT-2">
 <title>Egads!</title>
 </sect1>
 </chapter>
@@ -69,9 +69,9 @@ $parser->parse_string_document( <<'EOPOD' );
 EOPOD
 
 is($results, <<'EODB', "multiple head level output (preface chapter)");
-<preface id="PREFACE" role="">
+<preface id="PREFACE">
 <title>Narf!</title>
-<sect1 id="PREFACE-SECT-1" role="">
+<sect1 id="PREFACE-SECT-1">
 <title>Poit!</title>
 </sect1>
 </preface>
@@ -248,7 +248,7 @@ $parser->parse_string_document(<<'EOPOD');
 A plain paragraph with a U<http://test.url.com/stuff/and/junk.txt>.
 EOPOD
 is($results, <<"EODB", "URL entity in a paragraph");
-<para>A plain paragraph with a <systemitem role="url">http://test.url.com/stuff/and/junk.txt</systemitem>.</para>
+<para>A plain paragraph with a <ulink url="http://test.url.com/stuff/and/junk.txt"/>.</para>
 EODB
 
 initialize($parser, $results);
@@ -268,7 +268,7 @@ $parser->parse_string_document(<<'EOPOD');
 A plain paragraph with a A<crossreferencelink>.
 EOPOD
 is($results, <<"EODB", "Link entity in a paragraph");
-<para>A plain paragraph with a <link linkend="#crossreferencelink">link</link>.</para>
+<para>A plain paragraph with a <xref linkend="crossreferencelink"/>.</para>
 EODB
 
 initialize($parser, $results);
