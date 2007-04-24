@@ -103,7 +103,7 @@ EOPOD
 
 is($results, <<'EODB', "multiple paragraphs");
 <para>B: Now, Pinky, if by any chance you are captured during this mission, remember you are Gunther Heindriksen from Appenzell. You moved to Grindelwald to drive the cog train to Murren. Can you repeat that?</para>
-<para>P: Mmmm, no, Brain, don't think I can.</para>
+<para>P: Mmmm, no, Brain, don&#39;t think I can.</para>
 EODB
 
 initialize($parser, $results);
@@ -251,6 +251,8 @@ is($results, <<"EODB", "URL entity in a paragraph");
 <para>A plain paragraph with a <ulink url="http://test.url.com/stuff/and/junk.txt"/>.</para>
 EODB
 
+TODO: {
+      local $TODO = "waiting for spec from O'Reilly";
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =pod
@@ -260,6 +262,7 @@ EOPOD
 is($results, <<"EODB", "Link anchor entity in a paragraph");
 <para>A plain paragraph with a <a name="crossreferenceendpoint">.</para>
 EODB
+};
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
@@ -331,6 +334,8 @@ is($results, <<"EODB", "File name in a paragraph");
 <para>A plain paragraph with a <filename>filename</filename>.</para>
 EODB
 
+TODO: {
+      local $TODO = "waiting for spec from O'Reilly";
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
 =begin author
@@ -344,6 +349,8 @@ is($results, <<"EODB", "File name in a paragraph");
 <para>A paragraph inside a block.</para>
 </author>
 EODB
+
+};
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');

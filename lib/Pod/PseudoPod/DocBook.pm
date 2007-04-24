@@ -14,11 +14,12 @@ sub new {
   my $new = $self->SUPER::new(@_);
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_targets( 'docbook', 'DocBook' );
-  $new->accept_targets_as_text( qw(author blockquote caution
+  $new->accept_targets_as_text( qw(blockquote caution
       editor epigraph example figure important literal note
       production screen sidebar table tip warning) );
 
   $new->nbsp_for_S(1);
+  $new->nix_Z_codes(1);
   $new->codes_in_verbatim(1);
   $new->chapter_type('chapter'); # default chapter type
   $new->{'scratch'} = '';
@@ -30,14 +31,15 @@ sub new {
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#sub handle_text {
-    # escape special characters in DocBook (<, >, &, etc)
-#    $_[0]{'scratch'} .= $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
-#}
-
 sub handle_text {
-    # escape special characters in DocBook (<, >, &, etc)
-    $_[0]{'scratch'} .= encode_entities( $_[1] );
+  my ($self) = @_;
+  # escape special characters in DocBook (<, >, &, etc)
+  my $text = encode_entities( $_[1] );
+  if ($self->{'in_filename'}) {
+    $self->{'figure_file'}  = $text;
+  } else {
+    $self->{'scratch'} .= $text;
+  }
 }
 
 sub start_Para     { $_[0]{'scratch'} = '<para>' unless $_[0]{'in_figure'} }
@@ -162,18 +164,35 @@ sub end_sidebar { $_[0]{'scratch'} .= '</sidebar>'; $_[0]->emit() }
 sub start_figure { 
   my ($self, $flags)      = @_;
   $self->{'in_figure'}    = 1;
-  $self->{'scratch'} .= '<figure>';
-  $self->{'scratch'} .= '<title>' . $flags->{'title'} .  '</title>' if $flags->{'title'};
-  $self->{'scratch'} .= '<mediaobject><imageobject role="print">';
+  $self->{'figure_file'}  = '';
+#  $self->{'scratch'} .= '<figure>';
+#  $self->{'scratch'} .= '<title>' . $flags->{'title'} .  '</title>' if $flags->{'title'};
 }
 
 sub end_figure { 
   my ($self, $flags)   = @_;
+
+  my $filepath = $self->{'figure_file'};
+  my $fileformat = '';
+  if ($filepath =~ m/\.(\w+$)/) {
+    $fileformat = uc($1);
+  }
+
+  $self->{'scratch'} .= <<"XMLBLOCK";
+<mediaobject>
+ <imageobject role="print">
+   <imagedata fileref="$filepath" format="$fileformat"/>
+ </imageobject>
+ <imageobject role="web">
+   <imagedata fileref="$filepath" format="$fileformat"/>
+ </imageobject>
+</mediaobject>
+XMLBLOCK
+
+#  $self->{'scratch'} .= "</figure>";
+
   $self->{'in_figure'} = 0;
-
-  $self->{'scratch'} .= "</imageobject></mediaobject>\n";
-  $self->{'scratch'} .= "</figure>";
-
+  $self->{'figure_file'}  = '';
   $self->emit();
 }
 
@@ -251,8 +270,22 @@ sub end_C   { $_[0]{'scratch'} .= '</literal>' }
 sub start_E { $_[0]{'scratch'} .= '&' }
 sub end_E   { $_[0]{'scratch'} .= ';' }
 
-sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<imagedata fileref="' : '<filename>' }
-sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '"/>' : '</filename>' }
+sub start_F { 
+  my ($self) = @_;
+  if ($self->{'in_figure'}) {
+    $self->{'in_filename'}  = 1;
+  } else {
+    $self->{'scratch'} .= '<filename>';
+  }
+}
+sub end_F { 
+  my ($self) = @_;
+  if ($self->{'in_figure'}) {
+    $self->{'in_filename'}  = 0;
+  } else {
+    $self->{'scratch'} .= '</filename>';
+  }
+}
 
 sub start_G { $_[0]{'scratch'} .= '<superscript>' }
 sub end_G   { $_[0]{'scratch'} .= '</superscript>' }
@@ -293,7 +326,7 @@ sub index_next {
 }
 
 sub start_Z { $_[0]{'scratch'} .= '<a name="' }
-sub end_Z   { $_[0]{'scratch'} .= '">' }
+sub end_Z   { $_[0]{'scratch'} .= '"/>' }
 
 sub emit {
   my($self) = @_;
