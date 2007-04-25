@@ -15,11 +15,11 @@ sub new {
   $new->{'output_fh'} ||= *STDOUT{IO};
   $new->accept_targets( 'docbook', 'DocBook' );
   $new->accept_targets_as_text( qw(blockquote caution
-      editor epigraph example figure important literal note
+      epigraph example figure important literal note
       production screen sidebar table tip warning) );
 
   $new->nbsp_for_S(1);
-  $new->nix_Z_codes(1);
+#  $new->nix_Z_codes(1);
   $new->codes_in_verbatim(1);
   $new->chapter_type('chapter'); # default chapter type
   $new->{'scratch'} = '';
@@ -258,8 +258,11 @@ sub end_Document   {
 }
 
 # Handling entity tags
-sub start_A { $_[0]{'scratch'} .= '<xref linkend="' }
-sub end_A   { $_[0]{'scratch'} .= '"/>' }
+sub start_L { $_[0]{'scratch'} .= '<xref linkend="' }
+sub end_L   { $_[0]{'scratch'} .= '"/>' }
+
+sub start_A { my $self = shift @_; $self->start_L(@_) }
+sub end_A   { my $self = shift @_; $self->end_L(@_) }
 
 sub start_B { $_[0]{'scratch'} .= '<emphasis role="strong">' }
 sub end_B   { $_[0]{'scratch'} .= '</emphasis>' }
@@ -307,6 +310,9 @@ sub end_N {
 }
 sub footnote_next { ++$_[0]{'footnote_count'} }
 
+sub start_M { $_[0]{'scratch'} .= '<firstterm>' }
+sub end_M   { $_[0]{'scratch'} .= '</firstterm>' }
+
 sub start_R { $_[0]{'scratch'} .= '<replaceable>' }
 sub end_R   { $_[0]{'scratch'} .= '</replaceable>' }
 
@@ -325,7 +331,7 @@ sub index_next {
   return sprintf("%04d", $idx);
 }
 
-sub start_Z { $_[0]{'scratch'} .= '<a name="' }
+sub start_Z { $_[0]{'scratch'} .= '<anchor id="' }
 sub end_Z   { $_[0]{'scratch'} .= '"/>' }
 
 sub emit {
