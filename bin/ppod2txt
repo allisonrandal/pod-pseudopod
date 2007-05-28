@@ -17,6 +17,7 @@
 ######################################################################
 
 use strict;
+use lib "lib";
 use Pod::PseudoPod::Text;
 use File::Basename;
 

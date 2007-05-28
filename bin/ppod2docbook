@@ -57,7 +57,7 @@ if ( $opts{'n'} && open INCLUDE, $opts{'n'}) {
 	close INCLUDE;
 }
 
-my ($book_xml, $index_count);
+my ($book_xml, $index_count, $preface_num);
 foreach my $file (@ARGV) {
 	my $parser = Pod::PseudoPod::DocBook->new();
 	$parser->index_count($index_count);
@@ -75,6 +75,7 @@ foreach my $file (@ARGV) {
 	my $filename = fileparse( $file, qr{\..*} );
 	if ($filename =~ /preface/) {
 		$parser->chapter_type('preface');
+		$parser->chapter_num(++$preface_num);
         } elsif ($filename =~ /colophon/) {
 		$parser->chapter_type('colophon');
         } elsif ($filename =~ /^app(\w)/) {
@@ -86,6 +87,7 @@ foreach my $file (@ARGV) {
 		$parser->chapter_num(int($1));
 		if ($1 == 0) {
 			$parser->chapter_type('preface');
+			$parser->chapter_num(++$preface_num);
 		}
         }
 

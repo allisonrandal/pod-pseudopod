@@ -154,6 +154,8 @@ sub start_sidebar {
   my ($self, $flags) = @_;
   $self->{'scratch'} = '<sidebar>';
   if ($flags->{'title'}) {
+    # small hack for encoded entities in sidebar titles
+    $flags->{'title'} =~ s/E<(\w+)>/&$1;/g;
     $self->{'scratch'} .= "\n<title>" . $flags->{'title'} . "</title>";
   }
   $self->emit();
@@ -172,13 +174,14 @@ sub start_figure {
 sub end_figure { 
   my ($self, $flags)   = @_;
 
-  my $filepath = $self->{'figure_file'};
-  my $fileformat = '';
-  if ($filepath =~ m/\.(\w+$)/) {
-    $fileformat = uc($1);
-  }
+  if ($self->{'figure_file'}) {
+    my $filepath = $self->{'figure_file'};
+    my $fileformat = '';
+    if ($filepath =~ m/\.(\w+$)/) {
+      $fileformat = uc($1);
+    }
 
-  $self->{'scratch'} .= <<"XMLBLOCK";
+    $self->{'scratch'} .= <<"XMLBLOCK";
 <mediaobject>
  <imageobject role="print">
    <imagedata fileref="$filepath" format="$fileformat"/>
@@ -190,17 +193,22 @@ sub end_figure {
 XMLBLOCK
 
 #  $self->{'scratch'} .= "</figure>";
+    $self->emit();
+  }
 
   $self->{'in_figure'} = 0;
   $self->{'figure_file'}  = '';
-  $self->emit();
 }
 
 # This handles =begin and =for blocks of all kinds.
 sub start_for { 
     my ($self, $flags) = @_;
     my $target = $flags->{'target'};
-    $self->{'scratch'} .= "<$target>";
+    if ($target eq "production") {
+        $self->{'scratch'} .= "<important><para>Note for Production:</para>";
+    } else {
+        $self->{'scratch'} .= "<$target>";
+    }
     $self->{"in_$target"} = 1;
     $self->emit();
 
@@ -208,7 +216,11 @@ sub start_for {
 sub end_for { 
     my ($self, $flags) = @_;
     my $target = $flags->{'target'};
-    $self->{'scratch'} .= "</$target>";
+    if ($target eq "production") {
+        $self->{'scratch'} .= "</important>";
+    } else {
+        $self->{'scratch'} .= "</$target>";
+    }
     $self->{"in_$target"} = 0;
     $self->emit();
 }
@@ -366,6 +378,7 @@ sub chapter_id {
       $id = $self->{'book_id'} . '-' if ($self->{'book_id'});
       if ($self->{'chapter_type'} eq 'preface') {
         $id .= 'PREFACE';
+        $id .= '-' . $self->{'chapter_num'} if ($self->{'chapter_num'});
       } elsif ($self->{'chapter_type'} eq 'colophon') {
         $id .= 'COLOPHON';
       } elsif ($self->{'chapter_type'} eq 'appendix') {
