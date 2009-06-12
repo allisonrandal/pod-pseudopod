@@ -1,5 +1,9 @@
 Revision history for Pod::PseudoPod
 
+0.15 Jun 11, 2009
+	- Update Tutorial for change in maintainership.
+        - Further improvements to the DocBook formatter.
+
 0.14 Mar 20, 2007
 	- Add a DocBook 4.4. formatter, to output the new format
 	  O'Reilly needs for book production with help from Lakshmi
