@@ -12,7 +12,7 @@ my $build = Module::Build->new (
     },
     script_files         => [ 'bin/ppod2html',
                               'bin/ppod2txt',
-                              'bin/ppod2docbook'
+                              'bin/ppod2docbook',
                               'bin/ppodchecker'
                             ],
     recursive_test_files => 1,
