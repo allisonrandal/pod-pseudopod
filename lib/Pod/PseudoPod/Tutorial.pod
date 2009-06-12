@@ -42,7 +42,9 @@ A region of text that contains one or more lines, such as a
 paragraph, head, code listing, or figure.
 
   =begin foo
+
   Fa la la la la.
+
   =end foo
 
 =item Inline Segment
@@ -382,8 +384,10 @@ reference that points to a figure:
   old apple orchard. The map is detailed in A<escape-route>.
 
   =begin figure picture Tunnel Trajectory
+
   Z<escape-route>
     ... picture here ...
+
   =end figure
 
 It doesn't matter if the C<A> tag comes before or after the C<Z> tag,
@@ -430,9 +434,12 @@ typically people just use the number "1":
   =over
 
   =item 1 mount bicycle
+
   =item 1
   balance on seat
+
   =item 1 put feet on pedals
+
   =item 1 pedal quickly so you don't fall over
 
   =back
@@ -474,9 +481,13 @@ the parser sad. Here's a complex example:
   There are three principle varieties of this confection:
 
   =over
+
   =item 1 Crullers
+
   =item 1 Roundies
+
   =item 1 Jellies
+
   =back
 
   =item 1 Candy bars
@@ -485,9 +496,13 @@ the parser sad. Here's a complex example:
   of my favorites are:
 
   =over
+
   =item 1 Payday (nutty)
+
   =item 1 Snickers (nougaty)
+
   =item 1 Zagnut (coconutty)
+
   =back
 
   =back
@@ -499,6 +514,7 @@ hook for cross references. The usual candidate for inclusion is a code
 listing. Here's an example:
 
   =begin listing A Frightening Subroutine
+
   Z<ex-scary>
 
     for( my $i=0; $i<10; $i++ ) {
@@ -533,8 +549,11 @@ As an HTML-tagged table
 Here's the basic form of a table:
 
   =begin table TYPE TITLE
+
   Z<IDENTIFIER>
+
   CONTENT
+
   =end table
 
 The preferred method is the PseudoPod table format which has =row 
@@ -542,17 +561,29 @@ and =cell tags, as well as =headrow to mark the heading row
 and =bodyrows to mark the start of the main body of the table:
 
   =begin table An Example Table
+
   =headrow
+
   =row
+
   =cell Header for first column (row 1, col 1)
+
   =cell Header for 2nd column (row 1, col 2)
+
   =bodyrows
+
   =row
+
   =cell Cell for row 2, col 1
+
   =cell Cell for row 2, col 2
+
   =row
+
   =cell Cell for row 3, col 1
+
   =cell Cell for row 3, col 2
+
   =end table
 
 The second method is a freestyle, anything-goes format. Make your own
@@ -569,11 +600,14 @@ like "graphic" or "picture", it will be treated as an ASCII rendering.
 For example:
 
   =begin table picture Comparing Camels to Horses.
+
   Z<camel-horse-chart>
+
     CAMEL                HORSE
     Lives in desert      Lives in grassland
     Bumpy                Smooth
     Spits                Kicks
+
   =end table
 
 =head2 Figures
@@ -583,8 +617,11 @@ ASCII masterpiece you paint yourself. The general form is similar to a
 table's:
 
   =begin figure TYPE TITLE
+
   Z<IDENTIFIER>
+
   CONTENT
+
   =end figure
 
 If the TYPE is "graphic", then the parser will expect to see a
@@ -592,21 +629,27 @@ reference to an external file, the name of a graphic to import. For
 example:
 
   =begin figure graphic My Hairstyle
+
   Z<fig-hair>
+
   F<figs/myhair.gif>
+
   =end figure
 
 For any other value of TYPE, the parser assumes you drew your own
 lovely diagram in text:
 
   =begin figure pikchur My Hairstyle
+
   Z<fig-hair>
+
       \  | / //
       \ \ - / \
        \ | /
        (o o)      I look like a pineapple!
        ( < )
        (===)
+
   =end figure
 
 =head2 Other Structures
@@ -635,10 +678,12 @@ rendered in constant width font, then use =begin literal. Here's a bit
 of poetry done up like that:
 
   =begin literal
+
   As I was going up the stair,
   I met a man who was not there.
   He wasn't there again today;
   I wish that man would go away.
+
   =end literal
 
 =head3 Footnotes
@@ -647,8 +692,8 @@ Footnotes use the C<N> inline tag to locate them inside blocks.
 Strangely, they also function like blocks in that they can be many
 lines long. The following example shows how you might use them:
 
-  O'Reilly books often contain footnotesN<Perl books especially, it
-  would seem,N<Though I wouldn't go so far as to say they I<overdo>
+  O'Reilly books often contain footnotes,N<Perl books especially, it
+  would seemN<Though I wouldn't go so far as to say they I<overdo>
   it.>.> though I believe that house style limits them to three per
   page.N<Uh oh.>
 
@@ -658,8 +703,10 @@ For an epigraph, just wrap it up in a =begin epigraph command like
 this:
 
   =begin epigraph
+
   Great art must be licked.
   --Jas W Felter, Mail Artist
+
   =end epigraph
 
 =head3 Author Information
@@ -681,8 +728,9 @@ tools, to allow authors to check their formatting before submitting
 files.
 
 As of 2007, PsuedoPod is no longer used or maintained by O'Reilly, after
-they switched all their manuscripts to DocBook. Pod::PseudoPod is now
-the primary parser for PseudoPod, and includes Pod::PseudoPod::DocBook
-to generate DocBook output suitable for submission to O'Reilly.
+they switched all their manuscripts to DocBook. L<Pod::PseudoPod> is now
+the primary parser for PseudoPod, and includes
+L<Pod::PseudoPod::DocBook> to generate DocBook output suitable for
+submission to O'Reilly.
 
 =end
