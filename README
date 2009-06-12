@@ -1,5 +1,5 @@
 DESCRIPTION
-    PseudoPOD is O'Reilly's extended set of POD tags for book manuscripts.
+    PseudoPOD is an extended set of POD tags for book manuscripts.
     Standard POD doesn't have all the markup options you might want for
     marking up files for publishing production. PseudoPOD adds a few extra
     tags for footnotes and tables, and has extended uses of "=begin" 
