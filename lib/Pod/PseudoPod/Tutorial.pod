@@ -1,18 +1,12 @@
 =pod
 
-=head1 PseudoPOD
+=head1 PseudoPod
 
-A POD Extension for Authoring Large Documents
-
-=head2 Source
-
-This tutorial is an updated version of O'Reilly's documentation on
-PseudoPOD. It is included with the distribution of Pod::PseudoPod by
-permission from O'Reilly and Associates.
+A Pod Extension for Authoring Large Documents
 
 =head2 Introduction
 
-Perl's "Plain Old Documentation" format (POD) is not, by any means, a
+Perl's "Plain Old Documentation" format (Pod) is not, by any means, a
 perfect markup language. It lacks XML's robust features of
 well-formedness and unambiguous syntax. In fact, it was never intended
 to be anything more than a simple format for embedding documentation
@@ -22,46 +16,22 @@ alludes:
   "...I'm not at all claiming this to be sufficient for producing a
   book."
 
-Yet many POD People -- er, I mean, authors -- want to do just that.
-POD is, after all, the darling of Perl hackers everywhere. Since we
-don't have a choice (we need your books to stay in business!) we
+Yet many Pod People -- er, I mean, authors -- want to do just that.
+Pod is, after all, the darling of Perl hackers everywhere. O'Reilly
 decided to extend it into the realm of large, complex documents, such
-as the typical book. This extension, called PseudoPOD (thanks to
-Jason McIntosh for the excellent name), adds many inline tags,
+as the typical book. This extension, called PseudoPod (thanks to
+Jason McIntosh for the excellent name), adds some inline tags,
 block structures, and rules to make processing work smoothly.
 
 Before you go any further, you should go and read the perlpod man
-page, if you haven't already. It lays the foundation for PseudoPOD,
+page, if you haven't already. It lays the foundation for PseudoPod,
 establishing some important rules for syntax and semantics that we
-rely on. Our parser is necessarily much more complex, and therefore
-less forgiving of errors such as improperly closed inline tags or
-blocks. Where before you could get away with sloppy tagging and still
-get reasonable output, PseudoPOD demands greater attention to detail.
-Hey, that's the price of using POD for making books, folks.
+rely on.
 
-In general, please keep your book's structure as simple as possible.
-Doing anything unnecessarily complicated will confuse the parser
-and/or slow down book production. Things like tables inside sidebars
-and footnotes in heads should never be used. But we're not going to
-start a diatribe about style here. That's the responsibility of your
-editor.
-
-On to PseudoPOD! But first, a moment of zen:
-
-  $ banner ":-)"
-
-     #              ##
-    ###               #
-     #                 #
-           #####       #
-     #                 #
-    ###               #
-     #              ##
-  
 =head2 Terminology
 
-Before we dive into the nitty-gritty details of PseudoPOD, we should
-recap the basic concepts of POD. The following table covers just about
+Before we dive into the nitty-gritty details of PseudoPod, we should
+recap the basic concepts of Pod. The following table covers just about
 everything:
 
 =over
@@ -91,15 +61,15 @@ Just a plain, ordinary block of text. Always unindented.
 
 =item Verbatim Paragraph
 
-A section of code, screen output, or an equation
-whose space and characters need to be preserved, verbatim.
+A section of code, screen output, or an equation whose space and
+characters need to be preserved, verbatim. Always indented.
 
       x + y = z
 
 =item Command Paragraph
 
-Start a new block style of one or more lines.
-Multi-line commands may require another command to end the block.
+Start a new block style of one or more lines. Multi-line commands may
+require another command to end the block.
 
   =head1 What I Did On My Summer Vacation
 
@@ -146,7 +116,7 @@ two simple paras living together in a file:
   common, run-of-the-mill, low-key,
   unassuming, plain old paragraph.
 
-Simple paragraphs will not preserve special spacing. POD formatters
+Simple paragraphs will not preserve special spacing. Pod formatters
 are allowed to throw away line breaks, adjust line width, and make any
 other changes to beautify the paragraphs. If you need to preserve
 spacing for any reason, you should use a verbatim paragraph.
@@ -159,7 +129,7 @@ will be treated as a line of code in a separate block.
 A verbatim paragraph will, unlike the simple paragraph type, preserve
 all spaces and linebreaks. It's distinguished by indenting every line
 at least one space. The amount doesn't matter, as long as subsequent
-lines are indented as least as much as the first line. The POD parser
+lines are indented as least as much as the first line. The Pod parser
 will measure the first line's indentation and subtract it from
 following lines.
 
@@ -185,7 +155,7 @@ you want. So, to be unambiguous about it, please only use spaces.
 
 =head2 Command Paragraphs
 
-Command paragraphs are used for all other structures in POD. The
+Command paragraphs are used for all other structures in Pod. The
 command takes the form of an equals sign (=) followed by some string
 of alphabetic characters and either a newline or a space and an
 optional string of data. It looks like this:
@@ -219,9 +189,9 @@ section, would look like this:
 
   =head1 Lizard Feeding Tips
 
-O'Reilly books typically are split up into multiple files, each
+Pod books typically are split up into multiple files, each
 containing a single chapter, appendix, or part page (intro to a part
-of the book). Every PseudoPOD file should follow this pattern:
+of the book). Every PseudoPod file should follow this pattern:
 
   =head0 CHAPTER TITLE
 
@@ -265,7 +235,7 @@ the parser will likely burst into flames. And it's bad style too.
 
 =head2 Inline Character Tagging
 
-Inline character tags, also known as interior sequences in POD
+Inline character tags, also known as interior sequences in Pod
 parlance, are a special syntactic form that delineates special
 treatment for character sequences inside a block. For example, to mark
 a word so that it has italic font style, you would do this:
@@ -291,7 +261,7 @@ stripped. These all do the same thing:
   C<<<<< foo >>>>>
 
 We have tried to preserve all the inline tags defined in the original
-POD spec. The set used by PseudoPOD adds a bunch more. The following
+Pod spec. The set used by PseudoPod adds a bunch more. The following
 table lays out the tags and their meanings:
 
    Tag  Meaning                        Example
@@ -355,8 +325,8 @@ examples, or figures.
 
 =item 2
 
-In standard POD, C<E> means any escaped character, but we have
-taken this further. In PseudoPOD, the data in C<E> is the name of
+In standard Pod, C<E> means any escaped character, but we have
+taken this further. In PseudoPod, the data in C<E> is the name of
 an XML entity, as defined in ISO-8879. So, translated into XML it
 would wind up as &times; and when translated into Unicode, it
 would become the multiplication symbol ×. For a complete list of
@@ -387,7 +357,7 @@ structure.
 
 =back
 
-The most common type of error we see in POD files is imbalanced
+The most common type of error we see in Pod files is imbalanced
 delimiters in inline tags. Be wary of this! These are all errors:
 
   C<>>
@@ -548,7 +518,7 @@ scenarios, so we offer three ways to markup tables:
 
 =item *
 
-As a POD formatted table
+As a Pod formatted table
 
 =item *
 
@@ -567,7 +537,7 @@ Here's the basic form of a table:
   CONTENT
   =end table
 
-The preferred method is the PseudoPOD table format which has =row 
+The preferred method is the PseudoPod table format which has =row 
 and =cell tags, as well as =headrow to mark the heading row 
 and =bodyrows to mark the start of the main body of the table:
 
@@ -592,25 +562,11 @@ ourselves in production which slows us down a bit. Just try to make it
 clear what is in which column and on what row, and it will be okay
 with us.
 
-The third method uses HTML's well-known style of table tagging which
-is simple and easy to learn. It also makes things like spans much
-easier. 
-
 The table markup is a wrapper, similar to examples, but with an extra
 keyword, TYPE, to denote the kind of table. If the keyword is "html",
 our parser will read it like an HTML table. If it's anything else,
 like "graphic" or "picture", it will be treated as an ASCII rendering.
 For example:
-
-  =begin table html Comparing Camels to Horses.
-  Z<camel-horse-chart>
-    <table>
-      <tr><th>Camel</th><th>Horse</th></tr>
-      <tr><td>Lives in desert</td><td>Lives in grassland</td></tr>
-      <tr><td>Bumpy</td><td>Smooth</td></tr>
-      <tr><td>Spits</td><td>Kicks</td></tr>
-    </table>
-  =end table
 
   =begin table picture Comparing Camels to Horses.
   Z<camel-horse-chart>
@@ -692,9 +648,9 @@ Strangely, they also function like blocks in that they can be many
 lines long. The following example shows how you might use them:
 
   O'Reilly books often contain footnotesN<Perl books especially, it
-  would seemN<Though I wouldn't go so far as to say they I<overdo>
-  it.>.>, though I believe that house style limits them to three per
-  pageN<Uh oh.>.
+  would seem,N<Though I wouldn't go so far as to say they I<overdo>
+  it.>.> though I believe that house style limits them to three per
+  page.N<Uh oh.>
 
 =head3 Epigraphs
 
@@ -713,13 +669,20 @@ article, use the =author command:
 
   =author Ferdinand Buscaglia
 
-=head2 Contact Information
+=head2 History
 
-PseudoPOD is originally the brainchild of Jason "J-mac" McIntosh, to
-whom we are deeply indebted. However, Jason is no longer with
-O'Reilly, so it's being maintained by the O'Reilly Techpubs Tools
-Group (tools@oreilly.com). We welcome your comments and suggestions
-and promise you that PseudoPOD will continue to grow in any direction
-needed.
+PseudoPod was originally the brainchild of Jason "J-mac" McIntosh who
+worked for O'Reilly's Publishing Tools Group. It was used for many
+venerable Perl books, including several revisions of the Camel and
+Llama. The Pod::PseudoPod modules were developed by Allison Randal while
+writing a book for O'Reilly as an easy-to-use and easy-to-install
+alternative to O'Reilly's internal PseudoPod parsing and formatting
+tools, to allow authors to check their formatting before submitting
+files.
+
+As of 2007, PsuedoPod is no longer used or maintained by O'Reilly, after
+they switched all their manuscripts to DocBook. Pod::PseudoPod is now
+the primary parser for PseudoPod, and includes Pod::PseudoPod::DocBook
+to generate DocBook output suitable for submission to O'Reilly.
 
 =end
