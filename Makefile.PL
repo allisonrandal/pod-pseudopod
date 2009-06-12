@@ -19,6 +19,7 @@ WriteMakefile(
     },
     EXE_FILES    => [ 'bin/ppod2html',
                       'bin/ppod2txt',
+                      'bin/ppod2docbook',
                       'bin/ppodchecker',
                     ],
     test =>

@@ -12,10 +12,11 @@ my $build = Module::Build->new (
     },
     script_files         => [ 'bin/ppod2html',
                               'bin/ppod2txt',
+                              'bin/ppod2docbook'
                               'bin/ppodchecker'
                             ],
     recursive_test_files => 1,
     dist_author          => 'Allison Randal (allison@perl.org)',
-    dist_abstract        => "A framework for parsing O'Reilly's PseudoPod",
+    dist_abstract        => "A framework for parsing PseudoPod",
 );
 $build->create_build_script;
