@@ -25,9 +25,6 @@ provides:
   Pod::PseudoPod::DocBook:
     file: lib/Pod/PseudoPod/DocBook.pm
     version: 0.15
-  Pod::PseudoPod::DumpAsXML:
-    file: lib/Pod/PseudoPod/DumpAsXML.pm
-    version: 1.01
   Pod::PseudoPod::HTML:
     file: lib/Pod/PseudoPod/HTML.pm
     version: 0.12
@@ -37,8 +34,5 @@ provides:
   Pod::PseudoPod::Text:
     file: lib/Pod/PseudoPod/Text.pm
     version: 0.11
-  Pod::PseudoPod::XMLOutStream:
-    file: lib/Pod/PseudoPod/XMLOutStream.pm
-    version: 1.02
 resources:
   license: http://dev.perl.org/licenses/
