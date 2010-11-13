@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 31;
+use Test::More tests => 32;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -213,6 +213,29 @@ is($results, <<"EOHTML", "adding html body tags");
 <body>
 
 <p>A plain paragraph with body tags turned on.</p>
+
+</body>
+</html>
+
+EOHTML
+
+initialize($parser, $results);
+$parser->add_body_tags(1);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+=head0 A Title
+
+Followed by a plain paragraph with body tags
+turned on.
+EOPOD
+is($results, <<"EOHTML", "adding html body tags with title");
+<html>
+<body>
+
+<h1>A Title</h1>
+
+<p>Followed by a plain paragraph with body tags turned on.</p>
 
 </body>
 </html>
