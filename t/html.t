@@ -210,6 +210,8 @@ A plain paragraph with body tags turned on.
 EOPOD
 is($results, <<"EOHTML", "adding html body tags");
 <html>
+<head>
+</head>
 <body>
 
 <p>A plain paragraph with body tags turned on.</p>
@@ -231,6 +233,8 @@ turned on.
 EOPOD
 is($results, <<"EOHTML", "adding html body tags with title");
 <html>
+<head>
+</head>
 <body>
 
 <h1>A Title</h1>
@@ -253,7 +257,9 @@ A plain paragraph with body tags and css tags turned on.
 EOPOD
 is($results, <<"EOHTML", "adding html body tags and css tags");
 <html>
+<head>
 <link rel='stylesheet' href='style.css' type='text/css'>
+</head>
 <body>
 
 <p>A plain paragraph with body tags and css tags turned on.</p>

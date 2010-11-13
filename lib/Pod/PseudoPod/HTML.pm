@@ -155,7 +155,7 @@ sub end_cell {
 sub start_Document { 
   my ($self) = @_;
   if ($self->{'body_tags'}) {
-    $self->{'scratch'} .= "<html>";
+    $self->{'scratch'} .= "<html>\n<head>";
     $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
     $self->emit('nowrap');
   }
@@ -217,7 +217,7 @@ sub emit {
   my($self, $nowrap) = @_;
 
   if ($self->{'body_tags'} && !$self->{'body_tags_emitted'}) {
-    $self->{'scratch'}.= "\n<body>";
+    $self->{'scratch'}.= "\n</head>\n<body>";
     $self->{'body_tags_emitted'} = 1;
   }
 
