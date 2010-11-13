@@ -155,7 +155,6 @@ sub end_cell {
 sub start_Document { 
   my ($self) = @_;
   if ($self->{'body_tags'}) {
-    $self->{'scratch'} .= "<html>\n<body>";
     $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
     $self->emit('nowrap');
   }
@@ -215,6 +214,12 @@ sub end_Z   { $_[0]{'scratch'} .= '">' }
 
 sub emit {
   my($self, $nowrap) = @_;
+
+  if ($self->{'body_tags'} && !$self->{'body_tags_emitted'}) {
+    $self->{'scratch'} = "<html>\n<body>" . $self->{'scratch'};
+    $self->{'body_tags_emitted'} = 1;
+  }
+
   my $out = $self->{'scratch'} . "\n";
   $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
   print {$self->{'output_fh'}} $out, "\n";
