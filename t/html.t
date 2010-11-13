@@ -253,8 +253,8 @@ A plain paragraph with body tags and css tags turned on.
 EOPOD
 is($results, <<"EOHTML", "adding html body tags and css tags");
 <html>
-<body>
 <link rel='stylesheet' href='style.css' type='text/css'>
+<body>
 
 <p>A plain paragraph with body tags and css tags turned on.</p>
 
