@@ -33,13 +33,15 @@ sub new {
 
 sub handle_text {
     # escape special characters in HTML (<, >, &, etc)
-    $_[0]{'scratch'} .= $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
+    my $text = $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1];
+    $_[0]{'title_text'} = $text if $_[0]{'in_title'};
+    $_[0]{'scratch'} .= $text;
 }
 
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>'; $_[0]{'in_verbatim'} = 1}
 
-sub start_head0 {  $_[0]{'scratch'} = '<h1>' }
+sub start_head0 {  $_[0]{'scratch'} = '<h1>'; $_[0]{'in_title'} = 1; }
 sub start_head1 {  $_[0]{'scratch'} = '<h2>' }
 sub start_head2 {  $_[0]{'scratch'} = '<h3>' }
 sub start_head3 {  $_[0]{'scratch'} = '<h4>' }
@@ -68,7 +70,7 @@ sub end_Verbatim {
     $_[0]->emit('nowrap');
 }
 
-sub end_head0       { $_[0]{'scratch'} .= '</h1>'; $_[0]->emit() }
+sub end_head0       { $_[0]{'scratch'} .= '</h1>'; $_[0]{'in_title'} = 0; $_[0]->emit() }
 sub end_head1       { $_[0]{'scratch'} .= '</h2>'; $_[0]->emit() }
 sub end_head2       { $_[0]{'scratch'} .= '</h3>'; $_[0]->emit() }
 sub end_head3       { $_[0]{'scratch'} .= '</h4>'; $_[0]->emit() }
