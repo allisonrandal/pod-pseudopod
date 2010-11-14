@@ -38,6 +38,19 @@ sub handle_text {
     $_[0]{'scratch'} .= $text;
 }
 
+sub begin_body_if_necessary {
+  my ($self, $title_text) = @_;
+  if ($self->{'body_tags'} && $self->{'in_html_head'} && $self->{'content_seen'}){
+    my $title = '';
+    $title = "<title>$title_text</title>\n" if defined $title_text;
+    $self->{'scratch'} = "</head>\n<body>\n\n".$self->{'scratch'};
+    $self->{'in_html_head'} = 0;
+  }
+}
+    
+
+  
+
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>'; $_[0]{'in_verbatim'} = 1}
 
@@ -70,7 +83,15 @@ sub end_Verbatim {
     $_[0]->emit('nowrap');
 }
 
-sub end_head0       { $_[0]{'scratch'} .= '</h1>'; $_[0]{'in_title'} = 0; $_[0]->emit() }
+sub end_head0 {
+  my ($self) = @_;
+  my $title = $self->{'title_text'};
+  $self->begin_body_if_necessary($title);
+  $self->{'scratch'} .= '</h1>';
+  $_[0]{'in_title'} = 0;
+  $self->emit();
+}
+
 sub end_head1       { $_[0]{'scratch'} .= '</h2>'; $_[0]->emit() }
 sub end_head2       { $_[0]{'scratch'} .= '</h3>'; $_[0]->emit() }
 sub end_head3       { $_[0]{'scratch'} .= '</h4>'; $_[0]->emit() }
@@ -158,7 +179,8 @@ sub start_Document {
   my ($self) = @_;
   if ($self->{'body_tags'}) {
     $self->{'scratch'} .= "<html>\n<head>";
-    $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
+    $self->{'in_html_head'} = 1;
+    $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'};
     $self->emit('nowrap');
   }
 }
@@ -217,12 +239,7 @@ sub end_Z   { $_[0]{'scratch'} .= '">' }
 
 sub emit {
   my($self, $nowrap) = @_;
-
-  if ($self->{'body_tags'} && !$self->{'body_tags_emitted'}) {
-    $self->{'scratch'}.= "\n</head>\n<body>";
-    $self->{'body_tags_emitted'} = 1;
-  }
-
+  $self->begin_body_if_necessary;
   my $out = $self->{'scratch'} . "\n";
   $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
   print {$self->{'output_fh'}} $out, "\n";

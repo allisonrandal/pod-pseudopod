@@ -211,6 +211,7 @@ EOPOD
 is($results, <<"EOHTML", "adding html body tags");
 <html>
 <head>
+
 </head>
 <body>
 
@@ -234,6 +235,7 @@ EOPOD
 is($results, <<"EOHTML", "adding html body tags with title");
 <html>
 <head>
+
 </head>
 <body>
 
@@ -259,6 +261,7 @@ is($results, <<"EOHTML", "adding html body tags and css tags");
 <html>
 <head>
 <link rel='stylesheet' href='style.css' type='text/css'>
+
 </head>
 <body>
 
