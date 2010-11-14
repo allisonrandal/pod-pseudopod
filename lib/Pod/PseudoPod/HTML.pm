@@ -290,8 +290,11 @@ This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
   $parser->add_body_tags(1);
   $parser->parse_file($file);
 
-Adds beginning and ending "<html>" and "<body>" tags to the formatted
-document.
+Adds beginning and ending "<html>", "<head>", and "<body>" tags to
+the formatted document.
+
+Additionally, if there is a "=head0" directive, adds a pair of
+"<title>" tags with its contents.
 
 =head2 add_css_tags
 
