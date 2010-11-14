@@ -48,9 +48,6 @@ sub begin_body_if_necessary {
   }
 }
     
-
-  
-
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>'; $_[0]{'in_verbatim'} = 1}
 
