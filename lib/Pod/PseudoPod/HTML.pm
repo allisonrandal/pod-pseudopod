@@ -42,8 +42,8 @@ sub begin_body_if_necessary {
   my ($self, $title_text) = @_;
   if ($self->{'body_tags'} && $self->{'in_html_head'} && $self->{'content_seen'}){
     my $title = '';
-    $title = "<title>$title_text</title>\n" if defined $title_text;
-    $self->{'scratch'} = "</head>\n<body>\n\n".$self->{'scratch'};
+    $title = "<title>$title_text</title>\n\n" if defined $title_text;
+    $self->{'scratch'} = "$title</head>\n<body>\n\n".$self->{'scratch'};
     $self->{'in_html_head'} = 0;
   }
 }

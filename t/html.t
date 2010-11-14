@@ -236,6 +236,8 @@ is($results, <<"EOHTML", "adding html body tags with title");
 <html>
 <head>
 
+<title>A Title</title>
+
 </head>
 <body>
 
