@@ -5,8 +5,6 @@ $VERSION = '0.12';
 use Carp ();
 use base qw( Pod::PseudoPod );
 
-use Text::Wrap 98.112902 ();
-$Text::Wrap::wrap = 'overflow';
 use HTML::Entities 'encode_entities';
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -216,7 +214,6 @@ sub end_Z   { $_[0]{'scratch'} .= '">' }
 sub emit {
   my($self, $nowrap) = @_;
   my $out = $self->{'scratch'} . "\n";
-  $out = Text::Wrap::wrap('', '', $out) unless $nowrap;
   print {$self->{'output_fh'}} $out, "\n";
   $self->{'scratch'} = '';
   return;
@@ -252,9 +249,6 @@ Pod::PseudoPod::HTML -- format PseudoPod as HTML
 
 This class is a formatter that takes PseudoPod and renders it as
 wrapped html.
-
-Its wrapping is done by L<Text::Wrap>, so you can change
-C<$Text::Wrap::columns> as you like.
 
 This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
 

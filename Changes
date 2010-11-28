@@ -1,5 +1,8 @@
 Revision history for Pod::PseudoPod
 
+0.17 Nov 28, 2010
+    - Removed Text::Wrap from Pod::PseudoPod::HTML altogether (RT #58784)
+
 0.16 Mar 29, 2010
         - Remove Pod::Simple tests, Pod::PseudoPod is compatible with
 	  old and new versions of Pod::Simple, doesn't need to be
