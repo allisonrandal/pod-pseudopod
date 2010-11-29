@@ -315,7 +315,7 @@ $parser->parse_string_document(<<'EOPOD');
 A plain paragraph with B<bold text>.
 EOPOD
 is($results, <<"EOHTML", "Bold text in a paragraph");
-<p>A plain paragraph with <b>bold text</b>.</p>
+<p>A plain paragraph with <strong>bold text</strong>.</p>
 
 EOHTML
 

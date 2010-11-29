@@ -170,8 +170,8 @@ sub end_Document   {
 sub start_A { $_[0]{'scratch'} .= '<a href="#' }
 sub end_A   { $_[0]{'scratch'} .= '">link</a>' }
 
-sub start_B { $_[0]{'scratch'} .= '<b>' }
-sub end_B   { $_[0]{'scratch'} .= '</b>' }
+sub start_B { $_[0]{'scratch'} .= '<strong>' }
+sub end_B   { $_[0]{'scratch'} .= '</strong>' }
 
 sub start_C { $_[0]{'scratch'} .= '<code>' }
 sub end_C   { $_[0]{'scratch'} .= '</code>' }
