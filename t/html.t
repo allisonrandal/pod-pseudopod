@@ -326,7 +326,7 @@ $parser->parse_string_document(<<'EOPOD');
 A plain paragraph with I<italic text>.
 EOPOD
 is($results, <<"EOHTML", "Italic text in a paragraph");
-<p>A plain paragraph with <i>italic text</i>.</p>
+<p>A plain paragraph with <em>italic text</em>.</p>
 
 EOHTML
 
@@ -348,7 +348,7 @@ $parser->parse_string_document(<<'EOPOD');
 A plain paragraph with a F<filename>.
 EOPOD
 is($results, <<"EOHTML", "File name in a paragraph");
-<p>A plain paragraph with a <i>filename</i>.</p>
+<p>A plain paragraph with a <em>filename</em>.</p>
 
 EOHTML
 

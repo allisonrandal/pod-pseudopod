@@ -129,7 +129,7 @@ sub end_for {
 sub start_table { 
   my ($self, $flags) = @_;
   if ($flags->{'title'}) {
-    $self->{'scratch'} .= "<i>Table: " . $flags->{'title'} . "</i>\n";
+    $self->{'scratch'} .= "<em>Table: " . $flags->{'title'} . "</em>\n";
   }
   $self->{'scratch'} .= '<table>';
   $self->emit('nowrap');
@@ -179,8 +179,8 @@ sub end_C   { $_[0]{'scratch'} .= '</code>' }
 sub start_E { $_[0]{'scratch'} .= '&' }
 sub end_E   { $_[0]{'scratch'} .= ';' }
 
-sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<img src="' : '<i>' }
-sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '">' : '</i>' }
+sub start_F { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '<img src="' : '<em>' }
+sub end_F   { $_[0]{'scratch'} .= ($_[0]{'in_figure'}) ? '">' : '</em>' }
 
 sub start_G { $_[0]{'scratch'} .= '<sup>' }
 sub end_G   { $_[0]{'scratch'} .= '</sup>' }
@@ -188,8 +188,8 @@ sub end_G   { $_[0]{'scratch'} .= '</sup>' }
 sub start_H { $_[0]{'scratch'} .= '<sub>' }
 sub end_H   { $_[0]{'scratch'} .= '</sub>' }
 
-sub start_I { $_[0]{'scratch'} .= '<i>' }
-sub end_I   { $_[0]{'scratch'} .= '</i>' }
+sub start_I { $_[0]{'scratch'} .= '<em>' }
+sub end_I   { $_[0]{'scratch'} .= '</em>' }
 
 sub start_N {
   my ($self) = @_;
