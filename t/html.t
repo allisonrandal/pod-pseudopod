@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 31;
+use Test::More tests => 32;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -184,6 +184,7 @@ is($results, <<"EOHTML", "code entity in a paragraph");
 <p>A plain paragraph with a <code>functionname</code>.</p>
 
 EOHTML
+
 
 
 initialize($parser, $results);
@@ -363,6 +364,19 @@ like($results, qr/&quot;/, "Verbatim text with encodable quotes");
 like($results, qr/&amp;/, "Verbatim text with encodable ampersands");
 like($results, qr/&lt;/, "Verbatim text with encodable less-than");
 like($results, qr/&gt;/, "Verbatim text with encodable greater-than");
+
+#Testing for angled brackets to get through double angled brackets (C<< >>)
+
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=pod
+
+More C<< < >> less.
+EOPOD
+is($results, <<"EOHTML", "Angled bracket in double angled brackets.");
+<p>More <code>&#60;</code> less.</p>
+
+EOHTML
 
 ######################################
 
