@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 32;
+use Test::More tests => 35;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -184,7 +184,6 @@ is($results, <<"EOHTML", "code entity in a paragraph");
 <p>A plain paragraph with a <code>functionname</code>.</p>
 
 EOHTML
-
 
 
 initialize($parser, $results);
@@ -365,18 +364,31 @@ like($results, qr/&amp;/, "Verbatim text with encodable ampersands");
 like($results, qr/&lt;/, "Verbatim text with encodable less-than");
 like($results, qr/&gt;/, "Verbatim text with encodable greater-than");
 
-#Testing for angled brackets to get through double angled brackets (C<< >>)
+# Testing for encodables to get through double angled brackets (C<< >>)
 
-initialize($parser, $results);
-$parser->parse_string_document(<<'EOPOD');
+#formatting codes that should escape the different encodeds (below)
+my @escaping_formatting_codes = qw/C/;
+
+my %encodeds;
+$encodeds{'quote'} 		= qr/(?:&quot;|&#34;)/;
+$encodeds{'ampersand'} 		= qr/(?:&amp;|&#38;)/;
+$encodeds{'less-than'} 		= qr/(?:&lt;|&#60;)/;
+$encodeds{'greater-than'} 	= qr/(?:&gt;|&#62;)/;
+
+foreach my $code (@escaping_formatting_codes) {
+	initialize($parser, $results);
+	$parser->parse_string_document(<<"EOPOD");
 =pod
 
-More C<< < >> less.
+Not written very often:
+$code<< < & > = >>
 EOPOD
-is($results, <<"EOHTML", "Angled bracket in double angled brackets.");
-<p>More <code>&#60;</code> less.</p>
+	foreach my $encodable (keys(%encodeds)) {
+		like($results, $encodeds{$encodable}, "Formatting code $code with encodable $encodable");
+	}
+}
 
-EOHTML
+done_testing();
 
 ######################################
 
