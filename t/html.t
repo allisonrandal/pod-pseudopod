@@ -379,11 +379,11 @@ TODO: {
 	foreach my $code (@escaping_formatting_codes) {
 		initialize($parser, $results);
 		$parser->parse_string_document(<<"EOPOD");
-	=pod
+=pod
 
-	Not written very often:
-	$code<< < & > = >>
-	EOPOD
+Not written very often:
+$code<< < & > = >>
+EOPOD
 		foreach my $encodable (keys(%encodeds)) {
 			like($results, $encodeds{$encodable}, "Formatting code $code with encodable $encodable");
 		}
