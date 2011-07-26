@@ -31,7 +31,7 @@ sub new {
 
 sub handle_text {
     # escape special characters in HTML (<, >, &, etc)
-    $_[0]{'scratch'} .= $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
+    $_[0]{'scratch'} .= $_[0]{'codes_in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
 }
 
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
