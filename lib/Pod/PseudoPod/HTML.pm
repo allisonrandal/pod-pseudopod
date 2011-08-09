@@ -34,8 +34,8 @@ sub handle_text {
     $_[0]{'scratch'} .= $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
 }
 
-sub start_Para     { $_[0]{'scratch'} = '<p>' }
-sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>'; $_[0]{'in_verbatim'} = 1}
+sub start_Para     { $_[0]{'scratch'} .= '<p>' }
+sub start_Verbatim { $_[0]{'scratch'} .= '<pre><code>'; $_[0]{'in_verbatim'} = 1}
 
 sub start_head0 {  $_[0]{'scratch'} = '<h1>' }
 sub start_head1 {  $_[0]{'scratch'} = '<h2>' }
@@ -43,14 +43,14 @@ sub start_head2 {  $_[0]{'scratch'} = '<h3>' }
 sub start_head3 {  $_[0]{'scratch'} = '<h4>' }
 sub start_head4 {  $_[0]{'scratch'} = '<h5>' }
 
-sub start_item_bullet { $_[0]{'scratch'} = '<li>' }
-sub start_item_number { $_[0]{'scratch'} = "<li>$_[1]{'number'}. "  }
-sub start_item_text   { $_[0]{'scratch'} = '<li>'   }
+sub start_item_bullet { $_[0]{'scratch'} .= '<li>' }
+sub start_item_number { $_[0]{'scratch'} .= "<li>$_[1]{'number'}. "  }
+sub start_item_text   { $_[0]{'scratch'} .= '<li>'   }
 
-sub start_over_bullet { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_text   { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_block  { $_[0]{'scratch'} = '<ul>'; $_[0]->emit() }
-sub start_over_number { $_[0]{'scratch'} = '<ol>'; $_[0]->emit() }
+sub start_over_bullet { $_[0]{'scratch'} .= '<ul>'; $_[0]->emit() }
+sub start_over_text   { $_[0]{'scratch'} .= '<ul>'; $_[0]->emit() }
+sub start_over_block  { $_[0]{'scratch'} .= '<ul>'; $_[0]->emit() }
+sub start_over_number { $_[0]{'scratch'} .= '<ol>'; $_[0]->emit() }
 
 sub end_over_bullet { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
 sub end_over_text   { $_[0]{'scratch'} .= '</ul>'; $_[0]->emit('nowrap') }
