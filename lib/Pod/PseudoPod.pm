@@ -11,7 +11,7 @@ use vars qw(
 );
 
 @ISA = ('Pod::Simple');
-$VERSION = '0.16';
+$VERSION = '0.18';
 
 BEGIN { *DEBUG = sub () {0} unless defined &DEBUG }
 

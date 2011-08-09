@@ -29,3 +29,4 @@ t/html.t
 t/index.t
 t/text.t
 t/table.t
+META.json
