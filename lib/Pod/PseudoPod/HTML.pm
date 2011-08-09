@@ -31,13 +31,25 @@ sub new {
 
 sub handle_text {
     # escape special characters in HTML (<, >, &, etc)
-    $_[0]{'scratch'} .= $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1]
+    my $text = $_[0]{'in_verbatim'} ? encode_entities( $_[1] ) : $_[1];
+    $_[0]{'title_text'} = $text if $_[0]{'in_title'};
+    $_[0]{'scratch'} .= $text;
 }
 
+sub begin_body_if_necessary {
+  my ($self, $title_text) = @_;
+  if ($self->{'body_tags'} && $self->{'in_html_head'} && $self->{'content_seen'}){
+    my $title = '';
+    $title = "<title>$title_text</title>\n\n" if defined $title_text;
+    $self->{'scratch'} = "$title</head>\n<body>\n\n".$self->{'scratch'};
+    $self->{'in_html_head'} = 0;
+  }
+}
+    
 sub start_Para     { $_[0]{'scratch'} = '<p>' }
 sub start_Verbatim { $_[0]{'scratch'} = '<pre><code>'; $_[0]{'in_verbatim'} = 1}
 
-sub start_head0 {  $_[0]{'scratch'} = '<h1>' }
+sub start_head0 {  $_[0]{'scratch'} = '<h1>'; $_[0]{'in_title'} = 1; }
 sub start_head1 {  $_[0]{'scratch'} = '<h2>' }
 sub start_head2 {  $_[0]{'scratch'} = '<h3>' }
 sub start_head3 {  $_[0]{'scratch'} = '<h4>' }
@@ -66,7 +78,15 @@ sub end_Verbatim {
     $_[0]->emit('nowrap');
 }
 
-sub end_head0       { $_[0]{'scratch'} .= '</h1>'; $_[0]->emit() }
+sub end_head0 {
+  my ($self) = @_;
+  my $title = $self->{'title_text'};
+  $self->begin_body_if_necessary($title);
+  $self->{'scratch'} .= '</h1>';
+  $_[0]{'in_title'} = 0;
+  $self->emit();
+}
+
 sub end_head1       { $_[0]{'scratch'} .= '</h2>'; $_[0]->emit() }
 sub end_head2       { $_[0]{'scratch'} .= '</h3>'; $_[0]->emit() }
 sub end_head3       { $_[0]{'scratch'} .= '</h4>'; $_[0]->emit() }
@@ -153,8 +173,9 @@ sub end_cell {
 sub start_Document { 
   my ($self) = @_;
   if ($self->{'body_tags'}) {
-    $self->{'scratch'} .= "<html>\n<body>";
-    $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'}; 
+    $self->{'scratch'} .= "<html>\n<head>";
+    $self->{'in_html_head'} = 1;
+    $self->{'scratch'} .= "\n<link rel='stylesheet' href='style.css' type='text/css'>" if $self->{'css_tags'};
     $self->emit('nowrap');
   }
 }
@@ -213,6 +234,7 @@ sub end_Z   { $_[0]{'scratch'} .= '">' }
 
 sub emit {
   my($self, $nowrap) = @_;
+  $self->begin_body_if_necessary;
   my $out = $self->{'scratch'} . "\n";
   print {$self->{'output_fh'}} $out, "\n";
   $self->{'scratch'} = '';
@@ -259,8 +281,11 @@ This is a subclass of L<Pod::PseudoPod> and inherits all its methods.
   $parser->add_body_tags(1);
   $parser->parse_file($file);
 
-Adds beginning and ending "<html>" and "<body>" tags to the formatted
-document.
+Adds beginning and ending "<html>", "<head>", and "<body>" tags to
+the formatted document.
+
+Additionally, if there is a "=head0" directive, adds a pair of
+"<title>" tags with its contents.
 
 =head2 add_css_tags
 
