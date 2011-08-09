@@ -129,7 +129,7 @@ sub end_for {
 sub start_table { 
   my ($self, $flags) = @_;
   if ($flags->{'title'}) {
-    $self->{'scratch'} .= "<em>Table: " . $flags->{'title'} . "</em>\n";
+    $self->{'scratch'} .= "<p><em>Table: " . $flags->{'title'} . "</em></p>\n";
   }
   $self->{'scratch'} .= '<table>';
   $self->emit('nowrap');
