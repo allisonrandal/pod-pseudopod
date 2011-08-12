@@ -8,7 +8,7 @@ BEGIN {
 
 use strict;
 use lib '../lib';
-use Test::More tests => 31;
+use Test::More tests => 35;
 
 use_ok('Pod::PseudoPod::HTML') or exit;
 
@@ -66,7 +66,7 @@ my $html =
   '<p>B: Now, Pinky, if by any chance you are captured during this mission, '
 . 'remember you are Gunther Heindriksen from Appenzell. You moved to '
 . "Grindelwald to drive the cog train to Murren. Can you repeat that?</p>\n\n"
-. "<p>P: Mmmm, no, Brain, don't think I can.</p>\n\n";
+. "<p>P: Mmmm, no, Brain, don&#39;t think I can.</p>\n\n";
 
 is($results, $html, "multiple paragraphs");
 
@@ -363,6 +363,33 @@ like($results, qr/&quot;/, "Verbatim text with encodable quotes");
 like($results, qr/&amp;/, "Verbatim text with encodable ampersands");
 like($results, qr/&lt;/, "Verbatim text with encodable less-than");
 like($results, qr/&gt;/, "Verbatim text with encodable greater-than");
+
+
+# Testing for encodables to get through double angled brackets (C<< >>)
+#formatting codes that should escape the different encodeds (below)
+my @escaping_formatting_codes = qw/C/;
+
+my %encodeds;
+$encodeds{'quote'} 		= qr/(?:&quot;|&#34;)/; # "
+$encodeds{'ampersand'} 		= qr/(?:&amp;|&#38;)/; # &
+$encodeds{'less-than'} 		= qr/(?:&lt;|&#60;)/; # <
+$encodeds{'greater-than'} 	= qr/(?:&gt;|&#62;)/; # >
+
+foreach my $code (@escaping_formatting_codes) {
+	initialize($parser, $results);
+	$parser->parse_string_document(<<"EOPOD");
+=pod
+
+Not written very often:
+$code<< < & > " >>
+EOPOD
+	foreach my $encodable (keys(%encodeds)) {
+		like($results, $encodeds{$encodable}, "Formatting code $code with encodable $encodable");
+	}
+}
+
+
+done_testing();
 
 ######################################
 
