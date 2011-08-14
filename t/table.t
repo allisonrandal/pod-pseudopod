@@ -235,6 +235,24 @@ is($results, <<'EOHTML', "lines in cells are not wrapped");
 
 EOHTML
 
+TODO: {
+local $TODO = "Table title with Code."
+initialize($parser, $results);
+$parser->parse_string_document(<<'EOPOD');
+=begin table Table title with C<Code>.
+
+=end table
+
+EOPOD
+is($results, <<'EOHTML', "lines in cells are not wrapped");
+<em>Table: Table title with <code>Code</code>.</em>
+<table>
+
+</table>
+
+EOHTML
+}; # TODO
+
 ######################################
 
 sub initialize {
