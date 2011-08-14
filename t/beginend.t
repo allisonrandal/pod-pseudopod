@@ -64,7 +64,7 @@ is($results, <<'EOHTML', "a sidebar with a Z<> entity");
 <blockquote>
 <h3>Title Text</h3>
 
-<p>This is the text of the <a name="strange"> sidebar.</p>
+<p>This is the text of the <em id="strange"></em> sidebar.</p>
 
 </blockquote>
 
@@ -175,7 +175,7 @@ F<sample.gif>
 EOPOD
 
 is($results, <<'EOHTML', "a figure with a Z<> tag included.");
-<p><a name="figure1"> <img src="sample.gif"></p>
+<p><em id="figure1"></em> <img src="sample.gif"></p>
 
 
 
@@ -192,7 +192,7 @@ F<sample.gif>
 EOPOD
 
 is($results, <<'EOHTML', "a figure with a caption.");
-<p><a name="figure1"> <img src="sample.gif"></p>
+<p><em id="figure1"></em> <img src="sample.gif"></p>
 
 <p><em>This is a sample figure</em></p>
 
