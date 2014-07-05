@@ -264,16 +264,16 @@ $html = '<p>A plain paragraph with a <font class="url">'
 
 is($results, $html, "URL entity in a paragraph");
 
-initialize($parser, $results);
-$parser->parse_string_document(<<'EOPOD');
+TODO: {
+	local $TODO = "Cross references should produce an 'id' property in a structural element.";
+	initialize($parser, $results);
+	$parser->parse_string_document(<<'EOPOD');
 =pod
 
 A plain paragraph with a Z<crossreferenceendpoint>.
 EOPOD
-is($results, <<"EOHTML", "Link anchor entity in a paragraph");
-<p>A plain paragraph with a <a name="crossreferenceendpoint">.</p>
-
-EOHTML
+	like($results, qr/id="crossreferenceendpoint"/, "Link anchor entity in a paragraph");
+}
 
 initialize($parser, $results);
 $parser->parse_string_document(<<'EOPOD');
@@ -387,6 +387,8 @@ EOPOD
 		like($results, $encodeds{$encodable}, "Formatting code $code with encodable $encodable");
 	}
 }
+
+
 
 
 done_testing();

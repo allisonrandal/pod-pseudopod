@@ -192,7 +192,7 @@ EOPOD
 is($results, <<'EOHTML', "a table with a Z<> tag inside");
 <table>
 
-<p><a name="table1"></p>
+<p><em id="table1"></em></p>
 
 <tr>
 
